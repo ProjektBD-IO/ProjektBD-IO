@@ -26,14 +26,16 @@ public class Gif {
     private Categories id_category;
     private Date add_date;
     private String title;
-    private Boolean type;
-    public Gif(Long id,String reflink, String tags, Long id_creator, Date data, String title, Boolean type) {
+    private Boolean gif_type;
+    private Boolean if_banned;
+    public Gif(Long id,String reflink, String tags, Long id_creator, Date data, String title, Boolean type,Boolean if_banned) {
         this.id_gif=id;
         this.reflink = reflink;
         this.tags = tags;
         this.id_creator = id_creator;
         this.add_date = data;
         this.title = title;
-        this.type = type;
+        this.gif_type = type;
+        this.if_banned=if_banned;
     }
 }

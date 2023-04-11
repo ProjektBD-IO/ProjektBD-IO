@@ -25,37 +25,60 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurer{
+
+    @Autowired
+    UserDetailsService userDetailsService;
+    @Bean
+    AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider provider=new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+//        provider.setPasswordEncoder(new BCryptPasswordEncoder());
+        provider.setPasswordEncoder(new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence rawPassword) {
+                return rawPassword.toString();
+            }
+
+            @Override
+            public boolean matches(CharSequence rawPassword, String encodedPassword) {
+                return rawPassword.toString().matches(encodedPassword);
+            }
+        });
+        return provider;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((request)->request
+                .requestMatchers("/test").authenticated()
                 .requestMatchers("/**").permitAll()
                 )
                 .formLogin((form)->form
-                        .loginPage("/login")
+//                        .loginPage("/login")
                         .permitAll()
                 )
                 .logout()
                 .permitAll();
                 return http.build();
     }
-    @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(
-                User.withDefaultPasswordEncoder()
-                        .username("user")
-                        .password("user")
-                        .roles("USER")
-                        .build()
-        );
-        manager.createUser(
-                User.withDefaultPasswordEncoder()
-                        .username("admin")
-                        .password("admin")
-                        .roles("USER","ADMIN")
-                        .build()
-        );
-                return manager;
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+//        manager.createUser(
+//                User.withDefaultPasswordEncoder()
+//                        .username("user")
+//                        .password("user")
+//                        .roles("USER")
+//                        .build()
+//        );
+//        manager.createUser(
+//                User.withDefaultPasswordEncoder()
+//                        .username("admin")
+//                        .password("admin")
+//                        .roles("USER","ADMIN")
+//                        .build()
+//        );
+//                return manager;
+//    }
 }
