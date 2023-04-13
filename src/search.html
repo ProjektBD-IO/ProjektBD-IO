@@ -1,0 +1,14 @@
+function SearchBar() {
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      const searchQuery = event.target.elements.search.value;
+      console.log(`Wyszukiwane hasło: ${searchQuery}`);
+    }
+  
+    return (
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="search" placeholder="Wyszukaj..." />
+        <button type="submit">Szukaj</button>
+      </form>
+    );
+  }

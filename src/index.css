@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  font-family: "Quicksand";
+  color: #333;
+}
+.nav {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  max-width:1000px;
+  margin: 0 auto;
+  width: "30%"; 
+  height: "30%"; 
+}
+.nav h1 {
+  width: "100px"; 
+  height: "40px"; 
+  color: #663399;
+}
+.nav .links {
+  margin-left: auto;
+  padding: 6px;
+  
+}
+.nav a {
+  width: 100%;
+  height: 10%;
+  margin-left: auto;
+  color: #663399;
+  margin-left: 16px;
+  text-decoration: none;
+  padding: 6px;
+}
+.nav a:hover {
+  color: #f1356d;
+}
+.nav button{
+  height: 34px;
+}
+.nav .links:hover{
+  color: #f1356d;
+}
+.content {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+body {
+  background-color: black	;
+}
+form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input[type="text"] {
+  width: 50%;
+  padding: 5px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+}
+
+button[type="submit"] {
+  padding: 5px 10px;
+  background-color: #FF1493;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.gallery{
+  -webkit-column-count: 3;
+  -moz-cloumn-count: 3;
+  column-count: 3;
+  -webkit-column-width: 33%;
+  -moz-column-width:33%;
+  column-width:33%;
+  padding:0 12px;
+
+}
+.gallery .gifs{
+  -webkit-transition: all 350ms ease;
+  transition:all 350ms ease;
+  cursor:pointer;
+  margin-bottom:12px;
+}
+.gallery .gifs:hover{
+  filter: opacity(.8);
+}
+@media (max-widht: 991px){
+  .gallery{
+    -webkit-column-count: 2;
+    -moz-cloumn-count: 2;
+    column-count: 2;
+  }
+}
+@media (max-widht: 480px){
+  .gallery{
+    -webkit-column-count: 2;
+    -moz-cloumn-count: 2;
+    column-count: 2;
+    -webkit-column-width: 100%;
+    -moz-column-width:100%;
+    column-width:100%;
+    padding:0 12px;
+  }
+}
+/*model*/
+.model{
+  width:100%;
+  height: 100vh;
+  position: fixed;
+  top:0;
+  left:0;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0000;
+  transition:opacity .4s ease, visibility .4s ease, transform .5s ease-in-out;
+  visibility:hidden;
+  opacity: 0;
+  transform: scale(0);
+  overflow: hidden;
+  z-index:999;
+}
+.model.open{
+  visibility: visible;
+  opacity: 1;
+  transform: scale(1);
+}
+.model img{
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  line-height: 0;
+  box-sizing: border-box;
+  padding: 20px 0 20px;
+  margin: 0 auto;
+
+}
+.model.open svg{
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 2rem;
+  height: 2rem;
+  padding: 5px;
+  background-color: #0000;
+  color:#ffff
+}
