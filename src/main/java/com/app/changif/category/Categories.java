@@ -1,6 +1,7 @@
 package com.app.changif.category;
 
 import com.app.changif.gif.Gif;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -21,6 +22,7 @@ public class Categories {
     @Id
     private Long id_category;
     @OneToMany(mappedBy = "id_category")
+    @JsonIgnore
     private Set<Gif> gifs = new HashSet<>();
     private String category_name;
 
