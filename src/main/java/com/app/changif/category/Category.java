@@ -15,18 +15,19 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name="categories")
 public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_category;
+    private Integer id_category;
 
-    @OneToMany(mappedBy = "id_category")
+    @OneToMany(mappedBy = "category")
     private Set<Gif> gifs = new HashSet<>();
 
     private String category_name;
 
-    public Category(Long id_category, String category_name) {
+    public Category(Integer id_category, String category_name) {
         this.id_category = id_category;
         this.category_name=category_name;
     }

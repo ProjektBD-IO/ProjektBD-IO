@@ -25,11 +25,13 @@ public class Gif {
     private String reflink;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_creator")
     private User creator;
 
     private String tags;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_category")
     private Category category;
 
     @Column(name = "add_date")
@@ -43,10 +45,10 @@ public class Gif {
     @Column(name = "if_banned")
     private boolean ifBanned;
 
-    @ManyToOne
-    @JoinColumn(name = "id_category")
-
-    private Category id_category;
+//    @ManyToOne
+//    @JoinColumn(name = "id_category")
+//
+//    private Category id_category;
 
 
 //    private Categories id_category;
@@ -54,14 +56,14 @@ public class Gif {
 //    private String title;
 //    private Boolean gif_type;
 //    private Boolean if_banned;
-//    public Gif(Long id,String reflink, String tags, Long id_creator, Date data, String title, Boolean type,Boolean if_banned) {
-//        this.id_gif=id;
+//    public Gif(Integer id_gif,String reflink, String tags, User creator, Date data, String title, Boolean gifType,Boolean ifBanned) {
+//        this.id_gif=id_gif;
 //        this.reflink = reflink;
 //        this.tags = tags;
-//        this.id_creator = id_creator;
-//        this.add_date = data;
+//        this.creator = creator;
+//        this.addDate = data;
 //        this.title = title;
-//        this.gif_type = type;
-//        this.if_banned=if_banned;
+//        this.gifType = gifType;
+//        this.ifBanned=ifBanned;
 //    }
 }

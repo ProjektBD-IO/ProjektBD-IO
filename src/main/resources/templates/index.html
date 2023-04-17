@@ -6,7 +6,7 @@
     </head>
     <body>
         <article th:each="gif:${dane}">
-            <a style="margin-right:5px; color:gold;" th:href="@{'/search/category/' + ${gif.id_category.category_name}}" th:text="${gif.id_category.category_name}"></a>
+            <a style="margin-right:5px; color:gold;" th:href="@{'/search/category/' + ${gif.category.category_name}}" th:text="${gif.category.category_name}"></a>
             <a style="margin-right:5px;" th:each="tag:${#strings.arraySplit(gif.tags,'#')}" th:href="@{'/search/tag/' + ${tag}}" th:text="'#'+${tag}"></a>
             <br>
             <img th:src="@{${gif.reflink}}" width="500"/>
