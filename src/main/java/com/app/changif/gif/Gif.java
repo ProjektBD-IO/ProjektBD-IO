@@ -1,5 +1,6 @@
 package com.app.changif.gif;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.app.changif.category.Category;
 import com.app.changif.user.User;
 import jakarta.persistence.*;
@@ -30,6 +31,8 @@ public class Gif {
 
     private String tags;
 
+    //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_category")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_category")
     private Category category;
