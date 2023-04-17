@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,15 +19,20 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Categories {
+@Table(name="categories")
+public class Category {
+
     @Id
-    private Long id_category;
-    @OneToMany(mappedBy = "id_category")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id_category;
     @JsonIgnore
+    @OneToMany(mappedBy = "category")
+
     private Set<Gif> gifs = new HashSet<>();
+
     private String category_name;
 
-    public Categories(Long id_category, String category_name) {
+    public Category(Integer id_category, String category_name) {
         this.id_category = id_category;
         this.category_name=category_name;
     }
