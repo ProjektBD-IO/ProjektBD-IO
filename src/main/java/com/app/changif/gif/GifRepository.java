@@ -14,9 +14,11 @@ public interface GifRepository extends JpaRepository<Gif,Long> {
     List<Gif> findByTag(@Param("tag")String tag);
     @Query("select g from Gif g where gifType=true order by addDate desc")
     List<Gif> getAll();
-    //@Query("select g, c.category_name from Gif g JOIN FETCH Categories c on g.id_category=c.id_category where gif_type=true order by add_date desc")
-    //List<Gif> findAllWithCategory();
+
+//    @Query("select g, c.category_name from Gif g JOIN FETCH Category c on g.category=c.id_category where gifType=true order by addDate desc")
+//    List<Gif> findAllWithCategory();
     @Query("select g, c.category_name from Gif g JOIN FETCH Category c on g.category=c.id_category where c.category_name = :cat and gifType=true order by addDate desc")
+
     List<Gif> findByCategory(@Param("cat")String cat);
 }
 

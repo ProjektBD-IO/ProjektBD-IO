@@ -1,8 +1,8 @@
 package com.app.changif.gif;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.app.changif.category.Category;
 import com.app.changif.user.User;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,16 +25,16 @@ public class Gif {
 
     private String reflink;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="id_creator")
+    @JsonIdentityReference(alwaysAsId = true)
     private User creator;
 
     private String tags;
 
-    //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_category")
-    @JsonIdentityReference(alwaysAsId = true)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="id_category")
+    @JsonIdentityReference(alwaysAsId = true)
     private Category category;
 
     @Column(name = "add_date")
