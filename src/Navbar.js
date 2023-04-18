@@ -1,13 +1,11 @@
+import Add from './upload';
 const Nav = () => {
-    const add = () => {
-        console.log('Prześlij gifa');
-    }
     return ( 
         <nav className="nav" >
             <h1>ChanGifs </h1>
             <div className="links" >
                 <a href="/" >Strona główna </a>
-                <button onClick={add} style={{
+                <button onClick={Add} style={{
                     color: "white",
                     backgroundColor: '#663399',
                     borderRadois: '8px'}}
@@ -26,6 +24,6 @@ const Nav = () => {
             </div>
         </nav>
      );
-}
- 
+            }
+            
 export default Nav;
