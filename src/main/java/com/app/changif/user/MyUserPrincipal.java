@@ -1,4 +1,4 @@
-package com.app.changif.users;
+package com.app.changif.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,11 +6,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class MyUsersPrincipal implements UserDetails {
-    private final Users user;
+public class MyUserPrincipal implements UserDetails {
+    private final User user;
     private final List<GrantedAuthority> authorities;
 
-    public MyUsersPrincipal(Users user,List<GrantedAuthority> authorities){
+    public MyUserPrincipal(User user, List<GrantedAuthority> authorities){
         this.user=user;
         this.authorities=authorities;
     }
@@ -18,7 +18,7 @@ public class MyUsersPrincipal implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities(){
         return authorities;
     }
-    public Users getUser(){
+    public User getUser(){
         return user;
     }
     @Override

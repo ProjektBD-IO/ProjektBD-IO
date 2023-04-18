@@ -1,6 +1,7 @@
 package com.app.changif.user;
 
 import com.app.changif.gif.Gif;
+import com.app.changif.role.Role;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,6 +37,10 @@ public class User {
 
     private String nickname;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "id_role")
+    private Role id_role;
 
     // getters and setters
 }
