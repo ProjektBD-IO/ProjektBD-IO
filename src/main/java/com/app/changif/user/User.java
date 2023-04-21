@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,12 +22,10 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
-
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_user;
-
     @JsonIgnore
     @OneToMany(mappedBy = "creator")
     private Set<Gif> gifs=new HashSet<>();
@@ -34,13 +33,9 @@ public class User {
     private String mail;
     @JsonIgnore
     private String password;
-
     private String nickname;
-
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_role")
     private Role id_role;
-
-    // getters and setters
 }
