@@ -14,6 +14,7 @@
   width: "30%"; 
   height: "30%"; 
 }
+
 .nav h1 {
   width: "100px"; 
   height: "40px"; 
@@ -29,7 +30,6 @@
   height: 10%;
   margin-left: auto;
   color: #663399;
-  margin-left: 16px;
   text-decoration: none;
   padding: 6px;
 }
@@ -38,6 +38,7 @@
 }
 .nav button{
   height: 34px;
+  padding: 6px;
 }
 .nav .links:hover{
   color: #f1356d;
@@ -106,3 +107,37 @@ button[type="submit"] {
     padding:0 12px;
   }
 }
+
+.dropdown-menu {
+  color: #663399;
+  position: relative;
+  display: inline-block;
+  background-color: #663399;
+}
+.dropdown-content {
+  left: 0;
+  width: 100%;
+  position: absolute;
+  z-index: 1;
+  background-color: #663399;
+  display: flex;
+  flex-direction: column;
+}
+.dropdown-content a {
+  color: white;
+  text-align: left;
+  display: block;
+  text-decoration: #663399;
+}
+.dropdown-button {
+  background-color: inherit;
+  color: white;
+  padding: 6px;
+  cursor: pointer;
+  text-align: center;
+}
+.dropdown{
+  position: relative;
+  width: 100%;
+}
+

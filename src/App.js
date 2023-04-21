@@ -1,7 +1,8 @@
 import Nav from './Navbar';
 import './index.css';
-import SearchBar from './search';
+import SearchBar from './searchbar';
 import Gif from './Home';
+import BasicButtonExample from './kategorie';
 function App() {
   return (
     <div className="App">

@@ -1,4 +1,5 @@
 import Add from './upload';
+import  DropdownMenu  from './kategorie';
 const Nav = () => {
     return ( 
         <nav className="nav" >
@@ -10,17 +11,16 @@ const Nav = () => {
                     backgroundColor: '#663399',
                     borderRadois: '8px'}}
                 >Dodaj Gifa</button>
-                <a href="/Categories" style={{
+                 <DropdownMenu  label="Kategorie"  >
+                    <a href="sport">sport</a>
+                    <a href="filmy">filmy</a>
+                    <a href="seriale">seriale</a>
+                </DropdownMenu >
+                <button onclick="window.location.href='strona_logowania.html'"
+                style={{
                     color: "white",
                     backgroundColor: '#663399',
-                    borderRadois: '8px'
-                }}>Kategorie</a>
-                <a href="/Categories" style={{
-                    color: "white",
-                    backgroundColor: '#663399',
-                    borderRadois: '8px'
-                }}>Zaloguj się</a>
-                
+                    borderRadois: '8px'}}>Zaloguj się</button>
             </div>
         </nav>
      );
