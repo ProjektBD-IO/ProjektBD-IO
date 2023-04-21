@@ -5,6 +5,7 @@ import com.app.changif.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -51,15 +52,19 @@ public class SecurityConfigurer {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.cors().and().authorizeHttpRequests()
-                .requestMatchers("/login").permitAll()
-                .anyRequest().permitAll()
-                .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration)))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration)))
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .addFilterBefore(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration)), JWTAuthenticationFilter.class)
+                .addFilterBefore(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration)), JWTAuthorizationFilter.class)
+                .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().build();
+                .and()
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers(HttpMethod.POST, "/services/controller/user", "/services/controller/user/login","/error","").permitAll()
+                        .anyRequest().authenticated())
+        ;
+        return http.build();
     }
 }
 

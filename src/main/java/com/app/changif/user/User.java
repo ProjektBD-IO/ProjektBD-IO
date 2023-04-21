@@ -26,15 +26,11 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_user;
-    @JsonIgnore
     @OneToMany(mappedBy = "creator")
     private Set<Gif> gifs=new HashSet<>();
-    @JsonIgnore
     private String mail;
-    @JsonIgnore
     private String password;
     private String nickname;
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_role")
     private Role id_role;
