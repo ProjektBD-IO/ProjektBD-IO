@@ -1,12 +1,11 @@
 package com.app.changif.security;
 
+import com.app.changif.user.MyUserPrincipal;
 import com.app.changif.user.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -53,11 +52,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res,
                                                    FilterChain chain, Authentication authentication) throws IOException{
         String token = JWT.create()
-                .withSubject(((User) authentication.getPrincipal()).getNickname())
+                .withSubject(((MyUserPrincipal) authentication.getPrincipal()).getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(SECRET.getBytes()));
 
-        String body = ((User) authentication.getPrincipal()).getNickname() + " " + token;
+        String body = ((MyUserPrincipal) authentication.getPrincipal()).getUsername() + " " + token;
 
         res.getWriter().write(body);
         res.getWriter().flush();

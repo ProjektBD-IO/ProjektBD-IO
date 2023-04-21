@@ -61,7 +61,7 @@ public class SecurityConfigurer {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers(HttpMethod.POST, "/services/controller/user", "/services/controller/user/login","/error","").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/services/controller/user", "/api/services/controller/user/login","/error","").permitAll()
                         .anyRequest().authenticated())
         ;
         return http.build();
