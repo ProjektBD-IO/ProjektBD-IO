@@ -59,7 +59,8 @@ public class Gif {
 
     @Transient
     private Long likeCount;
-    private Long getLikeCount(){
+
+    public Long getLikeCount() {
         return (long) likes.size();
     }
 
