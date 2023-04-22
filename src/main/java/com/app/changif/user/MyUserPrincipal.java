@@ -21,6 +21,9 @@ public class MyUserPrincipal implements UserDetails {
     public User getUser(){
         return user;
     }
+    public Integer getUserId(){
+        return user.getId_user();
+    }
     @Override
     public String getPassword(){
         return user.getPassword();

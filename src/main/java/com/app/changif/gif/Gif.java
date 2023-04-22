@@ -1,8 +1,10 @@
 package com.app.changif.gif;
 
 import com.app.changif.category.Category;
+import com.app.changif.like.Likes;
 import com.app.changif.user.User;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -45,8 +49,19 @@ public class Gif {
     @Column(name = "gif_type")
     private boolean gifType;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "gif")
+    private Set<Likes> likes = new HashSet<>();
+
+
     @Column(name = "if_banned")
     private boolean ifBanned;
+
+    @Transient
+    private Long likeCount;
+    private Long getLikeCount(){
+        return (long) likes.size();
+    }
 
 //    @ManyToOne
 //    @JoinColumn(name = "id_category")
