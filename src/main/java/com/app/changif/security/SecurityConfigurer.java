@@ -62,7 +62,7 @@ public class SecurityConfigurer {
                 .and()
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(HttpMethod.POST, "/services/controller/user", "/api/services/controller/user/login","/error","").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/", "/category/all", "/search/**").permitAll()
                         .anyRequest().authenticated())
         ;
         return http.build();

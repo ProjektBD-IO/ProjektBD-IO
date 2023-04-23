@@ -63,6 +63,17 @@ public class Gif {
     public Long getLikeCount() {
         return (long) likes.size();
     }
+    @Transient
+    private boolean likedByCurrentUser;
+
+    public void setLikedByCurrentUser(Integer userId) {
+        for (Likes like : likes) {
+            if (like.getUser().getId_user().equals(userId)) {
+                this.likedByCurrentUser = true;
+                break;
+            }
+        }
+    }
 
 //    @ManyToOne
 //    @JoinColumn(name = "id_category")

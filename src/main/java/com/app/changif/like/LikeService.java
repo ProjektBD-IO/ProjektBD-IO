@@ -20,6 +20,9 @@ public class LikeService {
     public void save(Likes like) {
         likeRepository.save(like);
     }
+    public void daleteLike(Likes like) {
+        likeRepository.delete(like);
+    }
     @Transactional
     public void likeGif(Integer gifId, Integer userId) {
 
@@ -37,6 +40,24 @@ public class LikeService {
         like.setGif(gif);
         like.setUser(user);
         save(like);
+    }
+
+    public void dislikeGif(Integer gifId, Integer userId) {
+
+        Optional<Gif> optionalGif =  gifRepository.findById(gifId);
+        Gif gif;
+        Optional<Likes> optionalLike;
+        Likes like;
+        if (optionalGif.isPresent())
+            gif = optionalGif.get();
+        else
+            throw new IllegalArgumentException("gif with specified id doesn't exists");
+        optionalLike=likeRepository.findByIds(gifId,userId);
+        if (optionalLike.isPresent())
+            like=optionalLike.get();
+        else
+            throw new IllegalArgumentException("Like doesn't exists");
+        daleteLike(like);
     }
 
 }

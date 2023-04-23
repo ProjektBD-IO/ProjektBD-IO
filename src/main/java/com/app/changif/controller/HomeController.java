@@ -28,17 +28,29 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public List<Gif> home() {
-        return gifRepository.getAll();
+    public List<Gif> home(Principal principal) {
+        List<Gif> gify=gifRepository.getAll();
+        if(principal!=null)
+            for (Gif gif : gify)
+                gif.setLikedByCurrentUser(Integer.parseInt(principal.getName()));
+        return gify;
     }
 
     @GetMapping("/search/tag/{tag}")
-    public List<Gif> tagsearch(@PathVariable String tag) {
-        return gifRepository.findByTag(tag);
+    public List<Gif> tagsearch(@PathVariable String tag, Principal principal) {
+        List<Gif> gify=gifRepository.findByTag(tag);
+        if(principal!=null)
+            for (Gif gif : gify)
+                gif.setLikedByCurrentUser(Integer.parseInt(principal.getName()));
+        return gify;
     }
 
     @GetMapping("/search/category/{cat}")
-    public List<Gif> categorysearch(@PathVariable String cat) {
-        return gifRepository.findByCategory(cat);
+    public List<Gif> categorysearch(@PathVariable String cat, Principal principal) {
+        List<Gif> gify=gifRepository.findByCategory(cat);
+        if(principal!=null)
+            for (Gif gif : gify)
+                gif.setLikedByCurrentUser(Integer.parseInt(principal.getName()));
+        return gify;
     }
 }
