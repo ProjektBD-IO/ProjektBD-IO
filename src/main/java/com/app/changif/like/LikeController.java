@@ -15,13 +15,13 @@ public class LikeController {
     private LikeService likeService;
 
     @PostMapping("/like")
-    public void like_gif(@RequestParam Integer id_gif, Principal principal) {
+    public Integer like_gif(@RequestParam Integer id_gif, Principal principal) {
         Integer userId=Integer.parseInt(principal.getName());
-        likeService.likeGif(id_gif, userId);
+        return likeService.likeGif(id_gif, userId);
     }
     @PostMapping("/dislike")
-    public void dislike_gif(@RequestParam Integer id_gif, Principal principal) {
+    public Integer dislike_gif(@RequestParam Integer id_gif, Principal principal) {
         Integer userId=Integer.parseInt(principal.getName());
-        likeService.dislikeGif(id_gif, userId);
+        return likeService.dislikeGif(id_gif, userId);
     }
 }

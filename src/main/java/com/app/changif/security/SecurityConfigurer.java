@@ -55,6 +55,7 @@ public class SecurityConfigurer {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                .cors().and()
                 .addFilterBefore(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration)), JWTAuthenticationFilter.class)
                 .addFilterBefore(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration)), JWTAuthorizationFilter.class)
                 .csrf().disable()
@@ -63,6 +64,7 @@ public class SecurityConfigurer {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(HttpMethod.POST, "/services/controller/user", "/api/services/controller/user/login","/error","").permitAll()
                         .requestMatchers(HttpMethod.GET, "/", "/category/all", "/search/**").permitAll()
+                        .requestMatchers("/images/**").permitAll()
                         .anyRequest().authenticated())
         ;
         return http.build();

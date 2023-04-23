@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.json.JSONObject;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -56,9 +57,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(SECRET.getBytes()));
 
-        String body = ((MyUserPrincipal) authentication.getPrincipal()).getUsername() + " " + token;
+        String username = ((MyUserPrincipal) authentication.getPrincipal()).getUsername();
 
-        res.getWriter().write(body);
+        JSONObject jsonResponse = new JSONObject();
+        jsonResponse.put("username", username);
+        jsonResponse.put("token", token);
+
+        res.setContentType("application/json");
+        res.setCharacterEncoding("UTF-8");
+        res.getWriter().write(jsonResponse.toString());
         res.getWriter().flush();
     }
 }

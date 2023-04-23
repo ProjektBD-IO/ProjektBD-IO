@@ -58,6 +58,9 @@ public class UserService implements UserDetailsService {
         if (userRepository.findByUsername(user.getNickname()) != null) {
             throw new IllegalArgumentException("User with this nickname already exists");
         }
+        Role role=new Role();
+        role.setId_role(2);
+        user.setId_role(role);
         save(user);
         return user.getId_user();
     }
