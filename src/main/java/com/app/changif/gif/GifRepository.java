@@ -1,5 +1,7 @@
 package com.app.changif.gif;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,17 +14,16 @@ import java.util.Optional;
 public interface GifRepository extends JpaRepository<Gif,Long> {
 
     @Query("select g from Gif g where g.tags like %:tag% and gifType=true order by addDate desc")
-    List<Gif> findByTag(@Param("tag")String tag);
+    Page<Gif> findByTag(@Param("tag")String tag, Pageable pageable);
 
     @Query("select g from Gif g where g.id_gif = :id")
     Optional<Gif> findById(@Param("id")Integer id);
     @Query("select g  from Gif g where gifType=true order by addDate desc")
-    List<Gif> getAll();
+    Page<Gif> getAll(Pageable pageable);
 
     //    @Query("select g, c.category_name from Gif g JOIN FETCH Category c on g.category=c.id_category where gifType=true order by addDate desc")
 //    List<Gif> findAllWithCategory();
-    @Query("select g, c.category_name from Gif g JOIN FETCH Category c on g.category=c.id_category where c.category_name = :cat and gifType=true order by addDate desc")
-
-    List<Gif> findByCategory(@Param("cat")String cat);
+    @Query("select g from Gif g JOIN FETCH Category c on g.category=c.id_category where c.category_name = :cat and gifType=true order by addDate desc")
+    Page<Gif> findByCategory(@Param("cat")String cat, Pageable pageable);
 }
 

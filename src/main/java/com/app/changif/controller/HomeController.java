@@ -4,14 +4,14 @@ import com.app.changif.gif.Gif;
 import com.app.changif.gif.GifRepository;
 import com.app.changif.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -28,8 +28,9 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public List<Gif> home(Principal principal) {
-        List<Gif> gify=gifRepository.getAll();
+    public Page<Gif> home(Principal principal, @RequestParam("page") int page) {
+        Pageable pageable = PageRequest.of(page, 16);
+        Page<Gif> gify=gifRepository.getAll(pageable);
         if(principal!=null)
             for (Gif gif : gify)
                 gif.setLikedByCurrentUser(Integer.parseInt(principal.getName()));
@@ -37,8 +38,9 @@ public class HomeController {
     }
 
     @GetMapping("/search/tag/{tag}")
-    public List<Gif> tagsearch(@PathVariable String tag, Principal principal) {
-        List<Gif> gify=gifRepository.findByTag(tag);
+    public Page<Gif> tagsearch(@PathVariable String tag, Principal principal, @RequestParam("page") int page) {
+        Pageable pageable = PageRequest.of(page, 16);
+        Page<Gif> gify=gifRepository.findByTag(tag, pageable);
         if(principal!=null)
             for (Gif gif : gify)
                 gif.setLikedByCurrentUser(Integer.parseInt(principal.getName()));
@@ -46,8 +48,9 @@ public class HomeController {
     }
 
     @GetMapping("/search/category/{cat}")
-    public List<Gif> categorysearch(@PathVariable String cat, Principal principal) {
-        List<Gif> gify=gifRepository.findByCategory(cat);
+    public Page<Gif> categorysearch(@PathVariable String cat, Principal principal, @RequestParam("page") int page) {
+        Pageable pageable = PageRequest.of(page, 16);
+        Page<Gif> gify=gifRepository.findByCategory(cat, pageable);
         if(principal!=null)
             for (Gif gif : gify)
                 gif.setLikedByCurrentUser(Integer.parseInt(principal.getName()));
