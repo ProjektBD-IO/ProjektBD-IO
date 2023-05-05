@@ -6,19 +6,38 @@ function RegistrationForm() {
     nickname: '',
     role: 'User'
   });
-
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const response = await fetch('http://localhost:8889/services/controller/user', {
+  
+    const formDataToSend = new FormData();
+    formDataToSend.append('file', formData.file);
+    formDataToSend.append('category', formData.category);
+    formDataToSend.append('tags', formData.tags);
+  
+    const response = await fetch('http://localhost:8889/services/controller/file', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
+      body: formDataToSend
     });
-    const data = await response.json();
-    console.log(data);
-
-    // Handle response
+  
+    if (response.ok) {
+      // The file was successfully uploaded
+      const data = await response.json();
+      console.log(data);
+  
+      // Reset the form data
+      setFormData({
+        file: null,
+        category: '',
+        tags: ''
+      });
+  
+      // Close the modal
+      setModalIsOpen(false);
+    } else {
+      // There was an error uploading the file
+      console.error(response.statusText);
+    }
   };
 
   const handleChange = (event) => {

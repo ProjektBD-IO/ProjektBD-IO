@@ -1,70 +1,137 @@
-import React, { useState } from 'react';
-import SearchForm from './tagi1';
-import DropdownButton from './kategorie';
+import React, { useState, useEffect } from 'react';
 import Gif from './Home'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { IconButton } from '@mui/material';
+import InfiniteScroll from 'react-infinite-scroll-component';
+
 function GifPage() {
-    const [searchResults, setSearchResults] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [page, setPage] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState('Cat0');
+  const [searchResultsIds, setSearchResultsIds] = useState([]);
+  const [previousCategory, setPreviousCategory] = useState(null);
+  const handleSearch = () => {
+    fetch(`http://localhost:8889/search/tag/${searchTerm}?page=${page}`)
+      .then(response => response.json())
+      .then((data) => {
+        console.log('Dane z serwera:', data);
+        const newResults = data.content.filter(gif => !searchResultsIds.includes(gif.id_gif)); // filter out duplicates
+        setSearchResults(prevResults => [...prevResults, ...newResults]);
+        setSearchResultsIds(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]); // add new IDs to the array
+        setPage(page => page + 1);
+      })
+      .catch(error => console.error(error));
+  };
+  
+  useEffect(() => {
+    handleSearch();
+  }, [page]);
+
+  const handleCategorySelect = () => {
+    fetch(`http://localhost:8889/search/category/${selectedCategory}?page=${page}`)
+      .then(response => response.json())
+      .then((data) => {
+        console.log('Dane z serwera:', data);
+        const newResults = data.content.filter(gif => !searchResultsIds.includes(gif.id_gif)); // filter out duplicates
+        setSearchResults(prevResults => [...prevResults, ...newResults]);
+        setSearchResultsIds(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]); 
+        setPage(page=>page+1)
+      })
+      .catch(error => console.error(error));
+  };
+
+  useEffect(() => {
+    if (selectedCategory !== "Cat0") {
+      handleCategorySelect(selectedCategory, page);
+    }
+  }, [selectedCategory, page]);
+
+  const handleLike = async (id) => {
+    const token = localStorage.getItem('jwtToken');
+    const url = `http://localhost:8889/api/like?id_gif=${id}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id_gif: id })
+    });
+    const data = await response.json();
+    console.log(data);
+  };
+  
+  const handleCategoryChange = (event) => {
+    const category = event.target.value;
+    setSelectedCategory(category);
+    if (category !== "Cat0") {
+      if (category !== previousCategory) {
+        setSearchResults([]);
+        setSearchResultsIds([]);
+        setPage(0);
+        setPreviousCategory(category);
+      }
+      handleCategorySelect(category);
+    } else {
+      setSearchResults([]);
+      setSearchResultsIds([]);
+      setPage(0);
+      setPreviousCategory(null);
+    }
+  };
+  
+  return (
     
-    const handleSearch = (searchResults) => {
-      fetch(`http://localhost:8889/search/tag/${searchResults}`)
-        .then(response => response.json())
-        .then(data => setSearchResults(data))
-        .catch(error => console.error(error));
-    };
-  
-    const handleCategorySelect = (searchResults) => {
-      fetch(`http://localhost:8889/search/category/${searchResults}`)
-        .then(response => response.json())
-        .then(data => setSearchResults(data))
-        .catch(error => console.error(error));
+    <div>
+      <div className='search-bar'>
+      <input type='text' placeholder='Wyszukaj...' value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} />
+        <button type='submit' onClick={handleSearch} >Search</button>
+      <InfiniteScroll
+      dataLength={searchResults.length}
+      next={() => handleSearch(searchTerm)}
+      hasMore={true}
+      onScroll={() => handleSearch(searchTerm)}
+      scrollThreshold={0.8}
+    >
         
-    };
-    const handleLike = async (id) => {
-      const token = localStorage.getItem('jwtToken');
-      const url = `http://localhost:8889/api/like?id_gif=${id}`;
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id_gif: id })
-      });
-      const data = await response.json();
-      console.log(data);
-    };
-  
-    return (
-      <div>
-        <SearchForm onSubmit={handleSearch} />
-        <div className='dropdown'>
-        <DropdownButton categories={['Cat1', 'Cat2', 'Cat3']} onChange={handleCategorySelect}
-          searchResults={searchResults}
-          setSearchResults={setSearchResults}
-          handleCategorySelect={handleCategorySelect} />
+        </InfiniteScroll>
         </div>
-        <div className='search-results'>
-          {searchResults.length > 0 && (
-            <ul>
-              {searchResults.map(gif => (
-                <li key={gif.id_gif}>
-                  <img src={`http://localhost:8889${gif.reflink}`} alt={gif.title} style={{ width: "100%", margin:"0px" }}/>
-                  <IconButton onClick={() => handleLike(gif.id_gif)}>
-              <ThumbUpIcon />
-              <span style={{ color:'white'}}>{gif.likeCount}</span>
+      <div className='dropdown'>
+      <InfiniteScroll
+      dataLength={searchResults.length}
+      next={handleCategorySelect}
+      onScroll={handleCategorySelect}
+      hasMore={true}
+      scrollThreshold={1}
+    >
+        <select value={selectedCategory} onChange={handleCategoryChange}> 
+          <option value="Cat0">--Wybierz kategorię--</option>
+          <option value="Cat1">Cat1</option>
+          <option value="Cat2">Cat2</option>
+          <option value="Cat3">Cat3</option>
+        </select>
+        </InfiniteScroll>
+      </div>
+      
+      <div className='search-results'>
+      
+            {searchResults.map(gif => (
+              <li key={gif.id_gif}>
+                <img src={`http://localhost:8889${gif.reflink}`} alt={gif.title} style={{width: '200px', height: '200px'}}/>
+                <IconButton onClick={() => handleLike(gif.id_gif)}>
+                  <ThumbUpIcon />
+                  <span style={{ color:'white'}}>{gif.likeCount}</span>
                 </IconButton>
-                    
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-        {searchResults.length === 0 && <Gif />}
+              </li>
+            ))}
+          
         
       </div>
-    );
-  }
-  
-  export default GifPage;
+      {( searchResults.length === 0) &&  <Gif/>}
+    </div>
+    
+  );
+}
+
+export default GifPage;

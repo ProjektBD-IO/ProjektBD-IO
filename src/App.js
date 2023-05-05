@@ -1,16 +1,14 @@
 import Nav from './Navbar';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './index.css';
-import Gif from './Home';
 import GifPage from './Gif'
 import RegistrationForm from './rejestracja';
 import LoginForm from './login';
 import { useState } from 'react'
-import Gif1 from './gif1';
 function App() {
-  const [searchResults, setSearchResults] = useState([]);
   return (
     <div className="App">
+      
       <Router>
       <Nav />
       <Routes>
@@ -19,7 +17,7 @@ function App() {
       </Routes>
     </Router>
       <div className="content"> 
-      <GifPage searchResults={searchResults} setSearchResults={setSearchResults} />
+      <GifPage />
       </div>
     </div>
   );
