@@ -13,17 +13,17 @@ import java.util.Optional;
 @Repository
 public interface GifRepository extends JpaRepository<Gif,Long> {
 
-    @Query("select g from Gif g where g.tags like %:tag% and gifType=true order by addDate desc")
+    @Query("select g from Gif g where g.tags like %:tag% and gifType=true")
     Page<Gif> findByTag(@Param("tag")String tag, Pageable pageable);
 
     @Query("select g from Gif g where g.id_gif = :id")
     Optional<Gif> findById(@Param("id")Integer id);
-    @Query("select g  from Gif g where gifType=true order by addDate desc")
+    @Query("select g  from Gif g where gifType=true")
     Page<Gif> getAll(Pageable pageable);
 
     //    @Query("select g, c.category_name from Gif g JOIN FETCH Category c on g.category=c.id_category where gifType=true order by addDate desc")
 //    List<Gif> findAllWithCategory();
-    @Query("select g from Gif g JOIN FETCH Category c on g.category=c.id_category where c.category_name = :cat and gifType=true order by addDate desc")
+    @Query("select g from Gif g JOIN FETCH Category c on g.category=c.id_category where c.category_name = :cat and gifType=true")
     Page<Gif> findByCategory(@Param("cat")String cat, Pageable pageable);
 }
 
