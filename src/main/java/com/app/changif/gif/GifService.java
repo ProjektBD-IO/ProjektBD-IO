@@ -15,16 +15,21 @@ public class GifService {
     @Autowired
     private GifRepository gifRepository;
 
-    public Gif checkPrivateAccess(Integer gifId) throws AccessDeniedException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentNickname = authentication.getName();
+    public Gif getGif(Integer gifId) throws AccessDeniedException {
         Gif gif = Option.ofOptional(gifRepository.findById(gifId))
                 .getOrElseThrow(() -> new RuntimeException("Gif not found"));
-        String gifOwnerNickname = gif.getCreator().getNickname();
 
-        if (Objects.equals(currentNickname, gifOwnerNickname)) {
-            return gif;
+        if (!gif.isGifType()) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentNickname = authentication.getName();
+
+            String gifOwnerNickname = gif.getCreator().getNickname();
+
+            if (Objects.equals(currentNickname, gifOwnerNickname)) {
+                return gif;
+            }
+            throw new AccessDeniedException("Dostep zablokowany: nie jestes wlascicielem gifa");
         }
-        throw new AccessDeniedException("Dostep zablokowany: nie jestes wlascicielem gifa");
+        return gif;
     }
 }

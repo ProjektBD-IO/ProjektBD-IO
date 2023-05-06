@@ -17,7 +17,7 @@ public class GifController {
     private GifService gifService;
 
     @GetMapping("/gif/{gifId}/**")
-    public Gif privateGifView(@PathVariable Integer gifId) throws AccessDeniedException {
-        return gifService.checkPrivateAccess(gifId);
+    public Gif getGif(@PathVariable Integer gifId) throws AccessDeniedException {
+        return gifService.getGif(gifId);
     }
 }
