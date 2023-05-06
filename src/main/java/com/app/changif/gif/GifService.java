@@ -15,10 +15,9 @@ public class GifService {
     @Autowired
     private GifRepository gifRepository;
 
-    private Gif checkPrivateAccess(Integer gifId) throws AccessDeniedException {
+    public Gif checkPrivateAccess(Integer gifId) throws AccessDeniedException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentNickname = authentication.getName();
-
         Gif gif = Option.ofOptional(gifRepository.findById(gifId))
                 .getOrElseThrow(() -> new RuntimeException("Gif not found"));
         String gifOwnerNickname = gif.getCreator().getNickname();
