@@ -18,10 +18,15 @@ function AddFileModal() {
     formDataToSend.append('category', formData.category);
     formDataToSend.append('tags', formData.tags);
     formDataToSend.append('title', formData.title);
+    formDataToSend.append('gifType', formData.gifType);
 
-    const response = await fetch('http://localhost:8889/api', {
+    const response = await fetch('http://localhost:8889/api/gif', {
+      body: JSON.stringify({formDataToSend}),
       method: 'POST',
-      body: formDataToSend
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        mode: "cors",
     });
     const data = await response.json();
     console.log(data);
@@ -72,7 +77,7 @@ function AddFileModal() {
           <label>
           Kategoria:
         <select onChange={handleChange}>
-          <option value="">Wybierz kategorię</option>
+          
           <option value="Cat1">Cat1</option>
           <option value="Cat2">Cat2</option>
           <option value="Cat3">Cat3</option>
@@ -85,6 +90,13 @@ function AddFileModal() {
           <label>
             Tytuł:
             <input type="text" name="title" value={formData.title} onChange={handleChange} />
+          </label>
+          <label>
+           Prywatny:
+           <select onChange={handleChange}>
+           <option value="true">Tak</option>
+          <option value="false">Nie</option>
+          </select>
           </label>
           <button type="submit">Add File</button>
         </form>
