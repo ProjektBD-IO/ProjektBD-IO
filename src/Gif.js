@@ -16,7 +16,7 @@ function GifPage() {
   const [Sort, SetSort] = useState('addDate desc')
   const [prevsort, setprevsort] = useState(null);
 
-  const url=`http://localhost:8889/search/tag/${searchTerm}?page=${page}&sort=${Sort}`;
+  const url=`${window.API_URL}/search/tag/${searchTerm}?page=${page}&sort=${Sort}`;
   const handleSearch = () => {
     fetch(url)
       .then(response => response.json())
@@ -36,7 +36,7 @@ function GifPage() {
   useEffect(() => {
     handleSearch();
   }, [page]);
-  const url2=`http://localhost:8889/search/category/${selectedCategory}?page=${page}&sort=${Sort}`;
+  const url2=`${window.API_URL}/search/category/${selectedCategory}?page=${page}&sort=${Sort}`;
   const handleCategorySelect = () => {
     fetch(url2)
       .then(response => response.json())
@@ -50,11 +50,7 @@ function GifPage() {
       .catch(error => console.error(error));
   };
 
-  useEffect(() => {
-    if (selectedCategory !== "Cat0") {
-      handleCategorySelect(selectedCategory, page);
-    }
-  }, [selectedCategory, page]);
+ 
 
   useEffect(() => {
     if (selectedCategory !== "Cat0") {
@@ -93,7 +89,7 @@ function GifPage() {
       }
       handleCategorySelect(selectedCategory);
       handleSearch(searchTerm);
-      <Gif/>
+      
     } else {
       setSearchResults([]);
       setSearchResultsIds([]);
@@ -118,7 +114,7 @@ function GifPage() {
 }}
 const handleLike = async (id) => {
   const token = localStorage.getItem('jwtToken');
-  const url = `http://localhost:8889/api/like?id_gif=${id}`;
+  const url = `${window.API_URL}/api/like?id_gif=${id}`;
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -132,7 +128,7 @@ const handleLike = async (id) => {
 };
 const handleDislike = async (id) => {
   const token = localStorage.getItem('jwtToken');
-  const url = `http://localhost:8889/api/dislike?id_gif=${id}`;
+  const url = `${window.API_URL}/api/dislike?id_gif=${id}`;
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -194,7 +190,7 @@ const handleDislike = async (id) => {
       
             {searchResults.map(gif => (
               <li key={gif.id_gif}>
-                <img src={`http://localhost:8889${gif.reflink}`} alt={gif.title} style={{width: '200px', height: '200px'}}/>
+                <img src={`${window.API_URL}${gif.reflink}`} alt={gif.title} style={{width: '200px', height: '200px'}}/>
                 <IconButton onClick={() => handleLike(gif.id_gif)}>
         {gif.likedByCurrentUser ? (
           <>
@@ -216,7 +212,7 @@ const handleDislike = async (id) => {
           
         
       </div>
-      {( searchResults.length === 0) &&  <Gif/>}
+      {( searchResults.length === 0) &&  <Gif handleSort={handleSort} />}
     </div>
     
   );

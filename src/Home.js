@@ -12,11 +12,11 @@ function Gif({ classes }) {
   const sendRequestRef = useRef(true);
   const [Sort, SetSort] = useState('sort')
 
-  const url=`http://localhost:8889/?page=${page}&sort=${Sort}`;
+  
   const loadGifs = () => {
     if (sendRequestRef.current) {
       sendRequestRef.current = false;
-      fetch(url)
+      fetch(`${window.API_URL}/?page=${page}&sort=${Sort}`)
         .then((response) => response.json())
         .then((data) => {
           console.log('Dane z serwera:', data);
@@ -50,7 +50,7 @@ function Gif({ classes }) {
 
   const handleLike = async (id) => {
     const token = localStorage.getItem('jwtToken');
-    const url = `http://localhost:8889/api/like?id_gif=${id}`;
+    const url = `${window.API_URL}/api/like?id_gif=${id}`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -65,7 +65,7 @@ function Gif({ classes }) {
   };
   const handleDislike = async (id) => {
     const token = localStorage.getItem('jwtToken');
-    const url = `http://localhost:8889/api/dislike?id_gif=${id}`;
+    const url = `${window.API_URL}/api/dislike?id_gif=${id}`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -94,7 +94,7 @@ function Gif({ classes }) {
           <li key={gif.id_gif} >
             <LazyLoad >  
               <img
-                src={`http://localhost:8889${gif.reflink}`}
+                src={`${window.API_URL}${gif.reflink}`}
                 alt={gif.title}
                 style={{width: '200px', height: '200px'}}
                 

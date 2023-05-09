@@ -20,7 +20,7 @@ function AddFileModal() {
     formDataToSend.append('title', formData.title);
     formDataToSend.append('gifType', formData.gifType);
 
-    const response = await fetch('http://localhost:8889/api/gif', {
+    const response = await fetch('${window.API_URL}/api/gif', {
       body: JSON.stringify({formDataToSend}),
       method: 'POST',
         headers: {

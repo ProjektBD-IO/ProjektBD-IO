@@ -6,9 +6,10 @@ function LoginForm(props) {
   const [loggedIn, setLoggedIn] = useState(false); // stan zalogowania
 
   const handleSubmit = async (event) => {
+   
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:8889/api/services/controller/user/login', {
+      const response = await fetch(`${window.API_URL}/api/services/controller/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
