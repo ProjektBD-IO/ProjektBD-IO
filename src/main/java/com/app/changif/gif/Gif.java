@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -75,25 +76,4 @@ public class Gif {
         }
     }
 
-//    @ManyToOne
-//    @JoinColumn(name = "id_category")
-//
-//    private Category id_category;
-
-
-//    private Categories id_category;
-//    private Date add_date;
-//    private String title;
-//    private Boolean gif_type;
-//    private Boolean if_banned;
-//    public Gif(Integer id_gif,String reflink, String tags, User creator, Date data, String title, Boolean gifType,Boolean ifBanned) {
-//        this.id_gif=id_gif;
-//        this.reflink = reflink;
-//        this.tags = tags;
-//        this.creator = creator;
-//        this.addDate = data;
-//        this.title = title;
-//        this.gifType = gifType;
-//        this.ifBanned=ifBanned;
-//    }
 }

@@ -34,7 +34,6 @@ public class User implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_role")
     private Role id_role;
-
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<Likes> likes = new HashSet<>();
