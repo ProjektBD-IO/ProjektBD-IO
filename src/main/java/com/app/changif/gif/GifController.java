@@ -20,7 +20,7 @@ public class GifController {
                                     @RequestParam("category") String category,
                                     @RequestParam("tags") String tags,
                                     @RequestParam("title") String title,
-                                    @RequestParam("gif_type") Boolean gifType) {
+                                    @RequestParam("gifType") String gifType) {
         return gifService.addGif(file, category, tags, title, gifType);
     }
 

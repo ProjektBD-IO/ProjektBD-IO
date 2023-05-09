@@ -1,5 +1,6 @@
 package com.app.changif.gif;
 
+import com.app.changif.category.Category;
 import com.app.changif.category.CategoryController;
 import com.app.changif.category.CategoryRepository;
 import com.app.changif.user.User;
@@ -13,10 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
 
@@ -28,22 +28,36 @@ public class GifService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public ResponseEntity<?> addGif(MultipartFile file, String category, String tags, String title, Boolean gifType) {
+    public ResponseEntity<?> addGif(MultipartFile file, String category, String tags, String title, String gifType) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
             byte[] bytes = file.getBytes();
-            Path path = Paths.get("uploads/" + file.getOriginalFilename());
+            Path currentWorkingDir = Paths.get("").toAbsolutePath();
+
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyyHHmmssSSS");
+            String formattedDate = now.format(formatter);
+
+            String filePath=formattedDate+file.getOriginalFilename();
+            Path path = Paths.get("src/main/resources/static/images/" + filePath);
             Files.write(path, bytes);
 
             Gif gif = new Gif();
-            gif.setReflink(file.getOriginalFilename());
-            gif.setCreator((User) authentication.getPrincipal());
+            gif.setReflink("/images/"+filePath);
+            User user = new User();
+            user.setId_user(Integer.parseInt(authentication.getPrincipal().toString()));
+            gif.setCreator(user);
             gif.setTags(tags);
             gif.setTitle(title);
-            gif.setGifType(gifType);
+            if(gifType.equals("true"))
+                gif.setGifType(true);
+            else
+                gif.setGifType(false);
             gif.setIfBanned(false);
             gif.setAddDate(new Date());
-            gif.setCategory(categoryRepository.findByName(category));
+            Category cat=new Category();
+            cat.setId_category(categoryRepository.findByName(category).getId_category());
+            gif.setCategory(cat);
             gifRepository.save(gif);
 
             return ResponseEntity.ok().body("File uploaded successfully");
