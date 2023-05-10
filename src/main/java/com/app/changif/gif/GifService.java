@@ -4,6 +4,7 @@ import com.app.changif.category.Category;
 import com.app.changif.category.CategoryController;
 import com.app.changif.category.CategoryRepository;
 import com.app.changif.user.User;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
+
+import static java.lang.Integer.parseInt;
 
 @Service
 public class GifService {
@@ -45,7 +48,7 @@ public class GifService {
             Gif gif = new Gif();
             gif.setReflink("/images/"+filePath);
             User user = new User();
-            user.setId_user(Integer.parseInt(authentication.getPrincipal().toString()));
+            user.setId_user(parseInt(authentication.getPrincipal().toString()));
             gif.setCreator(user);
             gif.setTags(tags);
             gif.setTitle(title);
@@ -73,11 +76,11 @@ public class GifService {
 
         if (!gif.isGifType()) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String currentNickname = authentication.getName();
+            Integer currentId = parseInt(authentication.getName());
 
-            String gifOwnerNickname = gif.getCreator().getNickname();
+            Integer gifOwnerId = gif.getCreator().getId_user();
 
-            if (Objects.equals(currentNickname, gifOwnerNickname)) {
+            if (Objects.equals(currentId, gifOwnerId)) {
                 return gif;
             }
             throw new AccessDeniedException("Dostep zablokowany: nie jestes wlascicielem gifa");
