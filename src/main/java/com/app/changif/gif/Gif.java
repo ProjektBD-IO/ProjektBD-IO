@@ -2,6 +2,7 @@ package com.app.changif.gif;
 
 import com.app.changif.category.Category;
 import com.app.changif.like.Likes;
+import com.app.changif.report.Report;
 import com.app.changif.user.User;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -54,6 +55,10 @@ public class Gif {
     @OneToMany(mappedBy = "gif")
     private Set<Likes> likes = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "gif")
+    private Set<Report> report = new HashSet<>();
+
 
     @Column(name = "if_banned")
     private boolean ifBanned;
@@ -74,6 +79,16 @@ public class Gif {
                 break;
             }
         }
+    }
+    @Transient
+    private int reportCount;
+
+    public int getReportCount() {
+        return reportCount;
+    }
+
+    public void setReportCount(int reportCount) {
+        this.reportCount = reportCount;
     }
 
 }

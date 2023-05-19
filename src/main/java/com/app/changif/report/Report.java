@@ -2,6 +2,7 @@ package com.app.changif.report;
 
 import com.app.changif.gif.Gif;
 import com.app.changif.user.User;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -21,10 +22,14 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_report;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name="id_aplicant")
+    @JsonIdentityReference(alwaysAsId = true)
     private User applicant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name="id_gif")
+    @JsonIdentityReference(alwaysAsId = true)
     private Gif gif;
 
     private boolean checked;

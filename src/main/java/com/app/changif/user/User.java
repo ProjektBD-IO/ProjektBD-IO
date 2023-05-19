@@ -2,6 +2,7 @@ package com.app.changif.user;
 
 import com.app.changif.gif.Gif;
 import com.app.changif.like.Likes;
+import com.app.changif.report.Report;
 import com.app.changif.role.Role;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
@@ -37,4 +38,8 @@ public class User implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<Likes> likes = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "applicant")
+    private Set<Report> reports = new HashSet<>();
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.AccessDeniedException;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/gif")
@@ -22,6 +23,21 @@ public class GifController {
                                     @RequestParam("title") String title,
                                     @RequestParam("gifType") String gifType) {
         return gifService.addGif(file, category, tags, title, gifType);
+    }
+    @PostMapping("/delete/{gifId}")
+    public Integer deleteGif(@PathVariable Integer gifId, Principal principal) {
+        Integer userId=Integer.parseInt(principal.getName());
+        return gifService.deleteGif(gifId,userId);
+    }
+    @PostMapping("/edit/{gifId}")
+    public ResponseEntity<?> editGif(@PathVariable Integer gifId,
+                                     @RequestParam("category") String category,
+                                    @RequestParam("tags") String tags,
+                                    @RequestParam("title") String title,
+                                    @RequestParam("gifType") String gifType,
+                                     Principal principal) {
+        Integer userId=Integer.parseInt(principal.getName());
+        return gifService.editGif(category, tags, title, gifType,gifId, userId);
     }
 
     @GetMapping("/{gifId}/**")

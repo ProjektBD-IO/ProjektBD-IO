@@ -3,7 +3,11 @@ package com.app.changif.gif;
 import com.app.changif.category.Category;
 import com.app.changif.category.CategoryController;
 import com.app.changif.category.CategoryRepository;
+import com.app.changif.like.Likes;
+import com.app.changif.role.Role;
+import com.app.changif.role.RoleRepository;
 import com.app.changif.user.User;
+import com.app.changif.user.UserRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 
@@ -28,6 +33,8 @@ public class GifService {
 
     @Autowired
     private GifRepository gifRepository;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -69,6 +76,30 @@ public class GifService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    public ResponseEntity<?> editGif(String category, String tags, String title, String gifType,Integer gifId, Integer userId) {
+            Optional<Gif> optionalGif =  gifRepository.findById(gifId);
+            Gif gif;
+            if (optionalGif.isPresent())
+                gif = optionalGif.get();
+            else
+                throw new IllegalArgumentException("gif with specified id doesn't exists");
+            User user=userRepository.getById(userId);
+            if(gif.getCreator().getId_user()!=userId)
+                throw new IllegalArgumentException("no permission to delete someone's gif");
+
+            gif.setTags(tags);
+            gif.setTitle(title);
+            if(gifType.equals("true"))
+                gif.setGifType(true);
+            else
+                gif.setGifType(false);
+            Category cat=new Category();
+            cat.setId_category(categoryRepository.findByName(category).getId_category());
+            gif.setCategory(cat);
+            gifRepository.save(gif);
+
+            return ResponseEntity.ok().body("gif updated successfully");
+    }
 
     public Gif getGif(Integer gifId) throws AccessDeniedException {
         Gif gif = Option.ofOptional(gifRepository.findById(gifId))
@@ -86,5 +117,21 @@ public class GifService {
             throw new AccessDeniedException("Dostep zablokowany: nie jestes wlascicielem gifa");
         }
         return gif;
+    }
+    public Integer deleteGif(Integer gifId, Integer userId) {
+
+        Optional<Gif> optionalGif =  gifRepository.findById(gifId);
+        Gif gif;
+        if (optionalGif.isPresent())
+            gif = optionalGif.get();
+        else
+            throw new IllegalArgumentException("gif with specified id doesn't exists");
+        User user=userRepository.getById(userId);
+        Role user_role=user.getId_role();
+        if(gif.getCreator().getId_user()!=userId&&!user_role.getRoleName().equals("Admin"))
+            throw new IllegalArgumentException("no permission to delete someone's gif");
+        gif.setIfBanned(true);
+        gifRepository.save(gif);
+        return gif.getId_gif();
     }
 }
