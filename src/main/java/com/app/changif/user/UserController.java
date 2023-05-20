@@ -22,7 +22,7 @@ public class UserController {
         String token = generateToken.createToken();
         String confirmationUrl = "http://localhost:8888/mail/" + token;
         user.setMail_token(token);
-        emailService.sendEmail(user.getMail(),"IO potwierdzenie mailowe","By potwierdzic maila kliknij: " + confirmationUrl);
+        emailService.sendEmail(user.getMail(),"Aplikacja z Gifami","By potwierdzic maila kliknij: " + confirmationUrl);
         return userService.register(user);
     }
 }

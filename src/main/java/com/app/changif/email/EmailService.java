@@ -40,9 +40,8 @@ public class EmailService {
         if(Objects.equals(currentUserToken, token) && !user.is_mail_confirmed()){
             user.set_mail_confirmed(true);
             userRepository.save(user);
-            System.out.println("udalo sie");
             return;
         }
-        throw new AccessDeniedException("Wrong token");
+        throw new AccessDeniedException("Cos poszlo nie tak, twoj token jest nieprawidlowy lub zostal juz potwierdzony");
     }
 }
