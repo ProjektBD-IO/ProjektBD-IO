@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 
@@ -33,15 +34,18 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
-    public void confirmEmail(String token) throws AccessDeniedException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.getById(parseInt(authentication.getName()));
-        String currentUserToken = user.getMail_token();
-        if(Objects.equals(currentUserToken, token) && !user.is_mail_confirmed()){
+    public Integer confirmEmail(String token) throws AccessDeniedException {
+        Optional<User> tempUser = userRepository.getByToken(token);
+        User user;
+        if(tempUser.isPresent())
+            user=tempUser.get();
+        else
+            return -1;
+        if (!user.is_mail_confirmed()){
             user.set_mail_confirmed(true);
             userRepository.save(user);
-            return;
+            return 0;
         }
-        throw new AccessDeniedException("Cos poszlo nie tak, twoj token jest nieprawidlowy lub zostal juz potwierdzony");
+        return -1;
     }
 }

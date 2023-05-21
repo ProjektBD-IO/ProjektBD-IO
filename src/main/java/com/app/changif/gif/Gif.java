@@ -60,7 +60,7 @@ public class Gif {
     private Set<Report> report = new HashSet<>();
 
 
-    @Column(name = "if_banned")
+    @Column(name = "if_disabled")
     private boolean ifBanned;
 
     @Transient

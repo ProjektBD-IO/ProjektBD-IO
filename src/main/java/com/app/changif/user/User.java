@@ -32,6 +32,7 @@ public class User implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String nickname;
+    @Column(name="token_mail")
     private String mail_token;
     private boolean is_mail_confirmed;
     @ManyToOne
