@@ -58,9 +58,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(Algorithm.HMAC512(SECRET.getBytes()));
 
         String username = ((MyUserPrincipal) authentication.getPrincipal()).getUsername();
+        String userrole = ((MyUserPrincipal) authentication.getPrincipal()).getUserRoleName();
+        Integer userId = ((MyUserPrincipal) authentication.getPrincipal()).getUserId();
 
         JSONObject jsonResponse = new JSONObject();
         jsonResponse.put("username", username);
+        jsonResponse.put("user_id", userId);
+        jsonResponse.put("user_role", userrole);
         jsonResponse.put("token", token);
 
         res.setContentType("application/json");

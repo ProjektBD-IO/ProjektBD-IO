@@ -32,6 +32,9 @@ public class MyUserPrincipal implements UserDetails {
     public String getUsername(){
         return user.getNickname();
     }
+    public String getUserRoleName(){
+        return user.getId_role().getRoleName();
+    }
     public String getMail(){
         return user.getMail();
     }
