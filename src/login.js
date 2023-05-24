@@ -1,66 +1,130 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function LoginForm(props) {
+  const [isLoggedin, setIsLoggedin] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false); // stan zalogowania
-
+  const [user_id, setUserid] = useState();
+  const [user_role, setUserrole] = useState();
   const handleSubmit = async (event) => {
-   
     event.preventDefault();
+
+    if (username.trim() === '' || password.trim() === '') {
+      toast.warn('Podaj login i hasło', {
+        position: "top-right",
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+      });
+      console.log('Wprowadź login i hasło');
+      return;
+    }
+
     try {
       const response = await fetch(`${window.API_URL}/api/services/controller/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        mode: "cors",
+        mode: 'cors',
         body: JSON.stringify({
           nickname: username,
-          password: password
+          password: password,
+          userid: user_id,
+          userro: user_role
         })
       });
-      const data = await response.json();
-      console.log(data);
-      localStorage.setItem('jwtToken', data.token);
-      localStorage.setItem('username', data.username);
-      setLoggedIn(true); // ustawienie stanu zalogowania na true
+
+      if (response.ok) {
+        // Logowanie pomyślne
+        const data = await response.json();
+        console.log(data);
+        localStorage.setItem('jwtToken', data.token);
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('user_id', data.user_id);
+        localStorage.setItem('user_role', data.user_role);
+        setIsLoggedin(true);
+      } else {
+        toast.warn('Błędny login lub hasło', {
+          position: "top-right",
+          autoClose: 500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
+        });
+        console.log('Błędne dane logowania');
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
+useEffect(() => {
+  if (isLoggedin) {
+    window.location.search = '?login1=true'; // Add the 'login1=true' parameter to the URL after successful login
+  }
+}, [isLoggedin]);
+
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('login1') === 'true') {
+    params.delete('login1'); // Remove the 'login1' parameter from the URL after displaying the toast message
+    const newUrl = '/' + params.toString();
+    window.history.replaceState(null, '', newUrl); // Update the URL without the 'login1' parameter
+
+    // Refresh the page after successful login
+    window.location.reload();
+  }
+}, []);
   return (
-    <>
-      {!loggedIn ? (
-        <form onSubmit={handleSubmit}>
-          <label>
-            Username:
-            <input
-              type="text"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-            />
-          </label>
-          <br />
-          <label>
-            Password:
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
-          </label>
-          <br />
-          <button type="submit">Log in</button>
-        </form>
-      ) : (
+    <form onSubmit={handleSubmit}>
+      <label className="usernameLabel">
+        Login:
+        <input
+          type="text"
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+        />
+      </label>
+      <br />
+      <label className="usernameLabel">
+        Hasło:
+        <input
+          type="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
+      </label>
+      <br />
+      {isLoggedin ? (
         <div>
-          <p>You are now logged in!</p>
-          <p>Welcome, {localStorage.getItem('username')}!</p>
-        </div>
+         <p style={{ color: '#663399' }}>Witaj {localStorage.getItem('username')}</p>
+         </div>
+      ) : (
+        <button type="submit" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '4px', height: '25px', width: '100px' }}>
+          Zaloguj się
+        </button>
       )}
-    </>
+      <ToastContainer
+        position="top-right"
+        autoClose={500}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        pauseOnFocusLoss
+        theme="light"
+      />
+    </form>
   );
 }
 

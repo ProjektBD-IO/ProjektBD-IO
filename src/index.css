@@ -3,7 +3,10 @@
 * {
   margin: 0;
   font-family: "Quicksand";
-  color: #333;
+  color: #663399;
+}
+#ThumbUpIcon{
+  color: purple;
 }
 .nav {
   padding: 20px;
@@ -192,4 +195,29 @@ input[type="text"] {
   justify-content: center;
   align-items: center;
   
+}
+.dislike-button {
+  color: black;
+}
+
+.dislike-button-liked {
+  color: blue;
+}
+.usernameLabel {
+  color: #663399;
+  text-decoration:#663399;
+  
+  
+}
+.usernameLabe {
+  color: #663399;
+  text-decoration:#663399;
+  
+  
+}
+.successMessage {
+  color: white;
+  background-color: #663399;
+  border-radius: 4px;
+  padding: 8px;
 }

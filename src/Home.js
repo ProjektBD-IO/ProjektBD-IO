@@ -8,11 +8,8 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 function Gif({ classes }) {
   const [gifs, setGifs] = useState([]);
   const [page, setPage] = useState(0);
-  const [maxPage, setMaxPage] = useState(null); 
   const sendRequestRef = useRef(true);
-  const [Sort, SetSort] = useState('sort')
-
-  
+  const [Sort, SetSort] = useState('addDate desc')
   const loadGifs = () => {
     if (sendRequestRef.current) {
       sendRequestRef.current = false;
@@ -21,7 +18,6 @@ function Gif({ classes }) {
         .then((data) => {
           console.log('Dane z serwera:', data);
           setGifs([...gifs, ...data.content]);
-          setMaxPage(data.maxPage);
           setPage((page) => page + 1);
           sendRequestRef.current = true;
           return Promise.resolve(true);
@@ -39,13 +35,6 @@ function Gif({ classes }) {
   useEffect(() => {
     loadGifs();
   }, []);
-  const hasMore = () => {
-    if (maxPage === null) {
-      return true; // gdy nie ma danych, ciągle próbujemy ładować
-    } else {
-      return page <= maxPage; // sprawdzamy, czy aktualna strona jest mniejsza niż maksymalna liczba stron
-    }
-  };
  
 
   const handleLike = async (id) => {
@@ -78,12 +67,12 @@ function Gif({ classes }) {
     console.log(data);
     
   };
-
+  
  
   return (
     <InfiniteScroll
       dataLength={gifs.length}
-      hasMore={hasMore()}
+      hasMore={true}
       onScroll={loadGifs}
       loader={<h4>Loading...</h4>}
       scrollThreshold={200}

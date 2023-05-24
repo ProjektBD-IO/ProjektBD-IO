@@ -4,7 +4,7 @@ import './index.css';
 import GifPage from './Gif'
 import RegistrationForm from './rejestracja';
 import LoginForm from './login';
-import { useState } from 'react'
+
 function App() {
   return (
     <div className="App">

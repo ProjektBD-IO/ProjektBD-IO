@@ -3,7 +3,13 @@ import Gif from './Home'
 import InfiniteScroll from 'react-infinite-scroll-component';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { IconButton } from '@mui/material';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import LazyLoad from 'react-lazyload';
+import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Delete from './delete';
+import { CoronavirusSharp } from '@mui/icons-material';
+
 function GifPage() {
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,31 +21,95 @@ function GifPage() {
   const [prevtag, setprevtag] = useState(null);
   const [Sort, SetSort] = useState('addDate desc')
   const [prevsort, setprevsort] = useState(null);
-
-  const url=`${window.API_URL}/search/tag/${searchTerm}?page=${page}&sort=${Sort}`;
+  const [gifs, setGifs] = useState([]);
+  const [gifsid, setgifsid] = useState([]);
+  const sendRequestRef = useRef(true);
+  const [hasMore, setHasMore] = useState(true)
+ 
   const handleSearch = () => {
-    fetch(url)
-      .then(response => response.json())
+    if (searchTerm !== '') {
+    const url = `${window.API_URL}/search/tag/${searchTerm}?page=${page}&sort=${Sort}`;
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    const jwtToken = localStorage.getItem('jwtToken');
+    if (jwtToken) {
+      headers['Authorization'] = `Bearer ${jwtToken}`;}
+      else {
+        localStorage.removeItem('jwtToken');
+      }
+
+    fetch(url, {
+      method: 'GET',
+      headers: headers
+    })
+      .then((response) => {
+        if (response.status === 403) {
+          // Wyczyść token i przekieruj na stronę logowania
+          localStorage.removeItem('jwtToken', '');
+          window.location.href = '/login'; // Przekierowanie na stronę logowania
+         
+        } else {
+          return response.json();
+        }})
       .then((data) => {
         console.log('Dane z serwera:', data);
         const newResults = data.content.filter(gif => !searchResultsIds.includes(gif.id_gif)); // filter out duplicates
         setSearchResults(prevResults => [...prevResults, ...newResults]);
         setSearchResultsIds(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]); // add new IDs to the array
-        setPage(page => page + 1);  
-
-        
-              
+        setPage(prevPage => prevPage + 1); 
       })
       .catch(error => console.error(error));
-  };
+  };}
+  
   
   useEffect(() => {
     handleSearch();
   }, [page]);
+  const handleTagChange = () => {
+    if (searchTerm !== '') {
+      if (searchTerm !== prevtag) {
+        setSearchResults([]);
+        setSearchResultsIds([]);
+        setPage(0);
+        setprevtag(searchTerm);
+        handleSearch(searchTerm); // dodaj argument searchTerm
+      }
+    } else {
+      setSearchResults([]);
+      setSearchResultsIds([]);
+      setPage(0);
+      setprevtag(null);
+    }
+  };
   const url2=`${window.API_URL}/search/category/${selectedCategory}?page=${page}&sort=${Sort}`;
   const handleCategorySelect = () => {
-    fetch(url2)
-      .then(response => response.json())
+    
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    const jwtToken = localStorage.getItem('jwtToken');
+    if (jwtToken) {
+      headers['Authorization'] = `Bearer ${jwtToken}`;}
+      else {
+        localStorage.removeItem('jwtToken');
+      }
+
+    fetch(url2, {
+      method: 'GET',
+      headers: headers
+    })
+      .then((response) => {
+        if (response.status === 403) {
+          // Wyczyść token i przekieruj na stronę logowania
+          localStorage.removeItem('jwtToken', '');
+          window.location.href = '/login'; // Przekierowanie na stronę logowania
+         
+        } else {
+          return response.json();
+        }})
       .then((data) => {
         console.log('Dane z serwera:', data);
         const newResults = data.content.filter(gif => !searchResultsIds.includes(gif.id_gif)); // filter out duplicates
@@ -50,8 +120,7 @@ function GifPage() {
       .catch(error => console.error(error));
   };
 
- 
-
+  
   useEffect(() => {
     if (selectedCategory !== "Cat0") {
       handleCategorySelect(selectedCategory, page);
@@ -75,73 +144,249 @@ function GifPage() {
       setPreviousCategory(null);
     }
   };
- 
-      
-  const handleSort = (event) => {
-    const sort = event.target.value;
-    SetSort(sort);
-    if (sort !== "sor") {
-      if (sort !== prevsort) {
-        setSearchResults([]);
-        setSearchResultsIds([]);
-        setPage(0);
-        setprevsort(sort);
-      }
-      handleCategorySelect(selectedCategory);
-      handleSearch(searchTerm);
-      
+  const loadGifs = () => {
+    const url3 = `${window.API_URL}/?page=${page}&sort=${Sort}`;
+    if (sendRequestRef.current) {
+      sendRequestRef.current = false;
+  
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+  
+      const jwtToken = localStorage.getItem('jwtToken');
+      if (jwtToken) {
+        headers['Authorization'] = `Bearer ${jwtToken}`;}
+        else {
+          localStorage.removeItem('jwtToken');
+        }
+  
+      fetch(url3, {
+        method: 'GET',
+        headers: headers
+      })
+        .then((response) => {
+          if (response.status === 403) {
+            // Wyczyść token i przekieruj na stronę logowania
+            localStorage.removeItem('jwtToken', '');
+            window.location.href = '/login'; // Przekierowanie na stronę logowania
+           
+          } else {
+            return response.json();
+          }})
+        .then((data) => {
+          console.log('Dane z serwera:', data);
+          const newResults = data.content.filter(gif => !searchResultsIds.includes(gif.id_gif)); // filter out duplicates
+          setGifs(prevResults => [...prevResults, ...newResults]);
+          setgifsid(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]); // add new IDs to the array
+          setPage((page) => page + 1);
+          sendRequestRef.current = true;
+  
+          if (page >= 10) {
+            setHasMore(false);
+          }
+          return Promise.resolve(true);
+        })
+        .catch((error) => {
+          console.error('Błąd podczas pobierania danych z serwera:', error);
+          sendRequestRef.current = true;
+          return Promise.resolve(false);
+        });
     } else {
-      setSearchResults([]);
-      setSearchResultsIds([]);
-      setPage(0);
-      setprevsort(null);
+      return Promise.resolve(false);
     }
   };
-  const handleTagChange=()=>{
-  if (searchTerm !== '') {
-  if (searchTerm !== prevtag) {
+ useEffect(() => {
+  loadGifs();
+}, [Sort]);
+  
+
+const handleSort = (event) => {
+  const sort = event.target.value;
+  SetSort(sort);
+  
+  if (sort !== "sor") {
+    if (sort !== prevsort) {
+      setSearchResults([]);
+      setSearchResultsIds([]);
+      setGifs([]);
+      setgifsid([]);
+      setPage(0);
+      setprevsort(sort);
+      
+    }
+    handleCategorySelect(selectedCategory);
+    if (searchTerm !== '') { 
+      handleSearch(searchTerm);
+    }
+    if(searchTerm=='' & selectedCategory==''){
+      loadGifs();
+    }
+    
+  } else {
     setSearchResults([]);
     setSearchResultsIds([]);
+    setGifs([]);
+    setgifsid([]);
     setPage(0);
-    setprevtag(searchTerm);
+    setprevsort(null);
   }
-    handleSearch();
-  }else {
-  setSearchResults([]);
-  setSearchResultsIds([]);
-  setPage(0);
-  setprevtag(null);
-}}
+};
+
+
+  
 const handleLike = async (id) => {
-  const token = localStorage.getItem('jwtToken');
-  const url = `${window.API_URL}/api/like?id_gif=${id}`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ id_gif: id })
-  });
-  const data = await response.json();
-  console.log(data);
-};
-const handleDislike = async (id) => {
-  const token = localStorage.getItem('jwtToken');
-  const url = `${window.API_URL}/api/dislike?id_gif=${id}`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
+  try {
+    const jwtToken = localStorage.getItem('jwtToken');
+    if (!jwtToken) {
+      // Handle the case when the JWT token is not available
+      console.log('JWT token not found');
+      toast.error('Musisz być zalogowany aby dać like', {
+        position: "top-right",
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+      return;
+    }
+
+    const url = `${window.API_URL}/api/like?id_gif=${id}`;
+    const headers = {
       'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ id_gif: id }),
-  });
-  const data = await response.json();
-  console.log(data);
-  
+      Authorization: `Bearer ${jwtToken}`,
+    };
+
+    await fetch(url, {
+      method: 'POST',
+      headers: headers,
+    });
+
+    setGifs((prevGifs) => {
+      return prevGifs.map((gif) => {
+        if (gif.id_gif === id) {
+          return {
+            ...gif,
+            likedByCurrentUser: true,
+            likeCount: gif.likeCount + 1,
+          };
+        }
+        return gif;
+      });
+    });
+  } catch (error) {
+    console.log('An error occurred while adding a like:', error);
+  }
 };
+
+
+const handleDislike = async (id) => {
+  try {
+    const jwtToken = localStorage.getItem('jwtToken');
+    if (!jwtToken) {
+      // Handle the case when the JWT token is not available
+      toast.error('Musisz być zalogowany aby dać dislike', {
+        position: "top-right",
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+      console.log('JWT token not found');
+      return;
+    }
+
+    const url = `${window.API_URL}/api/dislike?id_gif=${id}`;
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    };
+
+    await fetch(url, {
+      method: 'POST',
+      headers: headers,
+    });
+
+    setGifs((prevGifs) => {
+      return prevGifs.map((gif) => {
+        if (gif.id_gif === id) {
+          return {
+            ...gif,
+            likedByCurrentUser: false,
+            likeCount: gif.likeCount - 1,
+          };
+        }
+        return gif;
+      });
+    });
+  } catch (error) {
+    console.log('An error occurred while removing a like:', error);
+  }
+};
+const handleDelete = async (id) => {
+  try {
+    const jwtToken = localStorage.getItem('jwtToken');
+    if (!jwtToken) {
+      toast.error('Musisz być zalogowany aby usunąć gifa', {
+        position: "top-right",
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      console.log('JWT token not found');
+      return;
+    }
+    const response = await fetch(`${window.API_URL}/api/gif/delete/?id_gif=${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${jwtToken}`,
+    },
+    
+  });
   
+  if (response.ok) {
+    toast.success('Usunięto', {
+      position: 'top-right',
+      autoClose: 500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      progress: undefined,
+      theme: 'light',
+    });
+    console.log('Gif został usunięty');
+    // Tutaj możesz wykonać dodatkowe działania, takie jak odświeżenie listy gifów itp.
+  } else {
+    toast.warn('Wystąpił problem podczas usuwania gifa', {
+      position: 'top-right',
+      autoClose: 500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      progress: undefined,
+      theme: 'light',
+    });
+    console.log('Wystąpił problem podczas usuwania gifa');
+  }
+  } catch (error) {
+  console.log('Wystąpił błąd sieci', error);
+  }
+  };
+const jwtToken = localStorage.getItem('jwtToken');
+const user_id = localStorage.getItem('user_id');
+const user_role = localStorage.getItem('user_role');
   return (
     
     <div>
@@ -152,7 +397,7 @@ const handleDislike = async (id) => {
       dataLength={searchResults.length}
       next={handleSearch}
       hasMore={true}
-      onScroll={handleSearch}
+      
       scrollThreshold={0.8}
     >
         
@@ -191,28 +436,121 @@ const handleDislike = async (id) => {
             {searchResults.map(gif => (
               <li key={gif.id_gif}>
                 <img src={`${window.API_URL}${gif.reflink}`} alt={gif.title} style={{width: '200px', height: '200px'}}/>
-                <IconButton onClick={() => handleLike(gif.id_gif)}>
-        {gif.likedByCurrentUser ? (
-          <>
-            <ThumbDownIcon />
-            <span style={{ color: 'white' }}>{gif.likeCount}</span>
-          </>
-        ) : (
-          <>
-            <ThumbUpIcon />
-            <span style={{ color: 'white' }}>{gif.likeCount}</span>
-          </>
-        )}
-      </IconButton>
-      <IconButton onClick={() => handleDislike(gif.id_gif)}>
-        <ThumbDownIcon />
-      </IconButton>
-              </li>
-            ))}
+    
+                {gif.likedByCurrentUser==false?
+                  <IconButton onClick={() => handleLike(gif.id_gif)}>
+                    
+                  <ToastContainer
+                  position="top-right"
+                  autoClose={1}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="light"
+                  />
+                  {/* Same as */}
+                  <ToastContainer />
+                  <ThumbUpAltOutlinedIcon />
+                  
+                  
+                   <span style={{ color: 'white' }}>{gif.likeCount} </span>
+                 </IconButton>
+                    :
+                  <IconButton onClick={() => handleDislike(gif.id_gif)}>
+                   <ToastContainer
+                  position="top-right"
+                  autoClose={1}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="light"
+                  />
+                  <ThumbUpIcon  />
+                  <span style={{ color: 'white' }}>{gif.likeCount} </span>
+                  </IconButton>}
+  
+          </li>
+        ))}
+            
           
         
       </div>
-      {( searchResults.length === 0) &&  <Gif handleSort={handleSort} />}
+      {( searchResults.length === 0) &&    <InfiniteScroll
+      dataLength={gifs.length}
+      hasMore={true}
+      onScroll={loadGifs}
+      loader={<h4>Loading...</h4>}
+      scrollThreshold={200}
+    >
+      
+      <div className='galleryy'>
+        
+        {gifs.map((gif) => (
+          <li key={gif.id_gif}>
+            <LazyLoad >  
+              
+              <img
+                src={`http://localhost:8889${gif.reflink}`}
+                alt={gif.title}
+                style={{width: '200px', height: '200px'}}
+              />  
+              
+              {(user_role === 'Admin' || user_id === gif.creator) && jwtToken ? (
+          <button onClick={() => handleDelete(gif.id_gif)}>
+            Usuń gif
+          </button>
+        ) : null}
+                 
+                  {gif.likedByCurrentUser==false?
+                  <IconButton onClick={() => handleLike(gif.id_gif)}>
+                  <ToastContainer
+                  position="top-right"
+                  autoClose={1}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="light"
+                  />
+                  <ThumbUpAltOutlinedIcon />
+                  
+                   <span style={{ color: 'white' }}>{gif.likeCount} </span>
+                 </IconButton>
+                    :
+                  <IconButton onClick={() => handleDislike(gif.id_gif)}>
+                   <ToastContainer
+                  position="top-right"
+                  autoClose={1}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="light"
+                  />
+                  <ThumbUpIcon  />
+                  <span style={{ color: 'white' }}>{gif.likeCount} </span>
+                  </IconButton>
+                  }
+  
+            </LazyLoad>
+          </li>
+        ))}
+      </div>
+    </InfiniteScroll>}
     </div>
     
   );

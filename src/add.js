@@ -1,18 +1,33 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function AddFileModal() {
   const [formData, setFormData] = useState({
     file: null,
-    category: '',
+    category: 'Cat1',
     tags: '',
-    title:''
+    title:'',
+    gifType:'true'
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const token = localStorage.getItem('jwtToken');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
+    const filed = event.target.file.files[0];
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (filed.size > maxSize) {
+      alert('Maksymalny rozmiar pliku to 10MB');
+      return;
+    }
+    // Sprawdź rozszerzenie pliku
+    const allowedExtensions = /(\.gif)$/i;
+    if (!allowedExtensions.exec(filed.name)) {
+      alert('Dozwolone są tylko pliki z rozszerzeniem .gif');
+      return;
+    }
     const formDataToSend = new FormData();
     formDataToSend.append('file', formData.file);
     formDataToSend.append('category', formData.category);
@@ -20,21 +35,46 @@ function AddFileModal() {
     formDataToSend.append('title', formData.title);
     formDataToSend.append('gifType', formData.gifType);
 
-    const response = await fetch('${window.API_URL}/api/gif', {
-      body: JSON.stringify({formDataToSend}),
+    const response = await fetch(`${window.API_URL}/api/gif`, {
+      body: formDataToSend,
       method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
         mode: "cors",
     });
-    const data = await response.json();
+    if (response.ok) {
+      toast.success('Gif dodany pomyślnie', {
+        position: "top-right",
+          autoClose: 500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
+        });
+      setModalIsOpen(false);
+      window.location.reload();
+    } else {
+      toast.warn('Błąd w dodawaniu gifa', {
+        position: "top-right",
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+    });
+    const data = await response;
     console.log(data);
 
     // Handle response
 
     setModalIsOpen(false);
-  };
+    window.location.reload();
+  }};
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -51,6 +91,7 @@ function AddFileModal() {
       [name]: value
     }));
   };
+  
 
   return (
     <div>
@@ -76,7 +117,7 @@ function AddFileModal() {
           </label>
           <label>
           Kategoria:
-        <select onChange={handleChange}>
+        <select name="category" onChange={handleChange}>
           
           <option value="Cat1">Cat1</option>
           <option value="Cat2">Cat2</option>
@@ -93,12 +134,24 @@ function AddFileModal() {
           </label>
           <label>
            Prywatny:
-           <select onChange={handleChange}>
-           <option value="true">Tak</option>
-          <option value="false">Nie</option>
+           <select name="gifType" value={formData.gifType} onChange={handleChange}>
+           <option value="false">Tak</option>
+          <option value="true">Nie</option>
           </select>
           </label>
           <button type="submit">Add File</button>
+          <ToastContainer
+position="top-right"
+autoClose={500}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"
+/>
         </form>
       </Modal>
     </div>
