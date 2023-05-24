@@ -1,41 +1,41 @@
 import React, { useState } from 'react';
+import Modal from 'react-modal';
 
-function Edit({ gif }) {
+function Edit({ gif, id }) {
   const [formData, setFormData] = useState({
     category: gif.category,
     tags: gif.tags,
     title: gif.title,
     gifType: gif.gifType,
   });
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const handleEdit = async () => {
+  const handleEdit = async (event) => {
+    event.preventDefault();
     try {
       const token = localStorage.getItem('jwtToken');
       if (!token) {
         console.log('Brak tokenu JWT. Nieautoryzowany dostęp.');
         return;
       }
-
-      // Sprawdzanie roli użytkownika na podstawie tokenu JWT
-      const decodedToken = decodeJWT(token);
-      if (!decodedToken || decodedToken.role !== '') {
-        console.log('Nie masz uprawnień do edycji.');
-        return;
-      }
-
-      const response = await fetch(`/api/gif/edit/${gif.id}`, {
-        method: 'PUT',
+      const formDataToSend = new FormData();
+      formDataToSend.append('category', formData.category);
+      formDataToSend.append('tags', formData.tags);
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('gifType', formData.gifType);
+      const response = await fetch(`${window.API_URL}/api/gif/edit/${id}?category=${formData.category}&tags=${formData.tags}&title=${formData.title}&gifType=${formData.gifType}`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
-
+      console.log('gif:', gif);
+      console.log('gif.category:', gif.category);
       if (response.ok) {
-        // Edycja powiodła się
         console.log('Gif został zaktualizowany');
-        // Tutaj możesz wykonać dodatkowe działania, takie jak odświeżenie listy gifów itp.
+        setModalIsOpen(false);
       } else {
         console.log('Wystąpił problem podczas edycji gifa');
       }
@@ -52,33 +52,53 @@ function Edit({ gif }) {
     }));
   };
 
-
   return (
     <div>
-      <button onClick={handleEdit} style={{ color: 'white', backgroundColor: 'green', borderRadius: '8px' }}>
+      <button onClick={() => setModalIsOpen(true)} style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px' }}>
         Edytuj gif
       </button>
-      <div>
-        <label>
-          Kategoria:
-          <input type="text" name="category" value={formData.category} onChange={handleChange} />
-        </label>
-        <label>
-          Tagi:
-          <input type="text" name="tags" value={formData.tags} onChange={handleChange} />
-        </label>
-        <label>
-          Tytuł:
-          <input type="text" name="title" value={formData.title} onChange={handleChange} />
-        </label>
-        <label>
-          Prywatny:
-          <select name="gifType" value={formData.gifType} onChange={handleChange}>
-            <option value="false">Tak</option>
-            <option value="true">Nie</option>
-          </select>
-        </label>
-      </div>
+      <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} style={{
+        overlay: {
+          backgroundColor: 'rgba(0, 0, 0, 0.5)'
+        },
+        content: {
+          top: '50%',
+          left: '50%',
+          right: 'auto',
+          bottom: 'auto',
+          marginRight: '-50%',
+          transform: 'translate(-50%, -50%)'
+        }
+      }}>
+        <h2>Edytuj gif</h2>
+        <form onSubmit={handleEdit}>
+          <label>
+            Kategoria:
+            <select name="category" onChange={handleChange} value={formData.category}>
+          
+          <option value="Cat1">Cat1</option>
+          <option value="Cat2">Cat2</option>
+          <option value="Cat3">Cat3</option>
+        </select>
+          </label>
+          <label>
+            Tagi:
+            <input type="text" name="tags" value={formData.tags} onChange={handleChange} />
+          </label>
+          <label>
+            Tytuł:
+            <input type="text" name="title" value={formData.title} onChange={handleChange} />
+          </label>
+          <label>
+            Prywatny:
+            <select name="gifType" value={formData.gifType} onChange={handleChange}>
+              <option value="false">Tak</option>
+              <option value="true">Nie</option>
+            </select>
+          </label>
+          <button type="submit" >Zapisz zmiany</button>
+        </form>
+      </Modal>
     </div>
   );
 }

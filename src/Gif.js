@@ -7,11 +7,10 @@ import LazyLoad from 'react-lazyload';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Delete from './delete';
-import { CoronavirusSharp } from '@mui/icons-material';
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import Edit from './edit';
 function GifPage() {
-
+  const [isDeleted, setisDeleted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [page, setPage] = useState(0);
@@ -329,6 +328,13 @@ const handleDislike = async (id) => {
   }
 };
 const handleDelete = async (id) => {
+  const confirmed = window.confirm('Czy na pewno chcesz usunąć tego gifa?');
+
+  if (!confirmed) {
+    // Jeśli użytkownik nie potwierdzi usunięcia, zakończ funkcję
+    return;
+  }
+
   try {
     const jwtToken = localStorage.getItem('jwtToken');
     if (!jwtToken) {
@@ -345,48 +351,51 @@ const handleDelete = async (id) => {
       console.log('JWT token not found');
       return;
     }
-    const response = await fetch(`${window.API_URL}/api/gif/delete/?id_gif=${id}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${jwtToken}`,
-    },
     
-  });
-  
-  if (response.ok) {
-    toast.success('Usunięto', {
-      position: 'top-right',
-      autoClose: 500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      progress: undefined,
-      theme: 'light',
+    const response = await fetch(`${window.API_URL}/api/gif/delete/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwtToken}`,
+      },
     });
-    console.log('Gif został usunięty');
-    // Tutaj możesz wykonać dodatkowe działania, takie jak odświeżenie listy gifów itp.
-  } else {
-    toast.warn('Wystąpił problem podczas usuwania gifa', {
-      position: 'top-right',
-      autoClose: 500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      progress: undefined,
-      theme: 'light',
-    });
-    console.log('Wystąpił problem podczas usuwania gifa');
-  }
+
+    if (response.ok) {
+      toast.success('Usunięto', {
+        position: 'top-right',
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: 'light',
+      });
+
+      console.log('Gif został usunięty');
+      window.location.reload(); // Odśwież stronę
+      // Tutaj możesz wykonać dodatkowe działania, takie jak odświeżenie listy gifów itp.
+    } else {
+      toast.warn('Wystąpił problem podczas usuwania gifa', {
+        position: 'top-right',
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: 'light',
+      });
+      console.log('Wystąpił problem podczas usuwania gifa');
+    }
   } catch (error) {
-  console.log('Wystąpił błąd sieci', error);
+    console.log('Wystąpił błąd sieci', error);
   }
-  };
+};
 const jwtToken = localStorage.getItem('jwtToken');
 const user_id = localStorage.getItem('user_id');
 const user_role = localStorage.getItem('user_role');
+
   return (
     
     <div>
@@ -436,7 +445,9 @@ const user_role = localStorage.getItem('user_role');
             {searchResults.map(gif => (
               <li key={gif.id_gif}>
                 <img src={`${window.API_URL}${gif.reflink}`} alt={gif.title} style={{width: '200px', height: '200px'}}/>
-    
+                {(user_role == 'Admin' || user_id == gif.creator.id_user) && jwtToken ? (
+          <IconButton onClick={() => handleDelete(gif.id_gif)}> <DeleteIcon  /></IconButton>
+        ) : null}
                 {gif.likedByCurrentUser==false?
                   <IconButton onClick={() => handleLike(gif.id_gif)}>
                     
@@ -495,20 +506,23 @@ const user_role = localStorage.getItem('user_role');
         
         {gifs.map((gif) => (
           <li key={gif.id_gif}>
-            <LazyLoad >  
-              
+            <LazyLoad>  
+             
               <img
                 src={`http://localhost:8889${gif.reflink}`}
                 alt={gif.title}
                 style={{width: '200px', height: '200px'}}
               />  
               
-              {(user_role === 'Admin' || user_id === gif.creator) && jwtToken ? (
-          <button onClick={() => handleDelete(gif.id_gif)}>
-            Usuń gif
-          </button>
+              {(user_role == 'Admin' || user_id == gif.creator.id_user) && jwtToken ? (
+                
+          <IconButton onClick={() => handleDelete(gif.id_gif)}> <DeleteIcon  /></IconButton>
+          
+        
         ) : null}
-                 
+        {user_id == gif.creator.id_user && jwtToken ? (
+        <Edit gif={gif} id={gif.id_gif}/>
+        ) : null}
                   {gif.likedByCurrentUser==false?
                   <IconButton onClick={() => handleLike(gif.id_gif)}>
                   <ToastContainer
