@@ -24,7 +24,7 @@ public class GifController {
                                     @RequestParam("gifType") String gifType) {
         return gifService.addGif(file, category, tags, title, gifType);
     }
-    @PostMapping("/delete/{gifId}")
+    @DeleteMapping("/delete/{gifId}")
     public Integer deleteGif(@PathVariable Integer gifId, Principal principal) {
         Integer userId=Integer.parseInt(principal.getName());
         return gifService.deleteGif(gifId,userId);
