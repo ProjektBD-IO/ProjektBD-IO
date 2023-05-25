@@ -39,10 +39,13 @@ public class ReportController {
         List<Gif> gifs= new ArrayList<>();
         for (Object[] result : results) {
             Gif gif = (Gif) result[0];
-            int reportCount = ((Number) result[1]).intValue();
-            gif.setReportCount(reportCount);
-            gifs.add(gif);
+            if(!gif.isIfBanned()&&gif.isGifType()) {
+                int reportCount = ((Number) result[1]).intValue();
+                gif.setReportCount(reportCount);
+                gifs.add(gif);
+            }
         }
+        gifs.sort((g1, g2) -> Integer.compare(g2.getReportCount(), g1.getReportCount()));
         return gifs;
     }
 }
