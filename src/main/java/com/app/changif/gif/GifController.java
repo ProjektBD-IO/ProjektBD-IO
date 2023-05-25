@@ -29,7 +29,7 @@ public class GifController {
         Integer userId=Integer.parseInt(principal.getName());
         return gifService.deleteGif(gifId,userId);
     }
-    @PostMapping("/edit/{gifId}")
+    @PutMapping("/edit/{gifId}")
     public ResponseEntity<?> editGif(@PathVariable Integer gifId,
                                      @RequestParam("category") String category,
                                     @RequestParam("tags") String tags,
