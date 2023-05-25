@@ -1,5 +1,7 @@
 package com.app.changif.user;
 
+import com.app.changif.ban.Ban;
+import com.app.changif.folder.Folder;
 import com.app.changif.gif.Gif;
 import com.app.changif.like.Likes;
 import com.app.changif.report.Report;
@@ -45,4 +47,12 @@ public class User implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "applicant")
     private Set<Report> reports = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "id_user")
+    private Set<Folder> folders = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "applicant")
+    private Set<Ban> bans = new HashSet<>();
 }

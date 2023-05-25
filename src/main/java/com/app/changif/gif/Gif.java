@@ -1,6 +1,7 @@
 package com.app.changif.gif;
 
 import com.app.changif.category.Category;
+import com.app.changif.gif_in_folder.GifInFolder;
 import com.app.changif.like.Likes;
 import com.app.changif.report.Report;
 import com.app.changif.user.User;
@@ -58,6 +59,10 @@ public class Gif {
     @JsonIgnore
     @OneToMany(mappedBy = "gif")
     private Set<Report> report = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "id_gif")
+    private Set<GifInFolder> gifInFolder = new HashSet<>();
 
 
     @Column(name = "if_disabled")

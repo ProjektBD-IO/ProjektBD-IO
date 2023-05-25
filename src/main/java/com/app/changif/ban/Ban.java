@@ -2,6 +2,7 @@ package com.app.changif.ban;
 
 import com.app.changif.report.Report;
 import com.app.changif.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -22,10 +25,9 @@ public class Ban {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_ban;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Report report;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "id_aplicant")
     private User applicant;
 
     @Column(name = "expiration_date")
@@ -33,6 +35,10 @@ public class Ban {
 
     @Column(name = "ban_note")
     private String banNote;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "ban")
+    private Set<Report> reports = new HashSet<>();
 
     // getters and setters
 }
