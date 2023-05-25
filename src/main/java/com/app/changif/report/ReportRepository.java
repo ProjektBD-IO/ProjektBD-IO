@@ -3,11 +3,13 @@ package com.app.changif.report;
 import com.app.changif.ban.Ban;
 import com.app.changif.gif.Gif;
 import com.app.changif.like.Likes;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,4 +22,10 @@ public interface ReportRepository extends JpaRepository<Report, Integer> {
 
     @Query("SELECT g, COUNT(r.id_report) as report_count FROM Report r JOIN r.gif g WHERE r.checked = false GROUP BY g")
     List<Object[]> getAll();
+
+    @Query("select r from Report r JOIN FETCH Gif g on g.id_gif=r.gif JOIN FETCH User u on u.id_user=g.creator where g.id_gif = :idGif and r.checked=false")
+    List<Report> getListById(@Param("idGif") Integer idGif);
+
+    @Query("select r from Report r JOIN FETCH Gif g on g.id_gif=r.gif where g.id_gif = :idGif and checked=false")
+    Optional<Report> findByGifId(@Param("idGif")Integer idGif);
 }

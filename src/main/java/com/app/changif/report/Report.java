@@ -1,8 +1,10 @@
 package com.app.changif.report;
 
+import com.app.changif.ban.Ban;
 import com.app.changif.gif.Gif;
 import com.app.changif.user.User;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -33,6 +35,11 @@ public class Report {
     private Gif gif;
 
     private boolean checked;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name="id_ban")
+    private Ban ban;
 
     // getters and setters
 }
