@@ -3,11 +3,17 @@ import { Link } from 'react-router-dom';
 import AddFileModal from './add';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import ReportList from './report';
 const Nav = () => {
   const isLoggedIn = localStorage.getItem('jwtToken') !== null;
   const [isLoggedOut, setIsLoggedOut] = useState(false);
+  const jwtToken = localStorage.getItem('jwtToken');
+  const user_id = localStorage.getItem('user_id');
+  const user_role = localStorage.getItem('user_role');
+  const [reports, setReports] = useState([]);
+  const [selectedReport, setSelectedReport] = useState('');
 
+  
   const handleLogout = () => {
     localStorage.removeItem('jwtToken');
     setIsLoggedOut(true);
@@ -56,7 +62,8 @@ const Nav = () => {
         <AddFileModal />
         {isLoggedIn ? (
           <>
-            <button onClick={handleLogout} style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px', height: '35px', width: '200px' }}>Wyloguj się</button>
+            <p>Witaj, {localStorage.getItem('username')}  </p>
+            <button onClick={handleLogout} style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px', height: '35px', width: '250px' }}>Wyloguj się</button>
             <ToastContainer
               position="top-right"
               autoClose={1000}
@@ -69,18 +76,22 @@ const Nav = () => {
               pauseOnHover
               theme="light"
             />
+            {user_role === 'Admin' && jwtToken ? (
+              <>
+                <ReportList/>
+              </>
+            ) : null}
           </>
-
         ) : (
-            <>
-              <Link to="/login" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px' }}>
-                Zaloguj się
+          <>
+            <Link to="/login" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px' }}>
+              Zaloguj się
             </Link>
-              <Link to="/register" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px' }}>
-                Rejestracja
+            <Link to="/register" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px' }}>
+              Rejestracja
             </Link>
-            </>
-          )}
+          </>
+        )}
       </div>
     </nav>
   );

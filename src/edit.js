@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-
+import { IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 function Edit({ gif, id }) {
   const [formData, setFormData] = useState({
-    category: gif.category,
+    category: gif.category.category_name,
     tags: gif.tags,
     title: gif.title,
     gifType: gif.gifType,
@@ -23,13 +24,14 @@ function Edit({ gif, id }) {
       formDataToSend.append('tags', formData.tags);
       formDataToSend.append('title', formData.title);
       formDataToSend.append('gifType', formData.gifType);
-      const response = await fetch(`${window.API_URL}/api/gif/edit/${id}?category=${formData.category}&tags=${formData.tags}&title=${formData.title}&gifType=${formData.gifType}`, {
-        method: 'POST',
+      const encodedTags = encodeURIComponent(formData.tags);
+      const response = await fetch(`${window.API_URL}/api/gif/edit/${id}?category=${formData.category}&tags=${encodedTags}&title=${formData.title}&gifType=${formData.gifType}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
       console.log('gif:', gif);
       console.log('gif.category:', gif.category);
@@ -54,9 +56,8 @@ function Edit({ gif, id }) {
 
   return (
     <div>
-      <button onClick={() => setModalIsOpen(true)} style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px' }}>
-        Edytuj gif
-      </button>
+
+      <IconButton onClick={() => setModalIsOpen(true)}> <EditIcon/> </IconButton>
       <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} style={{
         overlay: {
           backgroundColor: 'rgba(0, 0, 0, 0.5)'
@@ -73,8 +74,8 @@ function Edit({ gif, id }) {
         <h2>Edytuj gif</h2>
         <form onSubmit={handleEdit}>
           <label>
-            Kategoria:
-            <select name="category" onChange={handleChange} value={formData.category}>
+          Kategoria:
+          <select name="category" onChange={handleChange} value={formData.category}>
           
           <option value="Cat1">Cat1</option>
           <option value="Cat2">Cat2</option>

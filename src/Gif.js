@@ -9,6 +9,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Edit from './edit';
+import ReportIcon from '@mui/icons-material/Report';
+import { Link, BrowserRouter  } from "react-router-dom";
+import Gifp from './podstronagifa';
 function GifPage() {
   const [isDeleted, setisDeleted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -392,6 +395,61 @@ const handleDelete = async (id) => {
     console.log('Wystąpił błąd sieci', error);
   }
 };
+const handleReport = async (id) => {
+  const confirmed = window.confirm('Czy na pewno chcesz zgłosić tego gifa?');
+
+  if (!confirmed) {
+    // Jeśli użytkownik nie potwierdzi usunięcia, zakończ funkcję
+    return;
+  }
+  try {
+    const jwtToken = localStorage.getItem('jwtToken');
+    if (!jwtToken) {
+      console.log('JWT token not found');
+      return;
+    }
+
+    const response = await fetch(`${window.API_URL}/api/report?id_gif=${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
+
+    if (response.ok) {
+      toast.success('Zgłoszono', {
+        position: 'top-right',
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: 'light',
+      });
+
+      console.log('Reported');
+      
+      // Tutaj możesz wykonać dodatkowe działania, takie jak odświeżenie listy gifów itp.
+    } else {
+      toast.warn('Nie możesz zgłosić gifa dwa razy', {
+        position: 'top-right',
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: 'light',
+      });
+      console.log('Wystąpił problem podczas zgłoszania gifa');
+    }
+    
+  } catch (error) {
+    console.log('An error occurred while removing a like:', error);
+  }
+};
 const jwtToken = localStorage.getItem('jwtToken');
 const user_id = localStorage.getItem('user_id');
 const user_role = localStorage.getItem('user_role');
@@ -444,13 +502,46 @@ const user_role = localStorage.getItem('user_role');
       
             {searchResults.map(gif => (
               <li key={gif.id_gif}>
-                <img src={`${window.API_URL}${gif.reflink}`} alt={gif.title} style={{width: '200px', height: '200px'}}/>
-                {(user_role == 'Admin' || user_id == gif.creator.id_user) && jwtToken ? (
+                   
+              {user_id === gif.creator.id_user && jwtToken ? (
+  <div style={{ border: '2px purple', display: 'inline-block' }}>
+    <Link to={`/podstrona/?gif_id=${gif.id_gif}`}>
+      <img
+        src={`${window.API_URL}${gif.reflink}`}
+        alt={gif.title}
+        style={{ width: '200px', height: '200px' }}
+      />
+    </Link>
+  </div>
+) : (
+  <Link to={`/podstrona/?gif_id=${gif.id_gif}`}>
+    <img
+      src={`${window.API_URL}${gif.reflink}`}
+      alt={gif.title}
+      style={{ width: '200px', height: '200px' }}
+    />
+  </Link>
+)}
+              {(user_role == 'Admin' || user_id == gif.creator.id_user) && jwtToken ? (
+                
           <IconButton onClick={() => handleDelete(gif.id_gif)}> <DeleteIcon  /></IconButton>
+          
+        
         ) : null}
-                {gif.likedByCurrentUser==false?
+        {user_id == gif.creator.id_user && jwtToken? (
+        <Edit gif={gif} id={gif.id_gif}/>
+        ) : null}
+        {  user_role != 'Admin' && user_id != gif.creator.id_user && jwtToken  ?(
+                
+                <IconButton onClick={() => handleReport(gif.id_gif)}> <ReportIcon  /> </IconButton>
+                
+              
+              ) : null}
+     
+
+        
+                  {gif.likedByCurrentUser==false?
                   <IconButton onClick={() => handleLike(gif.id_gif)}>
-                    
                   <ToastContainer
                   position="top-right"
                   autoClose={1}
@@ -463,10 +554,7 @@ const user_role = localStorage.getItem('user_role');
                   pauseOnHover
                   theme="light"
                   />
-                  {/* Same as */}
-                  <ToastContainer />
                   <ThumbUpAltOutlinedIcon />
-                  
                   
                    <span style={{ color: 'white' }}>{gif.likeCount} </span>
                  </IconButton>
@@ -486,8 +574,8 @@ const user_role = localStorage.getItem('user_role');
                   />
                   <ThumbUpIcon  />
                   <span style={{ color: 'white' }}>{gif.likeCount} </span>
-                  </IconButton>}
-  
+                  </IconButton>
+                  }
           </li>
         ))}
             
@@ -506,23 +594,46 @@ const user_role = localStorage.getItem('user_role');
         
         {gifs.map((gif) => (
           <li key={gif.id_gif}>
-            <LazyLoad>  
-             
-              <img
-                src={`http://localhost:8889${gif.reflink}`}
-                alt={gif.title}
-                style={{width: '200px', height: '200px'}}
-              />  
-              
+            <LazyLoad> 
+              <div> 
+                
+              {user_id === gif.creator.id_user && jwtToken ? (
+  <div style={{ border: '2px purple', display: 'inline-block' }}>
+    <Link to={`/podstrona/?gif_id=${gif.id_gif}`}>
+      <img
+        src={`${window.API_URL}${gif.reflink}`}
+        alt={gif.title}
+        style={{ width: '200px', height: '200px' }}
+      />
+    </Link>
+  </div>
+) : (
+  <Link to={`/podstrona/?gif_id=${gif.id_gif}`}>
+    <img
+      src={`${window.API_URL}${gif.reflink}`}
+      alt={gif.title}
+      style={{ width: '200px', height: '200px' }}
+    />
+  </Link>
+)}
               {(user_role == 'Admin' || user_id == gif.creator.id_user) && jwtToken ? (
                 
           <IconButton onClick={() => handleDelete(gif.id_gif)}> <DeleteIcon  /></IconButton>
           
         
         ) : null}
-        {user_id == gif.creator.id_user && jwtToken ? (
+        {user_id == gif.creator.id_user && jwtToken? (
         <Edit gif={gif} id={gif.id_gif}/>
         ) : null}
+        {  user_role != 'Admin' && user_id != gif.creator.id_user && jwtToken  ?(
+                
+                <IconButton onClick={() => handleReport(gif.id_gif)}> <ReportIcon  /> </IconButton>
+                
+              
+              ) : null}
+     
+
+        </div>
                   {gif.likedByCurrentUser==false?
                   <IconButton onClick={() => handleLike(gif.id_gif)}>
                   <ToastContainer
