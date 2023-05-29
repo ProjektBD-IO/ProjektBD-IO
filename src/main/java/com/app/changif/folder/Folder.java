@@ -22,12 +22,15 @@ public class Folder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_folder")
     private Integer id_folder;
 
+    @Column(name = "name")
     private String name;
 
     @ManyToOne
-    @JoinColumn(name="id_user")
+
+    @JoinColumn(name = "id_user")
     private User id_user;
     @JsonIgnore
     @OneToMany(mappedBy = "id_folder")

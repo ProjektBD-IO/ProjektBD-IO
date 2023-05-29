@@ -24,7 +24,8 @@ public class GifInFolder {
     @ManyToOne
     @JoinColumn(name="id_gif")
     private Gif id_gif;
+
     @ManyToOne
-    @JoinColumn(name="id_folder")
+    @JoinColumn(name = "id_folder")
     private Folder id_folder;
 }
