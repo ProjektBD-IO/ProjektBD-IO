@@ -29,9 +29,9 @@ public class Folder {
     private String name;
 
     @ManyToOne
-
     @JoinColumn(name = "id_user")
     private User id_user;
+
     @JsonIgnore
     @OneToMany(mappedBy = "id_folder")
     private Set<GifInFolder> gifInFolder = new HashSet<>();

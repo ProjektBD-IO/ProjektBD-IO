@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.AccessDeniedException;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/gif")
@@ -25,7 +26,7 @@ public class GifController {
         return gifService.addGif(file, category, tags, title, gifType);
     }
     @DeleteMapping("/delete/{gifId}")
-    public Integer deleteGif(@PathVariable Integer gifId, Principal principal) {
+    public ResponseEntity<?> deleteGif(@PathVariable Integer gifId, Principal principal) {
         Integer userId=Integer.parseInt(principal.getName());
         return gifService.deleteGif(gifId,userId);
     }
@@ -43,5 +44,11 @@ public class GifController {
     @GetMapping("/{gifId}/**")
     public Gif getGif(@PathVariable Integer gifId) throws AccessDeniedException {
         return gifService.getGif(gifId);
+    }
+
+    @GetMapping("/usergifs")
+    public ResponseEntity<?> getUserGifs(Principal principal){
+        Integer userId = Integer.parseInt(principal.getName());
+        return gifService.getUserGifs(userId);
     }
 }

@@ -1,5 +1,7 @@
 package com.app.changif.gif;
 
+import com.app.changif.ban.Ban;
+import com.app.changif.ban.BanRepository;
 import com.app.changif.category.Category;
 import com.app.changif.category.CategoryController;
 import com.app.changif.category.CategoryRepository;
@@ -23,6 +25,7 @@ import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -37,6 +40,8 @@ public class GifService {
     private UserRepository userRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private BanRepository banRepository;
 
     public ResponseEntity<?> addGif(MultipartFile file, String category, String tags, String title, String gifType) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -56,6 +61,9 @@ public class GifService {
             gif.setReflink("/images/"+filePath);
             User user = new User();
             user.setId_user(parseInt(authentication.getPrincipal().toString()));
+            List<Ban> bans = banRepository.getBansByUser(user.getId_user());
+            if(bans.size()>0)
+                return ResponseEntity.status(500).body("User is banned");
             gif.setCreator(user);
             gif.setTags(tags);
             gif.setTitle(title);
@@ -86,6 +94,10 @@ public class GifService {
             User user=userRepository.getById(userId);
             if(gif.getCreator().getId_user()!=userId)
                 throw new IllegalArgumentException("no permission to delete someone's gif");
+
+            List<Ban> bans = banRepository.getBansByUser(user.getId_user());
+            if(bans.size()>0)
+            return ResponseEntity.status(500).body("User is banned");
 
             gif.setTags(tags);
             gif.setTitle(title);
@@ -118,20 +130,28 @@ public class GifService {
         }
         return gif;
     }
-    public Integer deleteGif(Integer gifId, Integer userId) {
+    public ResponseEntity<?> deleteGif(Integer gifId, Integer userId) {
 
         Optional<Gif> optionalGif =  gifRepository.findById(gifId);
         Gif gif;
         if (optionalGif.isPresent())
             gif = optionalGif.get();
         else
-            throw new IllegalArgumentException("gif with specified id doesn't exists");
+            return ResponseEntity.status(500).body("gif with specified id doesn't exists");
         User user=userRepository.getById(userId);
+        List<Ban> bans = banRepository.getBansByUser(user.getId_user());
+        if(bans.size()>0)
+            return ResponseEntity.status(500).body("User is banned");
         Role user_role=user.getId_role();
         if(gif.getCreator().getId_user()!=userId&&!user_role.getRoleName().equals("Admin"))
-            throw new IllegalArgumentException("no permission to delete someone's gif");
+            return ResponseEntity.status(500).body("no permission to delete someone's gif");
         gif.setIfBanned(true);
         gifRepository.save(gif);
-        return gif.getId_gif();
+        return ResponseEntity.ok().body(gif.getId_gif());
+    }
+
+    public ResponseEntity<?> getUserGifs(Integer userId){
+        List<Gif> gifs = gifRepository.getByUser(userId);
+        return ResponseEntity.ok().body(gifs);
     }
 }

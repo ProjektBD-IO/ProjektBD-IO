@@ -1,5 +1,6 @@
 package com.app.changif.user;
 
+import com.app.changif.ban.BanRepository;
 import com.app.changif.role.Role;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -32,6 +33,8 @@ public class UserService implements UserDetailsService {
     private List<GrantedAuthority> authorities;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private final BanRepository banRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -41,7 +44,7 @@ public class UserService implements UserDetailsService {
         TypedQuery<Role> query = entityManager.createQuery("select r from Role r JOIN FETCH User u on u.id_role=r.id_role where u.id_user=:userId", Role.class);
         query.setParameter("userId", user.getId_user());
         authorities = query.getResultList().stream().map(r -> new SimpleGrantedAuthority(r.getRoleName())).collect(Collectors.toList());
-        return new MyUserPrincipal(user, authorities);
+        return new MyUserPrincipal(user, authorities,banRepository);
     }
 
     public void save(User user) {

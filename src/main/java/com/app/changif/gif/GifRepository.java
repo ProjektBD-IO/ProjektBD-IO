@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,5 +26,8 @@ public interface GifRepository extends JpaRepository<Gif,Long> {
 //    List<Gif> findAllWithCategory();
     @Query("select g from Gif g JOIN FETCH Category c on g.category=c.id_category where c.category_name = :cat and gifType=true and ifBanned=false")
     Page<Gif> findByCategory(@Param("cat")String cat, Pageable pageable);
+
+    @Query("select g from Gif g join User u on g.creator=u.id_user where u.id_user=:userId and g.ifBanned=false")
+    List <Gif> getByUser(@Param("userId") Integer userId);
 }
 

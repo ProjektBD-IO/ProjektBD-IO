@@ -1,18 +1,26 @@
 package com.app.changif.user;
 
+import com.app.changif.ban.Ban;
+import com.app.changif.ban.BanRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class MyUserPrincipal implements UserDetails {
     private final User user;
     private final List<GrantedAuthority> authorities;
 
-    public MyUserPrincipal(User user, List<GrantedAuthority> authorities){
+    @Autowired
+    private BanRepository banRepository;
+
+    public MyUserPrincipal(User user, List<GrantedAuthority> authorities, BanRepository banRepository){
         this.user=user;
         this.authorities=authorities;
+        this.banRepository=banRepository;
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){
@@ -56,5 +64,21 @@ public class MyUserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public boolean isBanned(){
+        List<Ban> bans = banRepository.getBansByUser(user.getId_user());
+        return bans.size()>0;
+    }
+    public Date banExpiration(){
+        List<Ban> bans = banRepository.getBansByUser(user.getId_user());
+        if(isBanned())
+            return bans.get(0).getExpirationDate();
+        else
+            return new Date(0,0,0,0,0,0);
+    }
+
+    public boolean isMailConfirmed(){
+        return user.is_mail_confirmed();
     }
 }

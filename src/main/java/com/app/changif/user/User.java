@@ -27,13 +27,18 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_user;
+
     @OneToMany(mappedBy = "creator")
     @JsonIgnore
     private Set<Gif> gifs=new HashSet<>();
+
     private String mail;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
     private String nickname;
+
     @Column(name="token_mail")
     private String mail_token;
     private boolean is_mail_confirmed;

@@ -32,4 +32,9 @@ public class FolderController {
         return folderService.delFolder(folderId,userId);
     }
 
+    @GetMapping("/get")
+    public ResponseEntity<?> getFolders(Principal principal){
+        Integer userId = Integer.parseInt(principal.getName());
+        return folderService.getFolders(userId);
+    }
 }

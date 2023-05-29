@@ -1,5 +1,7 @@
 package com.app.changif.gif_in_folder;
 
+import com.app.changif.ban.Ban;
+import com.app.changif.ban.BanRepository;
 import com.app.changif.folder.Folder;
 import com.app.changif.folder.FolderRepository;
 import com.app.changif.gif.Gif;
@@ -7,6 +9,8 @@ import com.app.changif.gif.GifRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +21,10 @@ public class GifInFolderService {
     private GifInFolderRepository gifInFolderRepository;
     @Autowired
     private GifRepository gifRepository;
+
+    @Autowired
+    private BanRepository banRepository;
+
     public ResponseEntity<?> getGfisFromFolder(Integer userid, Integer folderid){
         Optional<Folder> optional_folder=folderRepository.findByFolderId(folderid);
         Folder folder;
@@ -29,6 +37,9 @@ public class GifInFolderService {
         return ResponseEntity.ok().body(gifInFolderRepository.getGifsByFolder(folderid));
     }
     public ResponseEntity<?> addGifToFolder(Integer userid, Integer folderid, Integer gifid){
+        List<Ban> bans = banRepository.getBansByUser(userid);
+        if(bans.size()>0)
+            return ResponseEntity.status(500).body("User is banned");
         Optional<Gif> optionalGif =  gifRepository.findById(gifid);
         Gif gif;
         if (optionalGif.isPresent())
@@ -54,6 +65,9 @@ public class GifInFolderService {
         return ResponseEntity.ok().body("gif added successfully");
     }
     public ResponseEntity<?> deleteGifFromFolder(Integer userid, Integer folderid, Integer gifid) {
+        List<Ban> bans = banRepository.getBansByUser(userid);
+        if(bans.size()>0)
+            return ResponseEntity.status(500).body("User is banned");
         Optional<Gif> optionalGif =  gifRepository.findById(gifid);
         Gif gif;
         if (optionalGif.isPresent())

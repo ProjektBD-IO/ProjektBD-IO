@@ -1,5 +1,7 @@
 package com.app.changif.security;
 
+import com.app.changif.ban.Ban;
+import com.app.changif.ban.BanRepository;
 import com.app.changif.user.MyUserPrincipal;
 import com.app.changif.user.User;
 import com.auth0.jwt.JWT;
@@ -9,6 +11,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -60,11 +63,17 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((MyUserPrincipal) authentication.getPrincipal()).getUsername();
         String userrole = ((MyUserPrincipal) authentication.getPrincipal()).getUserRoleName();
         Integer userId = ((MyUserPrincipal) authentication.getPrincipal()).getUserId();
+        Boolean ifBanned = ((MyUserPrincipal) authentication.getPrincipal()).isBanned();
+        Date banExpiration = ((MyUserPrincipal) authentication.getPrincipal()).banExpiration();
+        Boolean isMailConfirmed = ((MyUserPrincipal) authentication.getPrincipal()).isMailConfirmed();
 
         JSONObject jsonResponse = new JSONObject();
         jsonResponse.put("username", username);
         jsonResponse.put("user_id", userId);
         jsonResponse.put("user_role", userrole);
+        jsonResponse.put("ifBanned",ifBanned);
+        jsonResponse.put("banExpiration",banExpiration);
+        jsonResponse.put("isMailConfirmed",isMailConfirmed);
         jsonResponse.put("token", token);
 
         res.setContentType("application/json");
