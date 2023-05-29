@@ -19,11 +19,12 @@ public class GifInFolder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_gif_in_folder;
+    private Integer id_gifs_in_folder;
 
     @ManyToOne
+    @JoinColumn(name="id_gif")
     private Gif id_gif;
-
     @ManyToOne
+    @JoinColumn(name="id_folder")
     private Folder id_folder;
 }
