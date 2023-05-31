@@ -44,9 +44,6 @@ public class BanService {
         Role adminRole=admin.getId_role();
         if(!adminRole.getRoleName().equals("Admin"))
             throw new RuntimeException("No admin privilage. Access denied.");
-        List<Report> reports = reportRepository.getListById(gifId);
-        if(reports.size()<=0)
-            throw new IllegalArgumentException("report doesn't exists");
         Gif gif = gifRepository.findById(gifId).get();
         User user = userRepository.getById(gif.getCreator().getId_user());
         LocalDateTime localDateTime = LocalDateTime.parse(expirationDate);
@@ -58,31 +55,34 @@ public class BanService {
         banRepository.save(ban);
         gif.setIfBanned(true);
         gifRepository.save(gif);
-        for(Report report:reports){
-            report.setBan(ban);
-            report.setChecked(true);
-            reportRepository.save(report);
+        List<Report> reports = reportRepository.getListById(gifId);
+        if(reports.size()>0) {
+            for (Report report : reports) {
+                report.setBan(ban);
+                report.setChecked(true);
+                reportRepository.save(report);
+            }
         }
         return ResponseEntity.ok().body("User banned");
     }
-    public ResponseEntity<?> banUserWithoutReport(Integer gifId, String banNote, String expirationDate,Integer userId){
-        User admin=userRepository.getById(userId);
-        Role adminRole=admin.getId_role();
-        if(!adminRole.getRoleName().equals("Admin"))
-            throw new RuntimeException("No admin privilage. Access denied.");
-        Gif gif = gifRepository.findById(gifId).get();
-        User user = userRepository.getById(gif.getCreator().getId_user());
-        LocalDateTime localDateTime = LocalDateTime.parse(expirationDate);
-        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        Ban ban = new Ban();
-        ban.setApplicant(user);
-        ban.setExpirationDate(date);
-        ban.setBanNote(banNote);
-        banRepository.save(ban);
-        gif.setIfBanned(true);
-        gifRepository.save(gif);
-        return ResponseEntity.ok().body("User banned");
-    }
+//    public ResponseEntity<?> banUserWithoutReport(Integer gifId, String banNote, String expirationDate,Integer userId){
+//        User admin=userRepository.getById(userId);
+//        Role adminRole=admin.getId_role();
+//        if(!adminRole.getRoleName().equals("Admin"))
+//            throw new RuntimeException("No admin privilage. Access denied.");
+//        Gif gif = gifRepository.findById(gifId).get();
+//        User user = userRepository.getById(gif.getCreator().getId_user());
+//        LocalDateTime localDateTime = LocalDateTime.parse(expirationDate);
+//        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+//        Ban ban = new Ban();
+//        ban.setApplicant(user);
+//        ban.setExpirationDate(date);
+//        ban.setBanNote(banNote);
+//        banRepository.save(ban);
+//        gif.setIfBanned(true);
+//        gifRepository.save(gif);
+//        return ResponseEntity.ok().body("User banned");
+//    }
     public ResponseEntity<?> ignoreReports(Integer gifId,Integer userId){
         User admin=userRepository.getById(userId);
         Role adminRole=admin.getId_role();
