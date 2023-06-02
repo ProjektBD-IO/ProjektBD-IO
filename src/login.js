@@ -8,6 +8,9 @@ function LoginForm(props) {
   const [password, setPassword] = useState("");
   const [user_id, setUserid] = useState();
   const [user_role, setUserrole] = useState();
+  const [isMailConfirmed, setisMailConfirmed] = useState();
+  const [ifBanned, setifBanned] = useState();
+  const [banExpiration, setbanExpiration] = useState();
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -34,10 +37,13 @@ function LoginForm(props) {
         },
         mode: 'cors',
         body: JSON.stringify({
+          banExpiration: banExpiration,
+          ifBanned: ifBanned,
           nickname: username,
           password: password,
           userid: user_id,
-          userro: user_role
+          userro: user_role,
+          isMailConfirmed: isMailConfirmed
         })
       });
 
@@ -49,7 +55,12 @@ function LoginForm(props) {
         localStorage.setItem('username', data.username);
         localStorage.setItem('user_id', data.user_id);
         localStorage.setItem('user_role', data.user_role);
+        localStorage.setItem('isMailConfirmed', data.isMailConfirmed);
+        localStorage.setItem('ifBanned', data.ifBanned);
+        localStorage.setItem('banExpiration', data.banExpiration);
+
         setIsLoggedin(true);
+        window.location.reload();
       } else {
         toast.warn('Błędny login lub hasło', {
           position: "top-right",
@@ -80,9 +91,10 @@ useEffect(() => {
     params.delete('login1'); // Remove the 'login1' parameter from the URL after displaying the toast message
     const newUrl = '/' + params.toString();
     window.history.replaceState(null, '', newUrl); // Update the URL without the 'login1' parameter
+    window.location.reload();
 
     // Refresh the page after successful login
-    window.location.reload();
+   
   }
 }, []);
   return (

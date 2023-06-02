@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
+import Ban from './ban';
+import Ignore from './ignore';
 function ReportList() {
   const [reports, setReports] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedReport, setSelectedReport] = useState(null);
-
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem('jwtToken');
 
@@ -18,7 +17,7 @@ function ReportList() {
         .then(response => response.json())
         .then(data => {
           setReports(data);
-          console.log('gif:', data);
+          console.log('reports:', data);
         })
         .catch(error => {
           console.error('An error occurred:', error);
@@ -26,41 +25,23 @@ function ReportList() {
     }
   }, []);
 
-  const token = localStorage.getItem('jwtToken');
-  const user_role = localStorage.getItem('user_role');
-
-  const toggleList = () => {
-    setIsOpen(prevState => !prevState);
-  };
-
-  const handleReportChange = event => {
-    const selectedValue = event.target.value;
-    setSelectedReport(selectedValue);
-  };
-
-  const handleReportClick = () => {
-    if (selectedReport) {
-      Navigate(`/reports/${selectedReport}`);
-    }
-  };
 
   return (
-    <div>
-      {user_role === 'Admin' && token ? (
-        <>
-        <div className='dropdown'>
-          <select value={selectedReport} onChange={handleReportChange} >
-            <option value="">Zgłoszenia</option>
-            {reports.map(report => (
-              <option key={report.id} value={report.id}>
-                <span style={{ color: 'white' }}>{report.reportCount} </span>
-              </option>
-            ))}
-          </select>
-          </div>
-        </>
-      ) : null}
-    </div>
+    <div className="report-list">
+    {reports.map(gif => (
+      <div key={gif.id}>
+        <Link
+          to={`http://localhost:3000/podstrona/${gif.id_gif}`}
+          className="report-link"
+        >
+          Zgłoszony gif
+        </Link>
+        <p className="report-info">Report Count: {gif.reportCount}</p>
+        <Ban id={gif.id_gif} showModal={showModal} setShowModal={setShowModal}/>
+        <Ignore id={gif.id_gif}></Ignore>
+      </div>
+    ))}
+  </div>
   );
 }
 
