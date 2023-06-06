@@ -15,7 +15,6 @@ import Gifen from './awd';
 import Ban from './ban';
 
 function GifPage() {
-  const [showModal, setShowModal] = useState(false);
   const [isDeleted, setisDeleted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -29,10 +28,9 @@ function GifPage() {
   const [gifs, setGifs] = useState([]);
   const [gifsid, setgifsid] = useState([]);
   const sendRequestRef = useRef(true);
-  const [hasMore, setHasMore] = useState(true)
  
   const handleSearch = () => {
-    if (searchTerm !== '') {
+    if (searchTerm !='') {
     const url = `${window.API_URL}/search/tag/${searchTerm}?page=${page}&sort=${Sort}`;
     const headers = {
       'Content-Type': 'application/json'
@@ -53,7 +51,7 @@ function GifPage() {
         if (response.status === 403) {
           // Wyczyść token i przekieruj na stronę logowania
           localStorage.removeItem('jwtToken', '');
-          window.location.href = '/login'; // Przekierowanie na stronę logowania
+          window.location.href = '/login1'; // Przekierowanie na stronę logowania
          
         } else {
           return response.json();
@@ -73,20 +71,15 @@ function GifPage() {
     handleSearch();
   }, [page]);
   const handleTagChange = () => {
-    if (searchTerm !== '') {
-      if (searchTerm !== prevtag) {
+    if (searchTerm != "") {
+      if (searchTerm != prevtag) {
         setSearchResults([]);
         setSearchResultsIds([]);
         setPage(0);
         setprevtag(searchTerm);
         handleSearch(searchTerm); // dodaj argument searchTerm
       }
-    } else {
-      setSearchResults([]);
-      setSearchResultsIds([]);
-      setPage(0);
-      setprevtag(null);
-    }
+    } 
   };
   const url2=`${window.API_URL}/search/category/${selectedCategory}?page=${page}&sort=${Sort}`;
   const handleCategorySelect = () => {
@@ -110,7 +103,7 @@ function GifPage() {
         if (response.status === 403) {
           // Wyczyść token i przekieruj na stronę logowania
           localStorage.removeItem('jwtToken', '');
-          window.location.href = '/login'; // Przekierowanie na stronę logowania
+          window.location.href = '/login1'; // Przekierowanie na stronę logowania
          
         } else {
           return response.json();
@@ -127,7 +120,7 @@ function GifPage() {
 
   
   useEffect(() => {
-    if (selectedCategory !== "Cat0") {
+    if (selectedCategory != "Cat0") {
       handleCategorySelect(selectedCategory, page);
     }
   }, [selectedCategory, page]);
@@ -173,7 +166,7 @@ function GifPage() {
           if (response.status === 403) {
             // Wyczyść token i przekieruj na stronę logowania
             localStorage.removeItem('jwtToken', '');
-            window.location.href = '/login'; // Przekierowanie na stronę logowania
+            window.location.href = '/login1'; // Przekierowanie na stronę logowania
            
           } else {
             return response.json();
@@ -186,9 +179,7 @@ function GifPage() {
           setPage((page) => page + 1);
           sendRequestRef.current = true;
   
-          if (page >= 10) {
-            setHasMore(false);
-          }
+        
           return Promise.resolve(true);
         })
         .catch((error) => {
@@ -305,11 +296,12 @@ const handleDislike = async (id) => {
     if (!jwtToken) {
       // Handle the case when the JWT token is not available
       toast.error('Musisz być zalogowany aby dać dislike', {
+
         position: "top-right",
         autoClose: 500,
         hideProgressBar: false,
         closeOnClick: true,
-        pauseOnHover: true,
+        pauseOnHover: false,
         draggable: true,
         progress: undefined,
         theme: "light",
@@ -484,12 +476,15 @@ const user_role = localStorage.getItem('user_role');
   return (
     
     <div>
+      
       <div className='search-bar'>
       <input type='text' placeholder='Wyszukaj...' value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} />
         <button type='submit' onClick={handleTagChange} >Search</button>
+        
       <InfiniteScroll
       dataLength={searchResults.length}
       next={handleSearch}
+      onScroll={handleSearch}
       hasMore={true}
       
       scrollThreshold={0.8}
@@ -509,6 +504,7 @@ const user_role = localStorage.getItem('user_role');
         </InfiniteScroll>
         </div>
       <div className='dropdown'>
+        
       <InfiniteScroll
       dataLength={searchResults.length}
       next={handleCategorySelect}
@@ -517,14 +513,13 @@ const user_role = localStorage.getItem('user_role');
       scrollThreshold={1}
     >
         <select value={selectedCategory} onChange={handleCategoryChange}> 
-          <option value="Cat0">Kategorie</option>
           <option value="Cat1">Cat1</option>
           <option value="Cat2">Cat2</option>
           <option value="Cat3">Cat3</option>
         </select>
         </InfiniteScroll>
       </div>
-      
+      {(selectedCategory !== "Cat0" || searchResults !=='')&&
       <div className='search-results'>
       
             {searchResults.map(gif => (
@@ -606,7 +601,9 @@ const user_role = localStorage.getItem('user_role');
     
   )}
   {user_role == 'Admin'  && jwtToken && (
-    <Ban id={gif.id_gif} showModal={showModal} setShowModal={setShowModal}/>
+     <IconButton>
+    <Ban id={gif.id_gif} />
+    </IconButton>
   )}
 </div>
   
@@ -616,11 +613,12 @@ const user_role = localStorage.getItem('user_role');
           
         
       </div>
+}
       {( searchResults.length === 0) &&    <InfiniteScroll
       dataLength={gifs.length}
       hasMore={true}
       onScroll={loadGifs}
-      loader={<h4>Loading...</h4>}
+     
       scrollThreshold={200}
     >
       
@@ -663,12 +661,18 @@ const user_role = localStorage.getItem('user_role');
         {user_id == gif.creator.id_user && jwtToken? (
         <Edit gif={gif} id={gif.id_gif}/>
         ) : null}
+        
         {  user_role != 'Admin' && user_id != gif.creator.id_user && jwtToken  ?(
                 
                 <IconButton onClick={() => handleReport(gif.id_gif)}> <ReportIcon  /> </IconButton>
                 
               
               ) : null}
+               {user_role == 'Admin'  && jwtToken ? (
+                    <IconButton>
+    <Ban id={gif.id_gif}/>
+    </IconButton>
+  ) : null}
      
 
         
@@ -709,9 +713,7 @@ const user_role = localStorage.getItem('user_role');
                   </IconButton>
                   
                   }
-                  {user_role == 'Admin'  && jwtToken && (
-    <Ban id={gif.id_gif} showModal={showModal} setShowModal={setShowModal}/>
-  )}
+                 
                   </div>
   </div>
             </LazyLoad>

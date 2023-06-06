@@ -197,9 +197,12 @@ const FolderComponent = () => {
       style={{ width: '200px', height: '18px' }}
         type="text"
         value={newFolderName}
+        placeholder='Dodaj Gifa'
         onChange={(e) => setNewFolderName(e.target.value)}
       />
+      <IconButton>
       <CreateNewFolderIcon fontSize="large" onClick={addFolder} />
+      </IconButton>
       <ul>
         {folders.map((folder) => (
           <li key={folder.id}>
@@ -209,8 +212,11 @@ const FolderComponent = () => {
             <FolderIcon fontSize="large" onClick={()=> <FolderGifs id={folder.id_folder} name={folder.name} />}/>
             </IconButton>
     </Link>
+    <IconButton>
             <EditIcon onClick={() => openEditModal(folder.id_folder, folder.name)} />
+            </IconButton> <IconButton>
             <FolderDeleteIcon fontSize="large" onClick={() => deleteFolder(folder.id_folder)} />
+            </IconButton>
           </li>
         ))}
       </ul>
@@ -228,11 +234,11 @@ const FolderComponent = () => {
         
       />
     </Link>
-    
+    <IconButton>
     <AddBoxIcon onClick={() => {
   setOpenModal(true);
   handleImageClick(gif.id_gif);
-}} />
+}} /></IconButton>
    
         </div>
         
@@ -276,10 +282,11 @@ const FolderComponent = () => {
           {folder.name}
         </option>
       ))}
-    </select>
+    </select><IconButton>
     <Button variant="contained" onClick={() => addGifToFolder(selectedFolder, gifId)}>
       Dodaj do folderu
     </Button>
+    </IconButton>
   </div>
 </Modal>
 <ToastContainer

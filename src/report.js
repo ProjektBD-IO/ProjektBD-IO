@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { IconButton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Ban from './ban';
 import Ignore from './ignore';
@@ -30,15 +31,29 @@ function ReportList() {
     <div className="report-list">
     {reports.map(gif => (
       <div key={gif.id}>
+        <IconButton>
+          
         <Link
-          to={`http://localhost:3000/podstrona/${gif.id_gif}`}
+          to={`${window.API_URL2}/podstrona/${gif.id_gif}`}
           className="report-link"
         >
-          Zgłoszony gif
+           <img
+        src={`${window.API_URL}${gif.reflink}`}
+        alt={gif.title}
+        style={{ width: '200px', height: '200px' }}
+        
+        
+      />
+          
         </Link>
-        <p className="report-info">Report Count: {gif.reportCount}</p>
+        </IconButton>
+        <p className="report-info">Ilość zgłoszeń: {gif.reportCount}</p>
+        <IconButton>
         <Ban id={gif.id_gif} showModal={showModal} setShowModal={setShowModal}/>
+        </IconButton>
+        <IconButton>
         <Ignore id={gif.id_gif}></Ignore>
+        </IconButton>
       </div>
     ))}
   </div>

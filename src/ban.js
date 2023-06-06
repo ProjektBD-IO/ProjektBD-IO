@@ -5,7 +5,8 @@ import Modal from 'react-modal';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BlockIcon from '@mui/icons-material/Block';
-function Ban({ id, showModal, setShowModal }) {
+function Ban({ id }) {
+  const [showModal, setShowModal] = useState(false);
   const [banNote, setBanNote] = useState('');
   const [selectedDate, setSelectedDate] = useState(() => {
     const today = new Date();
@@ -20,11 +21,6 @@ function Ban({ id, showModal, setShowModal }) {
     // Jeśli użytkownik nie potwierdzi usunięcia, zakończ funkcję
     return;
   }
-    if (!id) {
-      console.error('Please provide an ID.');
-      return;
-    }
-
     if (!selectedDate) {
       console.error('Please select an expiration date.');
       return;
@@ -52,6 +48,7 @@ function Ban({ id, showModal, setShowModal }) {
       }
     } catch (error) {
       console.error('Error while fetching data from the server:', error);
+      toast.error('Ten użytkownik został już zbanowany, ten gif zostanie usunięty');
     }
   };
 
@@ -68,8 +65,8 @@ function Ban({ id, showModal, setShowModal }) {
     fetchData()
       .then(() => {
         closeModal();
-        window.location.reload(); // Refresh the page
-        toast.success('Gif dodany pomyślnie', {
+        // Refresh the page
+        toast.success('Gif usunięty pomyślnie', {
           position: "top-right",
             autoClose: 500,
             hideProgressBar: false,
@@ -87,9 +84,6 @@ function Ban({ id, showModal, setShowModal }) {
   };
   
 
-  useEffect(() => {
-    // Remove the fetchData call here since it's not needed on component mount
-  }, [id]);
 
   return (
     <div>

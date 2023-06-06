@@ -18,6 +18,7 @@ const Nav = () => {
   const handleLogout = () => {
     localStorage.removeItem('jwtToken');
     setIsLoggedOut(true);
+    window.location.href = "/";
   };
 
   useEffect(() => {
@@ -40,22 +41,25 @@ const Nav = () => {
       <h1>ChanGifs</h1>
       <div className="links">
         <a href="/">Strona główna</a>
-        <AddFileModal />
+        
         {isLoggedIn ? (
           <>
+          <AddFileModal />
             <p>Witaj, {localStorage.getItem('username')}</p>
-            <button
+            <Link to="/"
               onClick={handleLogout}
               style={{
                 color: 'white',
                 backgroundColor: '#663399',
                 borderRadius: '8px',
-                height: '38px',
-                width: '300px'
+                height: '25px',
+                width: '250px'
               }}
             >
               Wyloguj się
-            </button>
+            </Link>
+              
+           
             
             {user_role === 'Admin' && jwtToken ? (
               <div className="links">
@@ -65,15 +69,17 @@ const Nav = () => {
               </div>
             ) : null}
              <Link to="/MojeGify" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px', width:'30%' }}> Moje Gify</Link>
-            {isMailConfirmed ? null : (
-              <Alert severity="warning">Potwierdź swój email</Alert>
-            )}
-             {ifBanned ? null : (
-              
-              <p style={{ color: 'red' }}>
-      Jesteś zbanowany do: {banExpiration}. Możesz teraz tylko przeglądać gify
-    </p>
-            )}
+             {isMailConfirmed ? null : (
+  <div style={{ position: 'absolute', top: '10px', right: '10px', width: '200px'}}>
+    <Alert severity="warning">Potwierdź swój email</Alert>
+    {ifBanned ? null : (
+      <p style={{ color: 'red' }}>
+        Jesteś zbanowany do: {banExpiration}. Możesz teraz tylko przeglądać gify
+      </p>
+    )}
+  </div>
+)}
+            
           </>
         ) : (
           <>
