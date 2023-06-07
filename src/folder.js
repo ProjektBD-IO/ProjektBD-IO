@@ -197,7 +197,7 @@ const FolderComponent = () => {
       style={{ width: '200px', height: '18px' }}
         type="text"
         value={newFolderName}
-        placeholder='Dodaj Gifa'
+        placeholder='Dodaj folder'
         onChange={(e) => setNewFolderName(e.target.value)}
       />
       <IconButton>

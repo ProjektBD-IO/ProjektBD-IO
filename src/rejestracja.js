@@ -2,23 +2,43 @@ import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { ToastContainer, toast, ToastMessage } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ThreeDots  } from 'react-loading-icons';
+import { ThreeDots } from 'react-loading-icons';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+
 function RegistrationForm() {
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [isMailConfirmed, setIsMailConfirmed] = useState(false);
   const [formData, setFormData] = useState({
     mail: '',
     password: '',
+    confirmPassword: '',
     nickname: '',
     role: 'User'
   });
   const [isRegistering, setIsRegistering] = useState(false);
+  const [passwordRequirements, setPasswordRequirements] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     setIsRegistering(true);
+    if (
+      formData.password.length < 7 ||
+      !/[A-Z]/.test(formData.password) ||
+      !/[!@#$%^&*]/.test(formData.password)
+    ) {
+      setPasswordRequirements('Hasło musi mieć przynajmniej 7 znaków, zawierać jedną dużą literę i znak specjalny');
+      setIsRegistering(false);
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setPasswordRequirements('Hasła nie pasują do siebie');
+      setIsRegistering(false);
+      return;
+    }
+    setPasswordRequirements('');
     const response = await fetch(`${window.API_URL}/services/controller/user`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -31,14 +51,14 @@ function RegistrationForm() {
     setIsRegistering(false);
     // Handle response
     toast.success('Zarejestrowano pomyślnie', {
-      position: "top-right",
+      position: 'top-right',
       autoClose: 500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: false,
       draggable: false,
       progress: undefined,
-      theme: "light",
+      theme: 'light'
     });
   };
 
@@ -49,16 +69,20 @@ function RegistrationForm() {
       ...prevFormData,
       [name]: value
     }));
+    if (name === 'password' || name === 'confirmPassword') {
+      setPasswordRequirements('');
+    }
   };
 
   if (redirectToHome) {
     return <Navigate to="/" />;
   }
 
-
-  
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}
+    >
       <label className="usernameLabel">
         Email:
         <input type="email" name="mail" value={formData.mail} onChange={handleChange} required />
@@ -74,6 +98,16 @@ function RegistrationForm() {
         />
       </label>
       <label className="usernameLabel">
+        Powtórz hasło:
+        <input
+          type="password"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          required
+        />
+      </label>
+      <label className="usernameLabel">
         Login:
         <input
           type="text"
@@ -83,6 +117,7 @@ function RegistrationForm() {
           required
         />
       </label>
+      <div style={{ color: 'red' }}>{passwordRequirements}</div>
       <button
         type="submit"
         style={{
@@ -95,13 +130,16 @@ function RegistrationForm() {
         Zarejestruj
       </button>
       {isRegistering && (
-        <div className='button-container'>
-  <Stack sx={{ width: '100%' }} spacing={2}>
-    <Alert severity="info">Zaraz otrzymasz wiadomość na pocztę z linkiem uwierzytelniającym. Potwierdź swój email klikając w ten link. </Alert>
-  </Stack>
-  <ThreeDots ></ThreeDots >
-  </div>
-)}
+        <div className="button-container">
+          <Stack sx={{ width: '100%' }} spacing={2}>
+            <Alert severity="info">
+              Zaraz otrzymasz wiadomość na pocztę z linkiem uwierzytelniającym. Potwierdź swój email
+              klikając w ten link.
+            </Alert>
+          </Stack>
+          <ThreeDots></ThreeDots>
+        </div>
+      )}
 
       <ToastContainer
         position="top-right"

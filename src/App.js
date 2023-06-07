@@ -14,6 +14,7 @@ function App() {
       <Router>
         <Nav />
         <Routes>
+          
           <Route path="/login1" element={<LoginForm />} />
           <Route path="/register" element={<RegistrationForm />} />
           <Route path="/podstrona/:id" element={<Gifen/>} />

@@ -28,7 +28,7 @@ function LoginForm(props) {
       console.log('Wprowadź login i hasło');
       return;
     }
-
+    
     try {
       const response = await fetch(`${window.API_URL}/api/services/controller/user/login`, {
         method: 'POST',
@@ -122,7 +122,7 @@ useEffect(() => {
          <p style={{ color: '#663399' }}>Witaj {localStorage.getItem('username')}</p>
          </div>
       ) : (
-        <button type="submit" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '4px', height: '25px', width: '100px' }}>
+        <button type="submit" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '4px', height: '30px', width: '100px' }}>
           Zaloguj się
         </button>
       )}

@@ -215,14 +215,22 @@ input[type="text"] {
 .usernameLabel {
   color: #663399;
   text-decoration:#663399;
-  
-  
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 .usernameLabe {
   color: #663399;
   text-decoration:#663399;
   
   
+}
+.passwordError {
+  color: red;
+  margin-top: 5px; /* Przykładowe przesunięcie komunikatu */
+}
+.usernameLabel input {
+  width: 300px; /* Przykładowa szerokość pola tekstowego */
 }
 .successMessage {
   color: white;

@@ -15,6 +15,7 @@ import Gifen from './awd';
 import Ban from './ban';
 
 function GifPage() {
+  const [hasMore, setHasMore] = useState(true);
   const [isDeleted, setisDeleted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -22,13 +23,16 @@ function GifPage() {
   const [selectedCategory, setSelectedCategory] = useState('Cat0');
   const [searchResultsIds, setSearchResultsIds] = useState([]);
   const [previousCategory, setPreviousCategory] = useState(null);
+  const [categoryResults, setCategoryResults] = useState([]);
+  const [categoryResultsIds, setCategoryResultsIds] = useState([]);
   const [prevtag, setprevtag] = useState(null);
   const [Sort, SetSort] = useState('addDate desc')
   const [prevsort, setprevsort] = useState(null);
   const [gifs, setGifs] = useState([]);
   const [gifsid, setgifsid] = useState([]);
   const sendRequestRef = useRef(true);
- 
+
+
   const handleSearch = () => {
     if (searchTerm !='') {
     const url = `${window.API_URL}/search/tag/${searchTerm}?page=${page}&sort=${Sort}`;
@@ -48,38 +52,42 @@ function GifPage() {
       headers: headers
     })
       .then((response) => {
-        if (response.status === 403) {
-          // Wyczyść token i przekieruj na stronę logowania
-          localStorage.removeItem('jwtToken', '');
-          window.location.href = '/login1'; // Przekierowanie na stronę logowania
-         
-        } else {
+        
           return response.json();
-        }})
+        })
       .then((data) => {
         console.log('Dane z serwera:', data);
         const newResults = data.content.filter(gif => !searchResultsIds.includes(gif.id_gif)); // filter out duplicates
         setSearchResults(prevResults => [...prevResults, ...newResults]);
         setSearchResultsIds(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]); // add new IDs to the array
-        setPage(prevPage => prevPage + 1); 
+        setPage(page => page + 1); 
+        setHasMore(newResults.length > 0);
       })
       .catch(error => console.error(error));
   };}
   
   
   useEffect(() => {
-    handleSearch();
-  }, [page]);
+    handleSearch(searchTerm, page);
+  }, [searchTerm, page]);
   const handleTagChange = () => {
-    if (searchTerm != "") {
-      if (searchTerm != prevtag) {
+    if (searchTerm !== "") {
+      if (searchTerm !== prevtag) {
+        setCategoryResults([]);
+        setCategoryResultsIds([]);
+        setSelectedCategory('Cat0');
+        setPreviousCategory([]);
         setSearchResults([]);
         setSearchResultsIds([]);
         setPage(0);
         setprevtag(searchTerm);
         handleSearch(searchTerm); // dodaj argument searchTerm
       }
+     
+      setPage(0);
     } 
+    
+    else{handleCategorySelect([]);}
   };
   const url2=`${window.API_URL}/search/category/${selectedCategory}?page=${page}&sort=${Sort}`;
   const handleCategorySelect = () => {
@@ -99,21 +107,16 @@ function GifPage() {
       method: 'GET',
       headers: headers
     })
-      .then((response) => {
-        if (response.status === 403) {
-          // Wyczyść token i przekieruj na stronę logowania
-          localStorage.removeItem('jwtToken', '');
-          window.location.href = '/login1'; // Przekierowanie na stronę logowania
-         
-        } else {
-          return response.json();
-        }})
+    .then((response) => {
+      return response.json();
+    })
       .then((data) => {
         console.log('Dane z serwera:', data);
-        const newResults = data.content.filter(gif => !searchResultsIds.includes(gif.id_gif)); // filter out duplicates
-        setSearchResults(prevResults => [...prevResults, ...newResults]);
-        setSearchResultsIds(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]); 
+        const newResults = data.content.filter(gif => !categoryResultsIds.includes(gif.id_gif)); // filter out duplicates
+        setCategoryResults(prevResults => [...prevResults, ...newResults]);
+        setCategoryResultsIds(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]); 
         setPage(page=>page+1)
+        setHasMore(newResults.length > 0);
       })
       .catch(error => console.error(error));
   };
@@ -128,19 +131,21 @@ function GifPage() {
     const category = event.target.value;
     setSelectedCategory(category);
     if (category !== "Cat0") {
+      
       if (category !== previousCategory) {
         setSearchResults([]);
         setSearchResultsIds([]);
+        setCategoryResults([]);
+        setCategoryResultsIds([]);
+        setprevtag([]);
+        setSearchTerm([]);
         setPage(0);
         setPreviousCategory(category);
+        handleCategorySelect(category);
       }
-      handleCategorySelect(category);
-    } else {
-      setSearchResults([]);
-      setSearchResultsIds([]);
-      setPage(0);
-      setPreviousCategory(null);
-    }
+      
+      
+    } 
   };
   const loadGifs = () => {
     const url3 = `${window.API_URL}/?page=${page}&sort=${Sort}`;
@@ -163,20 +168,16 @@ function GifPage() {
         headers: headers
       })
         .then((response) => {
-          if (response.status === 403) {
-            // Wyczyść token i przekieruj na stronę logowania
-            localStorage.removeItem('jwtToken', '');
-            window.location.href = '/login1'; // Przekierowanie na stronę logowania
-           
-          } else {
+          
             return response.json();
-          }})
+          })
         .then((data) => {
           console.log('Dane z serwera:', data);
           const newResults = data.content.filter(gif => !searchResultsIds.includes(gif.id_gif)); // filter out duplicates
           setGifs(prevResults => [...prevResults, ...newResults]);
           setgifsid(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]); // add new IDs to the array
           setPage((page) => page + 1);
+          setHasMore(newResults.length > 0);
           sendRequestRef.current = true;
   
         
@@ -192,42 +193,45 @@ function GifPage() {
     }
   };
  useEffect(() => {
-  loadGifs();
-}, [Sort]);
+  loadGifs(Sort, page);
+}, [Sort, page]);
   
 
 const handleSort = (event) => {
-  const sort = event.target.value;
-  SetSort(sort);
+  const Sort = event.target.value;
+  SetSort(Sort);
   
-  if (sort !== "sor") {
-    if (sort !== prevsort) {
+  if (Sort !== "sor") {
+    if (Sort !== prevsort) {
       setSearchResults([]);
+      setCategoryResults([]);
+      setCategoryResultsIds([]);
       setSearchResultsIds([]);
       setGifs([]);
       setgifsid([]);
-      setPage(0);
-      setprevsort(sort);
-      
+      setPage(-1);
+      setprevsort(Sort);
     }
-    handleCategorySelect(selectedCategory);
+    setPage(-1);
     if (searchTerm !== '') { 
       handleSearch(searchTerm);
-    }
-    if(searchTerm=='' & selectedCategory==''){
+    } else if (selectedCategory !== 'Cat0') {
+      handleCategorySelect(selectedCategory);
+    } else {
       loadGifs();
     }
     
   } else {
     setSearchResults([]);
     setSearchResultsIds([]);
+    setCategoryResults([]);
+    setCategoryResultsIds([]);
     setGifs([]);
     setgifsid([]);
-    setPage(0);
+    setPage(-1);
     setprevsort(null);
   }
 };
-
 
   
 const handleLike = async (id) => {
@@ -484,10 +488,9 @@ const user_role = localStorage.getItem('user_role');
       <InfiniteScroll
       dataLength={searchResults.length}
       next={handleSearch}
-      onScroll={handleSearch}
       hasMore={true}
       
-      scrollThreshold={0.8}
+      scrollThreshold={200}
     >
         
         <div className='dropdown'>
@@ -506,118 +509,190 @@ const user_role = localStorage.getItem('user_role');
       <div className='dropdown'>
         
       <InfiniteScroll
-      dataLength={searchResults.length}
+      dataLength={categoryResults.length}
       next={handleCategorySelect}
-      onScroll={handleCategorySelect}
       hasMore={true}
-      scrollThreshold={1}
+      scrollThreshold={200}
     >
         <select value={selectedCategory} onChange={handleCategoryChange}> 
+          <option value="Cat0">Kategorie</option>
           <option value="Cat1">Cat1</option>
           <option value="Cat2">Cat2</option>
           <option value="Cat3">Cat3</option>
         </select>
         </InfiniteScroll>
       </div>
-      {(selectedCategory !== "Cat0" || searchResults !=='')&&
-      <div className='search-results'>
-      
-            {searchResults.map(gif => (
-              <li key={gif.id_gif}>
-                   
-              {user_id === gif.creator.id_user && jwtToken ? (
-  <div style={{ border: '2px purple', display: 'inline-block' }}>
-    <Link to={`/podstrona/${gif.id_gif}`}>
-      <img
-        src={`${window.API_URL}${gif.reflink}`}
-        alt={gif.title}
-        style={{ width: '200px', height: '200px' }}
-        onClick={<Gifen id={gif.id_gif}/>}
-        
-      />
-    </Link>
-  </div>
-) : (
-  <Link to={`/podstrona/${gif.id_gif}`}>
-    <img
-      src={`${window.API_URL}${gif.reflink}`}
-      alt={gif.title}
-      style={{ width: '200px', height: '200px' }}
-    
-    />
-  </Link>
-)}
-             <div className="button-container">
-  {(user_role == 'Admin' || user_id == gif.creator.id_user) && jwtToken && (
-    <IconButton onClick={() => handleDelete(gif.id_gif)}>
-      <DeleteIcon />
-    </IconButton>
-  )}
+      {(selectedCategory !== 'Cat0' || searchResults !== '') && (
+  <div className='search-results'>
+    {selectedCategory !== 'Cat0'
+      ? categoryResults.map(gif => (
+          <li key={gif.id_gif}>
+            {user_id === gif.creator.id_user && jwtToken ? (
+              <div style={{ border: '2px purple', display: 'inline-block' }}>
+                <Link to={`/podstrona/${gif.id_gif}`}>
+                  <img
+                    src={`${window.API_URL}${gif.reflink}`}
+                    alt={gif.title}
+                    style={{ width: '200px', height: '200px' }}
+                    onClick={<Gifen id={gif.id_gif} />}
+                  />
+                </Link>
+              </div>
+            ) : (
+              <Link to={`/podstrona/${gif.id_gif}`}>
+                <img
+                  src={`${window.API_URL}${gif.reflink}`}
+                  alt={gif.title}
+                  style={{ width: '200px', height: '200px' }}
+                />
+              </Link>
+            )}
+            <div className='button-container'>
+              {(user_role === 'Admin' || user_id === gif.creator.id_user) && jwtToken && (
+                <IconButton onClick={() => handleDelete(gif.id_gif)}>
+                  <DeleteIcon />
+                </IconButton>
+              )}
 
-  {user_id == gif.creator.id_user && jwtToken && (
-    <Edit gif={gif} id={gif.id_gif} />
-  )}
+              {user_id === gif.creator.id_user && jwtToken && <Edit gif={gif} id={gif.id_gif} />}
 
-  {user_role != 'Admin' && user_id != gif.creator.id_user && jwtToken && (
-    <IconButton onClick={() => handleReport(gif.id_gif)}>
-      <ReportIcon />
-    </IconButton>
-  )}
+              {user_role !== 'Admin' && user_id !== gif.creator.id_user && jwtToken && (
+                <IconButton onClick={() => handleReport(gif.id_gif)}>
+                  <ReportIcon />
+                </IconButton>
+              )}
 
-  {gif.likedByCurrentUser === false ? (
-    <IconButton onClick={() => handleLike(gif.id_gif)}>
-      <ToastContainer
-        position="top-right"
-        autoClose={1}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      <ThumbUpAltOutlinedIcon />
-      <span style={{ color: 'white' }}>{gif.likeCount} </span>
-    </IconButton>
-  ) : (
-    <IconButton onClick={() => handleDislike(gif.id_gif)}>
-      <ToastContainer
-        position="top-right"
-        autoClose={1}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      <ThumbUpIcon />
-      <span style={{ color: 'white' }}>{gif.likeCount} </span>
-    </IconButton>
-    
-  )}
-  {user_role == 'Admin'  && jwtToken && (
-     <IconButton>
-    <Ban id={gif.id_gif} />
-    </IconButton>
-  )}
-</div>
-  
+              {gif.likedByCurrentUser === false ? (
+                <IconButton onClick={() => handleLike(gif.id_gif)}>
+                  <ToastContainer
+                    position='top-right'
+                    autoClose={1}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme='light'
+                  />
+                  <ThumbUpAltOutlinedIcon />
+                  <span style={{ color: 'white' }}>{gif.likeCount} </span>
+                </IconButton>
+              ) : (
+                <IconButton onClick={() => handleDislike(gif.id_gif)}>
+                  <ToastContainer
+                    position='top-right'
+                    autoClose={1}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme='light'
+                  />
+                  <ThumbUpIcon />
+                  <span style={{ color: 'white' }}>{gif.likeCount} </span>
+                </IconButton>
+              )}
+
+              {user_role === 'Admin' && jwtToken && (
+                <IconButton>
+                  <Ban id={gif.id_gif} />
+                </IconButton>
+              )}
+            </div>
+          </li>
+        ))
+      : searchResults.map(gif => (
+          <li key={gif.id_gif}>
+            {user_id === gif.creator.id_user && jwtToken ? (
+              <div style={{ border: '2px purple', display: 'inline-block' }}>
+                <Link to={`/podstrona/${gif.id_gif}`}>
+                  <img
+                    src={`${window.API_URL}${gif.reflink}`}
+                    alt={gif.title}
+                    style={{ width: '200px', height: '200px' }}
+                    onClick={<Gifen id={gif.id_gif} />}
+                  />
+                </Link>
+              </div>
+            ) : (
+              <Link to={`/podstrona/${gif.id_gif}`}>
+                <img
+                  src={`${window.API_URL}${gif.reflink}`}
+                  alt={gif.title}
+                  style={{ width: '200px', height: '200px' }}
+                />
+              </Link>
+            )}
+            <div className='button-container'>
+              {(user_role === 'Admin' || user_id === gif.creator.id_user) && jwtToken && (
+                <IconButton onClick={() => handleDelete(gif.id_gif)}>
+                  <DeleteIcon />
+                </IconButton>
+              )}
+
+              {user_id === gif.creator.id_user && jwtToken && <Edit gif={gif} id={gif.id_gif} />}
+
+              {user_role !== 'Admin' && user_id !== gif.creator.id_user && jwtToken && (
+                <IconButton onClick={() => handleReport(gif.id_gif)}>
+                  <ReportIcon />
+                </IconButton>
+              )}
+
+              {gif.likedByCurrentUser === false ? (
+                <IconButton onClick={() => handleLike(gif.id_gif)}>
+                  <ToastContainer
+                    position='top-right'
+                    autoClose={1}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme='light'
+                  />
+                  <ThumbUpAltOutlinedIcon />
+                  <span style={{ color: 'white' }}>{gif.likeCount} </span>
+                </IconButton>
+              ) : (
+                <IconButton onClick={() => handleDislike(gif.id_gif)}>
+                  <ToastContainer
+                    position='top-right'
+                    autoClose={1}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme='light'
+                  />
+                  <ThumbUpIcon />
+                  <span style={{ color: 'white' }}>{gif.likeCount} </span>
+                </IconButton>
+              )}
+
+              {user_role === 'Admin' && jwtToken && (
+                <IconButton>
+                  <Ban id={gif.id_gif} />
+                </IconButton>
+              )}
+            </div>
           </li>
         ))}
-            
-          
-        
-      </div>
-}
-      {( searchResults.length === 0) &&    <InfiniteScroll
+  </div>
+)}
+      {( searchResults.length == 0 && categoryResults.length == 0) &&    <InfiniteScroll
       dataLength={gifs.length}
-      hasMore={true}
-      onScroll={loadGifs}
+      hasMore={hasMore}
+      next={loadGifs}
      
       scrollThreshold={200}
     >
