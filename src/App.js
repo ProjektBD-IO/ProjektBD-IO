@@ -8,6 +8,8 @@ import ReportList from './report';
 import Gifen from './awd';
 import FolderGifs from './gifsinfolder';
 import FolderComponent from './folder';
+import Category from './category';
+import Tag from './tag';
 function App() {
   return (
     <div className="App">
@@ -25,6 +27,8 @@ function App() {
         </Routes>
         <div className="content">
           <Routes>
+            <Route path="/category/:category" element={<Category/>}/>
+            <Route path="/search/:search" element={<Tag/>}/>
             <Route path="/" element={<GifPage />} />
           </Routes>
         </div>
