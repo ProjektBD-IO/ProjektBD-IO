@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Modal from 'react-modal';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BlockIcon from '@mui/icons-material/Block';
 function Ban({ id }) {
@@ -69,7 +69,7 @@ function Ban({ id }) {
         toast.success('Gif usunięty pomyślnie', {
           position: "top-right",
             autoClose: 500,
-            hideProgressBar: false,
+            hideProgressBar: true,
             closeOnClick: true,
             pauseOnHover: false,
             draggable: false,
@@ -128,9 +128,11 @@ function Ban({ id }) {
         
       </Modal>
       <ToastContainer
+      limit={1}
+      transition={Zoom}
         position="top-right"
         autoClose={1}
-        hideProgressBar={false}
+        hideProgressBar
         newestOnTop={false}
         closeOnClick
         rtl={false}

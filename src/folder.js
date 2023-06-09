@@ -80,10 +80,23 @@ const FolderComponent = () => {
       });
       const data = await response.json();
       setNewFolderName('');
-      fetchFolders();
+      fetchFolders(); 
+      window.location.reload();
     } catch (error) {
       console.error('Wystąpił błąd podczas dodawania folderu:', error);
-    }
+      window.location.reload();
+      if (error.message.includes('Folder alr')) {
+        toast.warn('Istnieje folder o tej nazwie', {
+          position: 'top-right',
+          autoClose: 500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: 'light',
+        });
+    }}
   };
 
   const openEditModal = (folderId, folderName) => {
@@ -200,22 +213,22 @@ const FolderComponent = () => {
         placeholder='Dodaj folder'
         onChange={(e) => setNewFolderName(e.target.value)}
       />
-      <IconButton>
-      <CreateNewFolderIcon fontSize="large" onClick={addFolder} />
+      <IconButton onClick={addFolder}>
+      <CreateNewFolderIcon fontSize="large"  />
       </IconButton>
       <ul>
-        {folders.map((folder) => (
-          <li key={folder.id}>
+        {folders.map((folder, index) => (
+          <li key={index}>
             {folder.name}
              <Link to={`/MojeGify/${folder.id_folder}/${folder.name}`}>
-              <IconButton>
-            <FolderIcon fontSize="large" onClick={()=> <FolderGifs id={folder.id_folder} name={folder.name} />}/>
+              <IconButton onClick={()=> <FolderGifs id={folder.id_folder} name={folder.name} />}>
+            <FolderIcon fontSize="large" />
             </IconButton>
     </Link>
-    <IconButton>
-            <EditIcon onClick={() => openEditModal(folder.id_folder, folder.name)} />
-            </IconButton> <IconButton>
-            <FolderDeleteIcon fontSize="large" onClick={() => deleteFolder(folder.id_folder)} />
+    <IconButton onClick={() => openEditModal(folder.id_folder, folder.name)}>
+            <EditIcon  />
+            </IconButton > <IconButton onClick={() => deleteFolder(folder.id_folder)}>
+            <FolderDeleteIcon fontSize="large"  />
             </IconButton>
           </li>
         ))}
@@ -234,11 +247,11 @@ const FolderComponent = () => {
         
       />
     </Link>
-    <IconButton>
-    <AddBoxIcon onClick={() => {
+    <IconButton onClick={() => {
   setOpenModal(true);
   handleImageClick(gif.id_gif);
-}} /></IconButton>
+}}>
+    <AddBoxIcon  /></IconButton>
    
         </div>
         
@@ -282,14 +295,15 @@ const FolderComponent = () => {
           {folder.name}
         </option>
       ))}
-    </select><IconButton>
-    <Button variant="contained" onClick={() => addGifToFolder(selectedFolder, gifId)}>
+    </select><IconButton onClick={() => addGifToFolder(selectedFolder, gifId)}>
+    <Button variant="contained" >
       Dodaj do folderu
     </Button>
     </IconButton>
   </div>
 </Modal>
 <ToastContainer
+limit={1}
                   position="top-right"
                   autoClose={1}
                   hideProgressBar={false}

@@ -4,7 +4,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { IconButton } from '@mui/material';
 import LazyLoad from 'react-lazyload';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
-import { ToastContainer, toast } from 'react-toastify';
+import { Zoom, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Edit from './edit';
@@ -113,7 +113,7 @@ const handleLike = async (id) => {
       toast.error('Musisz być zalogowany aby dać like', {
         position: "top-right",
         autoClose: 500,
-        hideProgressBar: false,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
@@ -162,7 +162,7 @@ const handleDislike = async (id) => {
 
         position: "top-right",
         autoClose: 500,
-        hideProgressBar: false,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: false,
         draggable: true,
@@ -215,7 +215,7 @@ const handleDelete = async (id) => {
       toast.error('Musisz być zalogowany aby usunąć gifa', {
         position: "top-right",
         autoClose: 500,
-        hideProgressBar: false,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
@@ -238,7 +238,7 @@ const handleDelete = async (id) => {
       toast.success('Usunięto', {
         position: 'top-right',
         autoClose: 500,
-        hideProgressBar: false,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: false,
         draggable: false,
@@ -253,7 +253,7 @@ const handleDelete = async (id) => {
       toast.warn('Wystąpił problem podczas usuwania gifa', {
         position: 'top-right',
         autoClose: 500,
-        hideProgressBar: false,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: false,
         draggable: false,
@@ -292,7 +292,7 @@ const handleReport = async (id) => {
       toast.success('Zgłoszono', {
         position: 'top-right',
         autoClose: 500,
-        hideProgressBar: false,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: false,
         draggable: false,
@@ -307,7 +307,7 @@ const handleReport = async (id) => {
       toast.warn('Zgłosiłeś już ten gif', {
         position: 'top-right',
         autoClose: 500,
-        hideProgressBar: false,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: false,
         draggable: false,
@@ -339,14 +339,16 @@ const user_role = localStorage.getItem('user_role');
     <div>
       
       <div className='search-bar'>
-      <input type='text' placeholder='Wyszukaj...' value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} />
-        <button type='submit' onClick={handleTagChange} >Search</button>
+      
+  <input type="text" placeholder="Wyszukaj..." value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} className="search-input" />
+  <button type="submit" onClick={handleTagChange} className="search-button">Szukaj</button>
+
         
     
         
         <div className='dropdown'>
      
-        <select value={Sort} onChange={handleSort}> 
+        <select value={Sort} onChange={handleSort} className="sort-select"> 
         <option value="addDate desc">Od najnowszych</option>
           <option value="addDate asc">Od najstarszych</option>
           <option value="title asc">Alfabetycznie a-z</option>
@@ -359,11 +361,11 @@ const user_role = localStorage.getItem('user_role');
         </div>
       <div className='dropdown'>
         
-        <select value={selectedCategory} onChange={handleCategoryChange}> 
+        <select value={selectedCategory} onChange={handleCategoryChange} className="category-select"> 
           <option value="Cat0">Kategorie</option>
-          <option value="Cat1">Cat1</option>
-          <option value="Cat2">Cat2</option>
-          <option value="Cat3">Cat3</option>
+          <option value="Cat1">Humor</option>
+          <option value="Cat2">Sport</option>
+          <option value="Cat3">Zwierzęta</option>
         </select>
         
       </div>
@@ -432,9 +434,10 @@ const user_role = localStorage.getItem('user_role');
                   {gif.likedByCurrentUser==false?
                   <IconButton onClick={() => handleLike(gif.id_gif)}>
                   <ToastContainer
+                  transition={Zoom}
                   position="top-right"
                   autoClose={1}
-                  hideProgressBar={false}
+                  hideProgressBar
                   newestOnTop={false}
                   closeOnClick
                   rtl={false}
@@ -442,17 +445,20 @@ const user_role = localStorage.getItem('user_role');
                   draggable
                   pauseOnHover
                   theme="light"
+                  limit={1}
                   />
                   <ThumbUpAltOutlinedIcon />
                   
-                   <span style={{ color: 'white' }}>{gif.likeCount} </span>
+                   <span style={{ color: '#663399' }}>{gif.likeCount} </span>
                  </IconButton>
                     :
                   <IconButton onClick={() => handleDislike(gif.id_gif)}>
                    <ToastContainer
+                   transition={Zoom}
                   position="top-right"
+                  limit={1}
                   autoClose={1}
-                  hideProgressBar={false}
+                  hideProgressBar
                   newestOnTop={false}
                   closeOnClick
                   rtl={false}
@@ -462,7 +468,7 @@ const user_role = localStorage.getItem('user_role');
                   theme="light"
                   />
                   <ThumbUpIcon  />
-                  <span style={{ color: 'white' }}>{gif.likeCount} </span>
+                  <span style={{ color: '663399' }}>{gif.likeCount} </span>
                   </IconButton>
                   
                   }

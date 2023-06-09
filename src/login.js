@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function LoginForm(props) {
@@ -18,7 +18,7 @@ function LoginForm(props) {
       toast.warn('Podaj login i hasło', {
         position: "top-right",
         autoClose: 500,
-        hideProgressBar: false,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: false,
         draggable: false,
@@ -65,7 +65,7 @@ function LoginForm(props) {
         toast.warn('Błędny login lub hasło', {
           position: "top-right",
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
@@ -127,9 +127,11 @@ useEffect(() => {
         </button>
       )}
       <ToastContainer
+      transition={Zoom}
+      limit={1}
         position="top-right"
         autoClose={500}
-        hideProgressBar={false}
+        hideProgressBar
         closeOnClick
         pauseOnHover
         draggable

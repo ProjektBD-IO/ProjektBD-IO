@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Edit from './edit';
 import ReportIcon from '@mui/icons-material/Report';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import { IconButton } from '@mui/material';
+import { IconButton, Zoom } from '@mui/material';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -45,7 +45,7 @@ function Gifen() {
         toast.error('Musisz być zalogowany aby dać like', {
           position: "top-right",
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
@@ -92,7 +92,7 @@ function Gifen() {
         toast.error('Musisz być zalogowany aby dać dislike', {
           position: "top-right",
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
@@ -144,7 +144,7 @@ function Gifen() {
         toast.error('Musisz być zalogowany aby usunąć gifa', {
           position: "top-right",
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
@@ -167,7 +167,7 @@ function Gifen() {
         toast.success('Usunięto', {
           position: 'top-right',
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
@@ -182,7 +182,7 @@ function Gifen() {
         toast.warn('Wystąpił problem podczas usuwania gifa', {
           position: 'top-right',
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
@@ -221,7 +221,7 @@ function Gifen() {
         toast.success('Zgłoszono', {
           position: 'top-right',
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
@@ -236,7 +236,7 @@ function Gifen() {
         toast.warn('Nie możesz zgłosić gifa dwa razy', {
           position: 'top-right',
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
@@ -285,9 +285,11 @@ const user_role = localStorage.getItem('user_role');
                         {gif.likedByCurrentUser==false?
                         <IconButton onClick={() => handleLike(gif.id_gif)}>
                         <ToastContainer
+                        transition={Zoom}
+                        limit={1}
                         position="top-right"
                         autoClose={1}
-                        hideProgressBar={false}
+                        hideProgressBar
                         newestOnTop={false}
                         closeOnClick
                         rtl={false}
@@ -303,9 +305,11 @@ const user_role = localStorage.getItem('user_role');
                           :
                         <IconButton onClick={() => handleDislike(gif.id_gif)}>
                          <ToastContainer
+                         transition={Zoom}
+                         limit={1}
                         position="top-right"
                         autoClose={1}
-                        hideProgressBar={false}
+                        hideProgressBar
                         newestOnTop={false}
                         closeOnClick
                         rtl={false}

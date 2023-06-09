@@ -62,8 +62,8 @@ function FolderGifs() {
             alt={gif.title}
             style={{ width: '200px', height: '200px' }}
           />
-          <IconButton>
-          <DeleteIcon onClick={() => deletegif(gif.id_gif)}/>
+          <IconButton onClick={() => deletegif(gif.id_gif)}>
+          <DeleteIcon />
           </IconButton>
         </div>
       ))}

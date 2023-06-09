@@ -61,6 +61,7 @@ function Ignore({id}) {
     <div className="button-container">
       <NotificationsPausedIcon onClick={fetchData}></NotificationsPausedIcon>
       <ToastContainer
+      limit={1}
         position="top-right"
         autoClose={1}
         hideProgressBar={false}

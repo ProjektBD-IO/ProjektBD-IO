@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { ToastContainer, toast, ToastMessage } from 'react-toastify';
+import { ToastContainer, toast, ToastMessage, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ThreeDots } from 'react-loading-icons';
 import Alert from '@mui/material/Alert';
@@ -51,9 +51,10 @@ function RegistrationForm() {
     setIsRegistering(false);
     // Handle response
     toast.success('Zarejestrowano pomyślnie', {
+      
       position: 'top-right',
       autoClose: 500,
-      hideProgressBar: false,
+      hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: false,
       draggable: false,
@@ -142,9 +143,11 @@ function RegistrationForm() {
       )}
 
       <ToastContainer
+      transition={Zoom}
+        limit={1}
         position="top-right"
         autoClose={500}
-        hideProgressBar={false}
+        hideProgressBar
         newestOnTop={false}
         closeOnClick
         rtl={false}

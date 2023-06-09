@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function AddFileModal() {
   const [formData, setFormData] = useState({
@@ -47,7 +47,7 @@ function AddFileModal() {
       toast.success('Gif dodany pomyślnie', {
         position: "top-right",
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
@@ -60,7 +60,7 @@ function AddFileModal() {
       toast.warn('Błąd w dodawaniu gifa', {
         position: "top-right",
         autoClose: 500,
-        hideProgressBar: false,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: false,
         draggable: false,
@@ -141,9 +141,11 @@ function AddFileModal() {
           </label>
           <button type="submit">Add File</button>
           <ToastContainer
+          transition={Zoom}
+          limit={1}
 position="top-right"
 autoClose={500}
-hideProgressBar={false}
+hideProgressBar
 newestOnTop={false}
 closeOnClick
 rtl={false}

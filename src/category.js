@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import { IconButton } from '@mui/material';
+import { IconButton, Zoom } from '@mui/material';
 import LazyLoad from 'react-lazyload';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import { ToastContainer, toast } from 'react-toastify';
@@ -126,7 +126,7 @@ const handleSort = (event) => {
         toast.error('Musisz być zalogowany aby dać like', {
           position: "top-right",
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
@@ -173,7 +173,7 @@ const handleSort = (event) => {
   
           position: "top-right",
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: true,
@@ -224,7 +224,7 @@ const handleSort = (event) => {
         toast.error('Musisz być zalogowany aby usunąć gifa', {
           position: "top-right",
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
@@ -247,7 +247,7 @@ const handleSort = (event) => {
         toast.success('Usunięto', {
           position: 'top-right',
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
@@ -262,7 +262,7 @@ const handleSort = (event) => {
         toast.warn('Wystąpił problem podczas usuwania gifa', {
           position: 'top-right',
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
@@ -301,7 +301,7 @@ const handleSort = (event) => {
         toast.success('Zgłoszono', {
           position: 'top-right',
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
@@ -316,7 +316,7 @@ const handleSort = (event) => {
         toast.warn('Zgłosiłeś już ten gif', {
           position: 'top-right',
           autoClose: 500,
-          hideProgressBar: false,
+          hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
@@ -338,18 +338,18 @@ return(
     <div>
     <div className='dropdown'>
         
-        <select value={selectedCategory} onChange={handleCategoryChange}> 
+        <select value={selectedCategory} onChange={handleCategoryChange} className="category-select"> 
           <option value="Cat0">Kategorie</option>
-          <option value="Cat1">Cat1</option>
-          <option value="Cat2">Cat2</option>
-          <option value="Cat3">Cat3</option>
+          <option value="Cat1">Humor</option>
+          <option value="Cat2">Sport</option>
+          <option value="Cat3">Zwierzęta</option>
         </select>
         
       </div>
         
         <div className='dropdown'>
      
-        <select value={Sort} onChange={handleSort}> 
+        <select value={Sort} onChange={handleSort} className="sort-select"> 
         <option value="addDate desc">Od najnowszych</option>
           <option value="addDate asc">Od najstarszych</option>
           <option value="title asc">Alfabetycznie a-z</option>
@@ -393,9 +393,11 @@ return(
         {gif.likedByCurrentUser === false ? (
           <IconButton onClick={() => handleLike(gif.id_gif)}>
             <ToastContainer
+            transition={Zoom}
+              limit={1}
               position='top-right'
               autoClose={1}
-              hideProgressBar={false}
+              hideProgressBar
               newestOnTop={false}
               closeOnClick
               rtl={false}
@@ -405,14 +407,16 @@ return(
               theme='light'
             />
             <ThumbUpAltOutlinedIcon />
-            <span style={{ color: 'white' }}>{gif.likeCount} </span>
+            <span style={{ color: '663399' }}>{gif.likeCount} </span>
           </IconButton>
         ) : (
           <IconButton onClick={() => handleDislike(gif.id_gif)}>
             <ToastContainer
+            transition={Zoom}
+              limit={1}
               position='top-right'
               autoClose={1}
-              hideProgressBar={false}
+              hideProgressBar
               newestOnTop={false}
               closeOnClick
               rtl={false}
@@ -422,7 +426,7 @@ return(
               theme='light'
             />
             <ThumbUpIcon />
-            <span style={{ color: 'white' }}>{gif.likeCount} </span>
+            <span style={{ color: '663399' }}>{gif.likeCount} </span>
           </IconButton>
         )}
 
