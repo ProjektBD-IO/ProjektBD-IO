@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from "react-router";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -27,7 +27,11 @@ const [prevtag, setprevtag] = useState(null);
 const { search } = useParams();
 const [searchTerm, setSearchTerm] = useState('');
 const Navigate = useNavigate();
+const sendRequestRef = useRef(true);
 const handleSearch = () => { 
+  if (sendRequestRef.current) {
+    sendRequestRef.current = false;
+
   const url = `${window.API_URL}/search/tag/${search}?page=${page}&sort=${Sort}`;
   const headers = {
     'Content-Type': 'application/json'
@@ -54,58 +58,55 @@ const handleSearch = () => {
         setSearchResults(prevResults => [...prevResults, ...newResults]);
         setSearchResultsIds(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]);
         setHasMore(newResults.length>0);
+        sendRequestRef.current = true;
     } else {
         setHasMore(false);
+        sendRequestRef.current = true;
       }
     })
     .catch(error => console.error(error));
+}  
 };
   useEffect(() => {
-    handleSearch();
+    handleSearch(Sort, page);
   }, [Sort, page]);
   const loadMoreGifs = () => {
+    
   setPage(page => page + 1);
+    
 };
-  const handleTagChange = () => {
-    setprevtag(search);
-    if(searchTerm !==''){
-    if (searchTerm !== prevtag) {
-      SetSort(prevsort);
-      setprevsort(null);
+const handleTagChange = () => {
+  if (searchTerm !== prevtag) {
+    SetSort(prevsort);
+    setprevsort(null);
+    setSearchResults([]);
+    setSearchResultsIds([]);
+    setprevtag(searchTerm);
+    Navigate(`/search/${searchTerm}`);
+    window.location.reload();
+  }
+};
+  
+const handleSort = (event) => {
+  const newSort = event.target.value;
+  SetSort(newSort);
+  if (newSort !== "sor") {
+    if (newSort !== prevsort) {
       setSearchResults([]);
       setSearchResultsIds([]);
-      window.location.reload();
-      setprevtag(searchTerm);
-      Navigate(`/search/${searchTerm}`);
-      
-  }
-  }
-  
-  };
-  
-  const handleSort = (event) => {
-    const Sort = event.target.value;
-    SetSort(Sort);
-    if (Sort !="sor") {
-      if (Sort != prevsort) {
-        setSearchResults([]);
-        setSearchResultsIds([]);
-        setPage(0);
-        setprevsort(Sort);
-        window.location.reload()
-
-        
-      }
       setPage(0);
+      setprevsort(newSort);
       handleSearch();
-    } else {
-      setSearchResults([]);
-      setSearchResultsIds([]);
-      setPage(0);
-      setprevsort(null);
-      window.location.reload();
     }
-  };
+  } else {
+    setSearchResults([]);
+    setSearchResultsIds([]);
+    setPage(0);
+    setprevsort(null);
+    handleSearch();
+  }
+};
+
 
   const handleLike = async (id) => {
     try {
@@ -354,7 +355,6 @@ const handleSearch = () => {
       dataLength={searchResults.length}
       next={loadMoreGifs}
       hasMore={hasMore}
-      loadOnScroll= {true}
       scrollThreshold={0.9}
     >
       <div className='galleryy'>

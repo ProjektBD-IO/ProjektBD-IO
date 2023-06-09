@@ -20,7 +20,10 @@ function GifPage() {
   const [page, setPage] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('Cat0');
   const [searchResultsIds, setSearchResultsIds] = useState([]);
-  const [Sort, SetSort] = useState('addDate desc')
+  const [Sort, SetSort] = useState(() => {
+    const savedSort = localStorage.getItem('sortValue'); // Sprawdź czy istnieje zapisana wartość sortowania w localStorage lub sessionStorage
+    return savedSort ? savedSort : 'addDate desc'; // Jeśli istnieje, ustaw ją jako początkową wartość Sort, w przeciwnym razie ustaw wartość domyślną
+  });
   const [prevsort, setprevsort] = useState(null);
   const [gifs, setGifs] = useState([]);
   const [gifsid, setgifsid] = useState([]);
@@ -31,10 +34,12 @@ function GifPage() {
     const newSort = event.target.value;
     if (newSort !== Sort) {
       SetSort(newSort);
+      localStorage.setItem('sortValue', newSort); // Zapisz wartość sortowania w localStorage lub sessionStorage
       setGifs([]);
       setgifsid([]);
       setPage(0);
       loadMoreGifs();
+      window.location.reload();
       loadGifs();
     }
   };
@@ -86,9 +91,11 @@ function GifPage() {
     } else {
       return Promise.resolve(false);
     }
+    
   };
   
   useEffect(() => {
+    
     loadGifs();
   }, [Sort, page]);
   
@@ -366,6 +373,7 @@ const user_role = localStorage.getItem('user_role');
       next={loadMoreGifs}
       hasMore={hasMore}
       scrollThreshold={0.9}
+      sort={Sort}
     >
       <div className='galleryy'>
         

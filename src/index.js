@@ -8,10 +8,10 @@ window.API_URL = "http://localhost:8889";
 window.API_URL2 = "http://localhost:3000";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+ 
     
     <App />
-  </React.StrictMode>
+ 
 );
 
 // If you want to start measuring performance in your app, pass a function

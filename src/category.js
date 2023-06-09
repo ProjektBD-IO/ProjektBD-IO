@@ -68,7 +68,6 @@ useEffect(() => {
 }, [Sort, page]);
 const loadMoreGifs = () => {
   setPage(page=>page+1);
-  handleCategorySelect();
 };
 const handleSort = (event) => {
     const Sort = event.target.value;
@@ -316,14 +315,15 @@ const handleSort = (event) => {
         setCategoryResultsIds([]);
         setPage(0);
         setPreviousCategory(category);
-        handleCategorySelect(category);
+        Navigate(`/category/${category}`);
+        window.location.reload();
       }
-      handleCategorySelect(category);
+      
     } else {
       setPage(0);
       setPreviousCategory(null);
     }
-    Navigate(`/category/${category}`);
+    
   };
   const jwtToken = localStorage.getItem('jwtToken');
   const user_id = localStorage.getItem('user_id');
