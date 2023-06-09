@@ -18,14 +18,19 @@ import { useNavigate } from 'react-router-dom';
 function Category(){
 const Navigate = useNavigate();
 const [page, setPage] = useState(0)
-const [selectedCategory, setSelectedCategory] = useState('Cat0');;
+const [selectedCategory, setSelectedCategory] = useState(
+  localStorage.getItem('selectedCategory') || 'Cat0'
+);
 const [hasMore, setHasMore] = useState(true);
 const { category } = useParams();
 const [previousCategory, setPreviousCategory] = useState(null);
 const [categoryResults, setCategoryResults] = useState([]);
 const [categoryResultsIds, setCategoryResultsIds] = useState([]);
 const [prevtag, setprevtag] = useState(null);
-const [Sort, SetSort] = useState('addDate desc')
+const [Sort, SetSort] = useState(() => {
+  const savedSort = localStorage.getItem('sortValue'); // Sprawdź czy istnieje zapisana wartość sortowania w localStorage lub sessionStorage
+  return savedSort ? savedSort : 'addDate desc'; // Jeśli istnieje, ustaw ją jako początkową wartość Sort, w przeciwnym razie ustaw wartość domyślną
+});
 const [prevsort, setprevsort] = useState(null);
 const url2=`${window.API_URL}/search/category/${category}?page=${page}&sort=${Sort}`;
 const handleCategorySelect = () => {
@@ -62,12 +67,31 @@ const handleCategorySelect = () => {
 };
 
 useEffect(() => {
- 
-    handleCategorySelect();
-  
-}, [Sort, page]);
+  handleCategorySelect();
+}, [Sort, page, selectedCategory]);
 const loadMoreGifs = () => {
   setPage(page=>page+1);
+};
+const handleCategoryChange = (event) => {
+  const category = event.target.value;
+  setSelectedCategory(category);
+  if (category != "Cat0") {
+    if (category != previousCategory) {
+      localStorage.setItem('selectedCategory', category);
+      setCategoryResults([]);
+      setCategoryResultsIds([]);
+      setPage(0);
+      setPreviousCategory(category);
+      Navigate(`/category/${category}`);
+      window.location.reload();
+    }
+    
+  } else {
+    setPage(0);
+    setPreviousCategory(null);
+  }
+  
+  
 };
 const handleSort = (event) => {
     const Sort = event.target.value;
@@ -75,19 +99,20 @@ const handleSort = (event) => {
     
     if (Sort != "sor") {
       if (Sort != prevsort) {
+        localStorage.setItem('sortValue', Sort);
         setCategoryResults([]);
         setCategoryResultsIds([]);
         setPage(0);
         setprevsort(Sort);
-      }
-      setPage(0);
-      if(category != 'Cat0') {
+        window.location.reload();
         handleCategorySelect();
-    } else {
+      }
+      else {
       setCategoryResults([]);
       setCategoryResultsIds([]);
       setPage(0);
       setprevsort(null);}
+      handleCategorySelect();
     }
   };
   
@@ -305,26 +330,7 @@ const handleSort = (event) => {
       console.log('An error occurred while removing a like:', error);
     }
   };
-  const handleCategoryChange = (event) => {
-    const category = event.target.value;
-    setSelectedCategory(category);
-    if (category != "Cat0") {
 
-      if (category != previousCategory) {
-        setCategoryResults([]);
-        setCategoryResultsIds([]);
-        setPage(0);
-        setPreviousCategory(category);
-        Navigate(`/category/${category}`);
-        window.location.reload();
-      }
-      
-    } else {
-      setPage(0);
-      setPreviousCategory(null);
-    }
-    
-  };
   const jwtToken = localStorage.getItem('jwtToken');
   const user_id = localStorage.getItem('user_id');
   const user_role = localStorage.getItem('user_role');

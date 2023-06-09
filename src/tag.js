@@ -21,7 +21,10 @@ const [hasMore, setHasMore] = useState(true);
 const [searchResults, setSearchResults] = useState([]);
 const [page, setPage] = useState(0);
 const [searchResultsIds, setSearchResultsIds] = useState([]);
-const [Sort, SetSort] = useState('addDate desc')
+const [Sort, SetSort] = useState(() => {
+  const savedSort = localStorage.getItem('sortValue'); // Sprawdź czy istnieje zapisana wartość sortowania w localStorage lub sessionStorage
+  return savedSort ? savedSort : 'addDate desc'; // Jeśli istnieje, ustaw ją jako początkową wartość Sort, w przeciwnym razie ustaw wartość domyślną
+});
 const [prevsort, setprevsort] = useState(null);
 const [prevtag, setprevtag] = useState(null);
 const { search } = useParams();
@@ -92,10 +95,12 @@ const handleSort = (event) => {
   SetSort(newSort);
   if (newSort !== "sor") {
     if (newSort !== prevsort) {
+      localStorage.setItem('sortValue', newSort);
       setSearchResults([]);
       setSearchResultsIds([]);
       setPage(0);
       setprevsort(newSort);
+      window.location.reload();
       handleSearch();
     }
   } else {
