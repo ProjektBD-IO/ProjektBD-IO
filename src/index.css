@@ -1,0 +1,268 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  font-family: "Poppins";
+  color: #663399;
+}
+#ThumbUpIcon{
+  color: purple;
+}
+.nav {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  max-width:1000px;
+  margin: 0 auto;
+  margin-left:auto;
+  
+}
+
+.nav h1 {
+  width: "100px"; 
+  height: "40px"; 
+  color: #663399;
+}
+.nav .links {
+  margin-left: auto;
+  padding: 0px;
+  display: flex;
+  align-items: center;
+  height: 60%;
+  text-align: center;
+}
+.nav .links {
+  margin-left: auto;
+  padding: 0px;
+  display: flex;
+  align-items: center;
+  height: 60%;
+  text-align: center;
+}
+
+
+.nav a {
+  
+  width: 100%;
+  margin-left: auto;
+  color: #663399;
+  text-decoration: none;
+  padding: 6px;
+}
+.nav a:hover {
+  color: #f1356d;
+}
+.nav button{
+  width:100px;
+  margin-left: 20px;
+  padding: 6px;
+  border-Radius: 8px;
+  font-size: 14px;
+}
+.nav .links:hover{
+  color: #f1356d;
+}
+.content {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+    
+}
+body {
+  background-color: black	;
+}
+form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input[type="text"] {
+  width: 50%;
+  padding: 5px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+}
+
+.search-bar button[type="submit"] {
+  padding: 5px 10px;
+  background-color: #FF1493;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.gallery{
+  -webkit-column-count: 4;
+  -moz-cloumn-count: 4;
+  column-count: 4;
+  -webkit-column-width: 25%;
+  -moz-column-width:25%;
+  column-width:25%;
+  padding:0 12px;
+  margin-right: 0px;
+  margin-left: 0px;
+  padding:10px;
+
+}
+
+@media (max-widht: 991px){
+  .gallery{
+    -webkit-column-count: 2;
+    -moz-cloumn-count: 2;
+    column-count: 2;
+  }
+}
+@media (max-widht: 480px){
+  .gallery{
+    -webkit-column-count: 2;
+    -moz-cloumn-count: 2;
+    column-count: 2;
+    -webkit-column-width: 100%;
+    -moz-column-width:100%;
+    column-width:100%;
+    padding:0 12px;
+  }
+}
+
+
+.galleryy {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  grid-gap: 12px; 
+  padding: 15px;;
+  margin: 0;
+}
+.galleryy li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  break-inside: avoid-column;
+}
+.search-results {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  grid-gap: 12px; 
+  padding: 0;
+  margin: 0;
+
+}
+.search-results li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  break-inside: avoid-column;
+}
+
+.category-results {
+  margin-top: 20px;
+  -webkit-column-count: 4;
+  -moz-cloumn-count: 4;
+  column-count: 4;
+  -webkit-column-width: 25%;
+  -moz-column-width:25%;
+  column-width:25%;
+  padding:0 12px;
+  margin-right: 0px;
+  margin-left: 0px;
+  padding:0px;
+
+}
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  size: 200px;
+}
+
+.search-bar input[type="text"] {
+ 
+  border: none;
+  
+  font-size: 14px;
+  width: 70%;
+  margin-right: 10px;
+}
+
+.search-bar button[type="submit"] {
+  
+  background-color: #FF1493;
+  color: white;
+  border: none;
+  cursor: pointer;
+  size: 200px;
+  font-size: 14px;
+}
+
+.dropdown {
+  padding:15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.dislike-button {
+  color: black;
+}
+
+.dislike-button-liked {
+  color: blue;
+}
+.usernameLabel {
+  color: #663399;
+  text-decoration:#663399;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.usernameLabe {
+  color: #663399;
+  text-decoration:#663399;
+  
+  
+}
+.passwordError {
+  color: red;
+  margin-top: 5px; /* Przykładowe przesunięcie komunikatu */
+}
+.usernameLabel input {
+  width: 300px; /* Przykładowa szerokość pola tekstowego */
+}
+.successMessage {
+  color: white;
+  background-color: #663399;
+  border-radius: 4px;
+  padding: 8px;
+}
+.report-link {
+  font-size: 40px;
+  color: #663399;
+  /* Dodaj inne style dla linku */
+}
+
+.report-info {
+  font-size: 25px;
+  color: #663399;
+  /* Dodaj inne style dla elementu <p> */
+}
+.report-list {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.button-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Odstęp między przyciskami */
+}
+.gal {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); 
+  grid-gap: 12px; 
+  padding: 0px;;
+  margin: 0;
+}
