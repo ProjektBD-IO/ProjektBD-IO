@@ -24,10 +24,24 @@ function GifPage() {
   const [prevsort, setprevsort] = useState(null);
   const [gifs, setGifs] = useState([]);
   const [gifsid, setgifsid] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const sendRequestRef = useRef(true);
+
+  const handleSort = (event) => {
+    const newSort = event.target.value;
+    if (newSort !== Sort) {
+      SetSort(newSort);
+      setGifs([]);
+      setgifsid([]);
+      setPage(0);
+      loadMoreGifs();
+      loadGifs();
+    }
+  };
 
   const loadGifs = () => {
     const url3 = `${window.API_URL}/?page=${page}&sort=${Sort}`;
+    
     if (sendRequestRef.current) {
       sendRequestRef.current = false;
   
@@ -37,34 +51,34 @@ function GifPage() {
   
       const jwtToken = localStorage.getItem('jwtToken');
       if (jwtToken) {
-        headers['Authorization'] = `Bearer ${jwtToken}`;}
-        else {
-          localStorage.removeItem('jwtToken');
-        }
+        headers['Authorization'] = `Bearer ${jwtToken}`;
+      } else {
+        localStorage.removeItem('jwtToken');
+      }
   
       fetch(url3, {
         method: 'GET',
         headers: headers
       })
         .then((response) => {
-          
-            return response.json();
-          })
+          return response.json();
+        })
         .then((data) => {
-        
           console.log('Dane z serwera:', data);
-          const newResults = data.content.filter(gif => !searchResultsIds.includes(gif.id_gif)); // filter out duplicates
-          setGifs(prevResults => [...prevResults, ...newResults]);
-          setgifsid(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]); // add new IDs to the array
-          setPage((page) => page + 1);
-          setHasMore(newResults.length > 0);
-          sendRequestRef.current = true;
+          if (Array.isArray(data.content) && data.content.length > 0) {
+            const newResults = data.content.filter(gif => !searchResultsIds.includes(gif.id_gif)); // filter out duplicates
+            setGifs(prevResults => [...prevResults, ...newResults]);
+            setgifsid(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]);
+            sendRequestRef.current = true;
+            setHasMore(newResults.length>0);
+          } else {
+            setHasMore(false);
+            sendRequestRef.current = true;
+          }
           
-  
-        
           return Promise.resolve(true);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error('Błąd podczas pobierania danych z serwera:', error);
           sendRequestRef.current = true;
           return Promise.resolve(false);
@@ -73,37 +87,15 @@ function GifPage() {
       return Promise.resolve(false);
     }
   };
- useEffect(() => {
-  loadGifs();
-}, [Sort, page]);
   
-
-const handleSort = (event) => {
-  const Sort = event.target.value;
-  SetSort(Sort);
+  useEffect(() => {
+    loadGifs();
+  }, [Sort, page]);
   
-  if (Sort != "sor") {
-    if (Sort != prevsort) {
-      setGifs([]);
-      setgifsid([]);
-      setPage(-1);
-      setprevsort(Sort);
-    }
-    setPage(-1);
-    
-    
-      loadGifs();
-    
-    
-  } else {
-    
-    setGifs([]);
-    setgifsid([]);
-    setPage(-1);
-    setprevsort(null);
-  }
-};
-
+  const loadMoreGifs = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+  
   
 const handleLike = async (id) => {
   try {
@@ -369,18 +361,16 @@ const user_role = localStorage.getItem('user_role');
         
       </div>
 
-    <InfiniteScroll
+      <InfiniteScroll
       dataLength={gifs.length}
+      next={loadMoreGifs}
       hasMore={hasMore}
-      next={loadGifs}
-     
-      scrollThreshold={200}
+      scrollThreshold={0.9}
     >
-      
       <div className='galleryy'>
         
-        {gifs.map((gif) => (
-          <li key={gif.id_gif} >
+        {gifs.map((gif, index) => (
+            <li key={`gif-${index}`}>
             <LazyLoad> 
               <div> 
                 
@@ -470,13 +460,15 @@ const user_role = localStorage.getItem('user_role');
                   }
                  
                   </div>
+                  
   </div>
+  
             </LazyLoad>
           </li>
         ))}
         
       </div>
-    </InfiniteScroll>
+      </InfiniteScroll>
     </div>
     
     

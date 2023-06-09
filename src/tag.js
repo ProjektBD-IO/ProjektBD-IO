@@ -16,6 +16,7 @@ import Ban from './ban';
 import { useNavigate } from 'react-router';
 
 function Tag(){
+  
 const [hasMore, setHasMore] = useState(true);
 const [searchResults, setSearchResults] = useState([]);
 const [page, setPage] = useState(0);
@@ -26,65 +27,85 @@ const [prevtag, setprevtag] = useState(null);
 const { search } = useParams();
 const [searchTerm, setSearchTerm] = useState('');
 const Navigate = useNavigate();
-const handleSearch = () => {
-    
-    const url = `${window.API_URL}/search/tag/${search}?page=${page}&sort=${Sort}`;
-    const headers = {
-      'Content-Type': 'application/json'
-    };
+const handleSearch = () => { 
+  const url = `${window.API_URL}/search/tag/${search}?page=${page}&sort=${Sort}`;
+  const headers = {
+    'Content-Type': 'application/json'
+  };
 
-    const jwtToken = localStorage.getItem('jwtToken');
-    if (jwtToken) {
-      headers['Authorization'] = `Bearer ${jwtToken}`;}
-      else {
-        localStorage.removeItem('jwtToken');
-      }
+  const jwtToken = localStorage.getItem('jwtToken');
+  if (jwtToken) {
+    headers['Authorization'] = `Bearer ${jwtToken}`;
+  } else {
+    localStorage.removeItem('jwtToken');
+  }
 
-    fetch(url, {
-      method: 'GET',
-      headers: headers
+  fetch(url, {
+    method: 'GET',
+    headers: headers
+  })
+    .then((response) => {
+      return response.json();
     })
-      .then((response) => {
-        
-          return response.json();
-        })
-      .then((data) => {
-        console.log('Dane z serwera:', data);
+    .then((data) => {
+      console.log('Dane z serwera:', data);
+      if (Array.isArray(data.content) && data.content.length > 0) {
         const newResults = data.content.filter(gif => !searchResultsIds.includes(gif.id_gif)); // filter out duplicates
         setSearchResults(prevResults => [...prevResults, ...newResults]);
-        setSearchResultsIds(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]); // add new IDs to the array
-        setPage(page=>page+1);
-        setHasMore(newResults.length>0); 
-      })
-      .catch(error => console.error(error));
-  ;}
+        setSearchResultsIds(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]);
+        setHasMore(newResults.length>0);
+    } else {
+        setHasMore(false);
+      }
+    })
+    .catch(error => console.error(error));
+};
   useEffect(() => {
     handleSearch();
   }, [Sort, page]);
+  const loadMoreGifs = () => {
+  setPage(page => page + 1);
+};
+  const handleTagChange = () => {
+    setprevtag(search);
+    if(searchTerm !==''){
+    if (searchTerm !== prevtag) {
+      SetSort(prevsort);
+      setprevsort(null);
+      setSearchResults([]);
+      setSearchResultsIds([]);
+      window.location.reload();
+      setprevtag(searchTerm);
+      Navigate(`/search/${searchTerm}`);
+      
+  }
+  }
+  
+  };
+  
   const handleSort = (event) => {
     const Sort = event.target.value;
     SetSort(Sort);
-    
-    if (Sort != "sor") {
+    if (Sort !="sor") {
       if (Sort != prevsort) {
         setSearchResults([]);
         setSearchResultsIds([]);
         setPage(0);
         setprevsort(Sort);
+        window.location.reload()
+
+        
       }
       setPage(0);
-      if (search != '') { 
-        handleSearch();
-     
-      
+      handleSearch();
     } else {
       setSearchResults([]);
-      setSearchResultsIds([])
+      setSearchResultsIds([]);
       setPage(0);
       setprevsort(null);
+      window.location.reload();
     }
   };
-}
 
   const handleLike = async (id) => {
     try {
@@ -301,22 +322,8 @@ const handleSearch = () => {
       console.log('An error occurred while removing a like:', error);
     }
   };
-  const handleTagChange = () => {
-    
-    if (searchTerm != "") {
-      if (searchTerm != prevtag) {
-        setSearchResults([]);
-        setSearchResultsIds([]);
-        setPage(0);
-        Navigate(`/search/${searchTerm}`);
-        setprevtag(searchTerm);
-        handleSearch(searchTerm); // dodaj argument searchTerm
-      }
-     
-      setPage(0);
-    } 
-
-  };
+  
+ 
   const jwtToken = localStorage.getItem('jwtToken');
   const user_id = localStorage.getItem('user_id');
   const user_role = localStorage.getItem('user_role');
@@ -328,13 +335,7 @@ const handleSearch = () => {
       <button type='submit' onClick={handleTagChange} >Search</button>
      
         
-      <InfiniteScroll
-      dataLength={searchResults.length+1}
-      next={handleSearch}
-      hasMore={hasMore}
       
-      scrollThreshold={200}
-    >
         
         <div className='dropdown'>
      
@@ -347,12 +348,19 @@ const handleSearch = () => {
         </select>
        
       </div>
-      </InfiniteScroll>
+      
       </div>
+      <InfiniteScroll
+      dataLength={searchResults.length}
+      next={loadMoreGifs}
+      hasMore={hasMore}
+      loadOnScroll= {true}
+      scrollThreshold={0.9}
+    >
       <div className='galleryy'>
         
-    {searchResults.map(gif => (
-    <li key={gif.id_gif}>
+    {searchResults.map((gif, index) => (
+            <li key={`gif-${index}`}>
       <LazyLoad> 
       {user_id === gif.creator.id_user && jwtToken ? (
         <div style={{ border: '2px purple', display: 'inline-block' }}>
@@ -435,8 +443,7 @@ const handleSearch = () => {
     </li>
   ))}
 </div>
-
+</InfiniteScroll>
 </>
 );}
 export default Tag;
-
