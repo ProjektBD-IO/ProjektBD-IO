@@ -11,12 +11,24 @@ import 'react-toastify/dist/ReactToastify.css';
 function Gifen() {
   const { id } = useParams();
   const [gifs, setGifs] = useState([]);
-
+  const jwtToken = localStorage.getItem('jwtToken');
+  const user_id = localStorage.getItem('user_id');
+  const user_role = localStorage.getItem('user_role');
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch(`${window.API_URL}/api/gif/${id}`);
 
+      try {
+        const jwtToken = localStorage.getItem('jwtToken');
+        const headers = {
+          'Content-Type': 'application/json',
+          
+        };
+        if (jwtToken) {
+          headers.Authorization = `Bearer ${jwtToken}`;
+        }
+      
+        const response = await fetch(`${window.API_URL}/api/gif/${id}`,{headers: headers});
+          
         if (response.ok) {
           const data = await response.json();
           console.log('Dane z serwera:', data);
@@ -26,7 +38,8 @@ function Gifen() {
           } else if (typeof data === 'object') {
             setGifs([data]);
           }
-        } else {
+        }
+         else {
           console.error('Błąd podczas pobierania danych z serwera:', response.status);
         }
       } catch (error) {
@@ -250,81 +263,60 @@ function Gifen() {
       console.log('An error occurred while removing a like:', error);
     }
   };
-const jwtToken = localStorage.getItem('jwtToken');
-const user_id = localStorage.getItem('user_id');
-const user_role = localStorage.getItem('user_role');
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', border:'5px' }}>
       <ul>
         {gifs.map((gif) => (
           <li key={gif.id_gif}>
-
-            <h2>Tytuł: {gif.title}</h2>
-            <img src={`${window.API_URL}${gif.reflink}`} alt={gif.title} width="500" />
-            <p>Tagi: {gif.tags}</p>
-            <p>Kategoria: {gif.category.category_name}</p>
-            <p>Data dodania: {gif.addDate}</p>
-            {(user_role == 'Admin' || user_id == gif.creator.id_user) && jwtToken ? (
-                
-                <IconButton onClick={() => handleDelete(gif.id_gif)}> <DeleteIcon  /></IconButton>
-                
-              
-              ) : null}
-              {user_id == gif.creator.id_user && jwtToken? (
-              <Edit gif={gif} id={gif.id_gif}/>
-              ) : null}
-              {  user_role != 'Admin' && user_id != gif.creator.id_user && jwtToken  ?(
-                      
-                      <IconButton onClick={() => handleReport(gif.id_gif)}> <ReportIcon  /> </IconButton>
-                      
-                    
-                    ) : null}
-           
-      
-              
-                        {gif.likedByCurrentUser==false?
-                        <IconButton onClick={() => handleLike(gif.id_gif)}>
-                        <ToastContainer
-                   transition={Zoom}
-                  position="top-right"
-                  limit={1}
-                  autoClose={1}
-                  hideProgressBar
-                  newestOnTop={false}
-                  closeOnClick={false}
-                  rtl={false}
-                  pauseOnFocusLoss={false}
-                  draggable={false}
-                  pauseOnHover={false}
-                  theme="light"
-                  />
-                        <ThumbUpAltOutlinedIcon />
-                        
-                         <span style={{ color: '#663399' }}>{gif.likeCount} </span>
-                       </IconButton>
-                          :
-                        <IconButton onClick={() => handleDislike(gif.id_gif)}>
-                         <ToastContainer
-                   transition={Zoom}
-                  position="top-right"
-                  limit={1}
-                  autoClose={1}
-                  hideProgressBar
-                  newestOnTop={false}
-                  closeOnClick={false}
-                  rtl={false}
-                  pauseOnFocusLoss={false}
-                  draggable={false}
-                  pauseOnHover={false}
-                  theme="light"
-                  />
-                        <ThumbUpIcon  />
-                        <span style={{ color: '#663399' }}>{gif.likeCount} </span>
-                        </IconButton>
-                        }
+            {(gif.gifType || (!gif.gifType && user_id == gif.creator.id_user)) && (
+              <>
+                <h2>Tytuł: {gif.title}</h2>
+                <img src={`${window.API_URL}${gif.reflink}`} alt={gif.title} width="500" />
+                <p>Tagi: {gif.tags}</p>
+                <p>Kategoria: {gif.category.category_name}</p>
+                <p>Data dodania: {gif.addDate.substring(0, 10)}</p>
+                {(user_role == 'Admin' || user_id == gif.creator.id_user) && jwtToken && (
+                  <IconButton onClick={() => handleDelete(gif.id_gif)}>
+                    <DeleteIcon />
+                  </IconButton>
+                )}
+                {user_id == gif.creator.id_user && jwtToken && <Edit gif={gif} id={gif.id_gif} />}
+                {user_role != 'Admin' && user_id != gif.creator.id_user && jwtToken && (
+                  <IconButton onClick={() => handleReport(gif.id_gif)}>
+                    <ReportIcon />
+                  </IconButton>
+                )}
+                {gif.likedByCurrentUser == false ? (
+                  <IconButton onClick={() => handleLike(gif.id_gif)}>
+                    <ThumbUpAltOutlinedIcon />
+                    <span style={{ color: '#663399' }}>{gif.likeCount}</span>
+                  </IconButton>
+                ) : (
+                  <IconButton onClick={() => handleDislike(gif.id_gif)}>
+                    <ThumbUpIcon />
+                    <span style={{ color: '#663399' }}>{gif.likeCount}</span>
+                  </IconButton>
+                )}
+              </>
+            )}
           </li>
         ))}
       </ul>
+      <ToastContainer
+        transition={Zoom}
+        position="top-right"
+        limit={1}
+        autoClose={1}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+        theme="light"
+      />
     </div>
   );
 }

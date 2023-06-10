@@ -404,39 +404,13 @@ const handleSort = (event) => {
 
         {gif.likedByCurrentUser === false ? (
           <IconButton onClick={() => handleLike(gif.id_gif)}>
-            <ToastContainer
-                   transition={Zoom}
-                  position="top-right"
-                  limit={1}
-                  autoClose={1}
-                  hideProgressBar
-                  newestOnTop={false}
-                  closeOnClick={false}
-                  rtl={false}
-                  pauseOnFocusLoss={false}
-                  draggable={false}
-                  pauseOnHover={false}
-                  theme="light"
-                  />
+           
             <ThumbUpAltOutlinedIcon />
             <span style={{ color: '663399' }}>{gif.likeCount} </span>
           </IconButton>
         ) : (
           <IconButton onClick={() => handleDislike(gif.id_gif)}>
-           <ToastContainer
-                   transition={Zoom}
-                  position="top-right"
-                  limit={1}
-                  autoClose={1}
-                  hideProgressBar
-                  newestOnTop={false}
-                  closeOnClick={false}
-                  rtl={false}
-                  pauseOnFocusLoss={false}
-                  draggable={false}
-                  pauseOnHover={false}
-                  theme="light"
-                  />
+           
             <ThumbUpIcon />
             <span style={{ color: '663399' }}>{gif.likeCount} </span>
           </IconButton>
@@ -452,6 +426,20 @@ const handleSort = (event) => {
     </li>
   ))}
 </div>
+<ToastContainer
+                   transition={Zoom}
+                  position="top-right"
+                  limit={1}
+                  autoClose={1}
+                  hideProgressBar
+                  newestOnTop={false}
+                  closeOnClick={false}
+                  rtl={false}
+                  pauseOnFocusLoss={false}
+                  draggable={false}
+                  pauseOnHover={false}
+                  theme="light"
+                  />
 </InfiniteScroll>
 </>
 );}

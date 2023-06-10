@@ -136,9 +136,9 @@ function AddFileModal() {
   <label style={{ marginBottom: '10px' }}>
     Kategoria:
     <select name="category" onChange={handleChange} style={{ marginTop: '5px' }}>
-      <option value="Cat1">Humor</option>
-      <option value="Cat2">Sport</option>
-      <option value="Cat3">Zwierzęta</option>
+      <option value="Humor">Humor</option>
+      <option value="Sport">Sport</option>
+      <option value="Zwierzęta">Zwierzęta</option>
     </select>
   </label>
   <label style={{ marginBottom: '10px' }}>

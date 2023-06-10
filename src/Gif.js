@@ -363,9 +363,9 @@ const user_role = localStorage.getItem('user_role');
         
         <select value={selectedCategory} onChange={handleCategoryChange} className="category-select"> 
           <option value="Cat0">Kategorie</option>
-          <option value="Cat1">Humor</option>
-          <option value="Cat2">Sport</option>
-          <option value="Cat3">Zwierzęta</option>
+          <option value="Humor">Humor</option>
+      <option value="Sport">Sport</option>
+      <option value="Zwierzęta">Zwierzęta</option>
         </select>
         
       </div>
@@ -433,40 +433,14 @@ const user_role = localStorage.getItem('user_role');
         
                   {gif.likedByCurrentUser==false?
                   <IconButton onClick={() => handleLike(gif.id_gif)}>
-                  <ToastContainer
-                   transition={Zoom}
-                   position="top-right"
-                   limit={1}
-                   autoClose={1}
-                   hideProgressBar
-                   newestOnTop={false}
-                   closeOnClick={false}
-                   rtl={false}
-                   pauseOnFocusLoss={false}
-                   draggable={false}
-                   pauseOnHover={false}
-                   theme="light"
-                  />
+                  
                   <ThumbUpAltOutlinedIcon />
                   
                    <span style={{ color: '#663399' }}>{gif.likeCount} </span>
                  </IconButton>
                     :
                   <IconButton onClick={() => handleDislike(gif.id_gif)}>
-                   <ToastContainer
-                   transition={Zoom}
-                  position="top-right"
-                  limit={1}
-                  autoClose={1}
-                  hideProgressBar
-                  newestOnTop={false}
-                  closeOnClick={false}
-                  rtl={false}
-                  pauseOnFocusLoss={false}
-                  draggable={false}
-                  pauseOnHover={false}
-                  theme="light"
-                  />
+                   
                   <ThumbUpIcon  />
                   <span style={{ color: '663399' }}>{gif.likeCount} </span>
                   </IconButton>
@@ -483,6 +457,20 @@ const user_role = localStorage.getItem('user_role');
         
       </div>
       </InfiniteScroll>
+      <ToastContainer
+                   transition={Zoom}
+                   position="top-right"
+                   limit={1}
+                   autoClose={1}
+                   hideProgressBar
+                   newestOnTop={false}
+                   closeOnClick={false}
+                   rtl={false}
+                   pauseOnFocusLoss={false}
+                   draggable={false}
+                   pauseOnHover={false}
+                   theme="light"
+                  />
     </div>
     
     

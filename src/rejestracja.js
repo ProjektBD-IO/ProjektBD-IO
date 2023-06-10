@@ -155,7 +155,7 @@ function RegistrationForm() {
           <Stack sx={{ width: '100%' }} spacing={2}>
             <Alert severity="info">
               Zaraz otrzymasz wiadomość na pocztę z linkiem uwierzytelniającym. Potwierdź swój email
-              klikając w ten link.
+              klikając w ten link. Za kilka sekund zostaniesz automatycznie przeniesiony na stronę główną
             </Alert>
           </Stack>
           <ThreeDots></ThreeDots>

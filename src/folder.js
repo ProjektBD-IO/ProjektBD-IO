@@ -114,6 +114,10 @@ const FolderComponent = () => {
 
   const editFolder = async () => {
     const token = localStorage.getItem('jwtToken');
+    if (!editFolderName) {
+      toast.error('Wpisz nazwę folderu');
+      return;
+    }
     try {
       await fetch(`${window.API_URL}/api/folder/edit?folderId=${editFolderId}&name=${editFolderName}`, {
         method: 'PUT',
@@ -202,7 +206,15 @@ const FolderComponent = () => {
   const handleImageClick = (gifId) => {
     setIdg(gifId);
   };
-  
+  const ButtonStyle = {
+    color: 'white',
+    backgroundColor: '#663399',
+    borderRadius: '8px',
+    padding: '10px 20px',
+    textDecoration: 'none',
+    margin: '10px',
+    fontSize: 16
+  };
   return (
     <div>
       <h1>Foldery</h1>
@@ -257,27 +269,38 @@ const FolderComponent = () => {
         
       ))}</div>
       <Modal
-        open={openModal1}
-        onClose={closeEditModal}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <div style={{ backgroundColor: '#F8F8FF', padding: '20px' }}>
-          <h2>Edytuj folder</h2>
-          <TextField
-            label="Nowa nazwa"
-            value={editFolderName}
-            onChange={(e) => setEditFolderName(e.target.value)}
-          />
-          <Button variant="contained" onClick={editFolder}>
-            Zapisz
-          </Button>
-        </div>
-      </Modal>
-      <Modal
+  open={openModal1}
+  onClose={closeEditModal}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <div
+    style={{
+      backgroundColor: '#F8F8FF',
+      padding: '20px',
+      borderRadius: '4px',
+      boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
+    }}
+  >
+    <h2>Edytuj folder</h2>
+    <div>
+      <TextField
+        label="Nowa nazwa"
+        value={editFolderName}
+        onChange={(e) => setEditFolderName(e.target.value)}
+        style={{ marginTop: '10px' }}
+      />
+      <button variant="contained" onClick={editFolder} style={ButtonStyle} >
+        Zapisz
+      </button>
+    </div>
+  </div>
+</Modal>
+
+<Modal
   open={openModal}
   onClose={closeAddModal}
   style={{
@@ -286,19 +309,35 @@ const FolderComponent = () => {
     justifyContent: 'center',
   }}
 >
-  <div style={{ backgroundColor: 'white', padding: '20px' }}>
+  <div
+    style={{
+      backgroundColor: 'white',
+      padding: '20px',
+      borderRadius: '4px',
+      boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
+    }}
+  >
     <h2>Wybierz folder</h2>
-    <select value={selectedFolder} onChange={(e) => setSelectedFolder(e.target.value)}>
+    <select
+      value={selectedFolder}
+      onChange={(e) => setSelectedFolder(e.target.value)}
+      style={{ marginBottom: '10px', height:'35px' }}
+    >
       <option value="">Wybierz folder</option>
       {folders.map((folder) => (
         <option key={folder.id_folder} value={folder.id_folder}>
           {folder.name}
         </option>
       ))}
-    </select><IconButton onClick={() => addGifToFolder(selectedFolder, gifId)}>
-    <Button variant="contained" >
-      Dodaj do folderu
-    </Button>
+    </select>
+    <IconButton onClick={() => addGifToFolder(selectedFolder, gifId)}>
+      <button style={{color: 'white',
+    backgroundColor: '#663399',
+    borderRadius: '8px',
+    padding: '10px 20px',
+    textDecoration: 'none',
+    margin: '10px',
+    fontSize: 16}} variant="contained">Dodaj do folderu </button>
     </IconButton>
   </div>
 </Modal>
