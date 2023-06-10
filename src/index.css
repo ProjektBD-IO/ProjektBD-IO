@@ -163,24 +163,23 @@
   padding: 20px;
     
 }
-body {
+body.light-mode {
   /* Styl dla trybu jasnego */
-  background-color:#FFFFF0;
-  color: #000000;
+  background-color:#F8F8FF;
+  color: #F8F8FF;
+  
 }
 
 body.dark-mode {
   /* Styl dla trybu ciemnego */
   background-color: #000000;
-  color: #FFFFF0;
+  color: #F8F8FF;
 }
 form {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
-
 
 .gallery{
   -webkit-column-count: 4;

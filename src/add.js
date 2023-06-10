@@ -3,6 +3,14 @@ import Modal from 'react-modal';
 import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function AddFileModal() {
+  const ButtonStyle = {
+    color: 'white',
+    backgroundColor: '#663399',
+    borderRadius: '8px',
+    padding: '10px 20px',
+    textDecoration: 'none',
+    margin: '10px',
+  };
   const [formData, setFormData] = useState({
     file: null,
     category: 'Cat1',
@@ -46,13 +54,14 @@ function AddFileModal() {
     if (response.ok) {
       toast.success('Gif dodany pomyślnie', {
         position: "top-right",
-          autoClose: 500,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: "light",
+        position: "top-right",
+        autoClose: 500,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
         });
       setModalIsOpen(false);
       window.location.reload();
@@ -61,7 +70,7 @@ function AddFileModal() {
         position: "top-right",
         autoClose: 500,
         hideProgressBar: true,
-        closeOnClick: true,
+        closeOnClick: false,
         pauseOnHover: false,
         draggable: false,
         progress: undefined,
@@ -95,8 +104,11 @@ function AddFileModal() {
 
   return (
     <div>
-      <button  onClick={() => setModalIsOpen(true)} style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px'}}>Dodaj gifa</button>
-      <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} style={{
+      <button  onClick={() => setModalIsOpen(true)} style={ButtonStyle}>Dodaj gifa</button>
+      <Modal
+  isOpen={modalIsOpen}
+  onRequestClose={() => setModalIsOpen(false)}
+  style={{
     overlay: {
       backgroundColor: 'rgba(0, 0, 0, 0.5)'
     },
@@ -106,56 +118,61 @@ function AddFileModal() {
       right: 'auto',
       bottom: 'auto',
       marginRight: '-50%',
-      transform: 'translate(-50%, -50%)'
+      transform: 'translate(-50%, -50%)',
+      border: 'none', // Usunięcie obramowania
+      background: '#fff', // Tło modalu
+      borderRadius: '8px', // Zaokrąglone rogi
+      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)', // Cień
+      padding: '20px' // Wewnętrzny odstęp
     }
-  }}>
-        <h2>Dodaj gifa</h2>
-        <form onSubmit={handleSubmit}>
-          <label>
-            File:
-            <input type="file" name="file" onChange={handleFileChange} required />
-          </label>
-          <label>
-          Kategoria:
-        <select name="category" onChange={handleChange}>
-          
-          <option value="Cat1">Cat1</option>
-          <option value="Cat2">Cat2</option>
-          <option value="Cat3">Cat3</option>
-        </select>
-          </label>
-          <label>
-            Tagi:
-            <input type="text" name="tags" value={formData.tags} onChange={handleChange} />
-          </label>
-          <label>
-            Tytuł:
-            <input type="text" name="title" value={formData.title} onChange={handleChange} />
-          </label>
-          <label>
-           Prywatny:
-           <select name="gifType" value={formData.gifType} onChange={handleChange}>
-           <option value="false">Tak</option>
-          <option value="true">Nie</option>
-          </select>
-          </label>
-          <button type="submit">Add File</button>
-          <ToastContainer
-          transition={Zoom}
-          limit={1}
-position="top-right"
-autoClose={500}
-hideProgressBar
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"
-/>
-        </form>
+  }}
+>
+<h2 style={{ marginBottom: '20px' }}>Dodaj gif</h2>
+<form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'row' }}>
+<label style={{position: 'relative', display: 'inline-block' }}>
+  
+  <input type="file" name="file" onChange={handleFileChange} required  />
+</label>
+  <label style={{ marginBottom: '10px' }}>
+    Kategoria:
+    <select name="category" onChange={handleChange} style={{ marginTop: '5px' }}>
+      <option value="Cat1">Humor</option>
+      <option value="Cat2">Sport</option>
+      <option value="Cat3">Zwierzęta</option>
+    </select>
+  </label>
+  <label style={{ marginBottom: '10px' }}>
+    Tagi:
+    <input type="text" name="tags" value={formData.tags} onChange={handleChange} style={{ marginTop: '5px' }} />
+  </label>
+  <label style={{ marginBottom: '10px' }}>
+    Tytuł:
+    <input type="text" name="title" value={formData.title} onChange={handleChange} style={{ marginTop: '5px' }} />
+  </label>
+  <label style={{ marginBottom: '10px' }}>
+    Prywatny:
+    <select name="gifType" value={formData.gifType} onChange={handleChange} style={{ marginTop: '5px' }}>
+      <option value="false">Tak</option>
+      <option value="true">Nie</option>
+    </select>
+  </label>
+  <button type="submit" style={ButtonStyle}>Dodaj</button>
+</form>
       </Modal>
+      <ToastContainer
+                   transition={Zoom}
+                  position="top-right"
+                  limit={1}
+                  autoClose={1}
+                  hideProgressBar
+                  newestOnTop={false}
+                  closeOnClick={false}
+                  rtl={false}
+                  pauseOnFocusLoss={false}
+                  draggable={false}
+                  pauseOnHover={false}
+                  theme="light"
+                  />
     </div>
   );
 }

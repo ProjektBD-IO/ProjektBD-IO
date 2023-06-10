@@ -1,8 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 function LoginForm(props) {
+  
+const FormStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};
+
+const InputStyle = {
+  margin: '10px',
+  padding: '5px',
+  borderRadius: '4px',
+  border: '1px solid #663399',
+};
+
+const SubmitButtonStyle = {
+  color: 'white',
+  backgroundColor: '#663399',
+  borderRadius: '4px',
+  height: '30px',
+  width: '100px',
+  marginTop: '10px',
+};
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -17,13 +39,13 @@ function LoginForm(props) {
     if (username.trim() === '' || password.trim() === '') {
       toast.warn('Podaj login i hasło', {
         position: "top-right",
-        autoClose: 500,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: "light",
+          autoClose: 500,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
       });
       console.log('Wprowadź login i hasło');
       return;
@@ -66,7 +88,7 @@ function LoginForm(props) {
           position: "top-right",
           autoClose: 500,
           hideProgressBar: true,
-          closeOnClick: true,
+          closeOnClick: false,
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
@@ -98,13 +120,14 @@ useEffect(() => {
   }
 }, []);
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={FormStyle} >
       <label className="usernameLabel">
         Login:
         <input
           type="text"
           value={username}
           onChange={(event) => setUsername(event.target.value)}
+          style={InputStyle}
         />
       </label>
       <br />
@@ -114,6 +137,7 @@ useEffect(() => {
           type="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
+          style={InputStyle}
         />
       </label>
       <br />
@@ -122,22 +146,24 @@ useEffect(() => {
          <p style={{ color: '#663399' }}>Witaj {localStorage.getItem('username')}</p>
          </div>
       ) : (
-        <button type="submit" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '4px', height: '30px', width: '100px' }}>
+        <button type="submit" style={SubmitButtonStyle}>
           Zaloguj się
         </button>
       )}
       <ToastContainer
-      transition={Zoom}
-      limit={1}
-        position="top-right"
-        autoClose={500}
-        hideProgressBar
-        closeOnClick
-        pauseOnHover
-        draggable
-        pauseOnFocusLoss
-        theme="light"
-      />
+                   transition={Zoom}
+                  position="top-right"
+                  limit={1}
+                  autoClose={1}
+                  hideProgressBar
+                  newestOnTop={false}
+                  closeOnClick={false}
+                  rtl={false}
+                  pauseOnFocusLoss={false}
+                  draggable={false}
+                  pauseOnHover={false}
+                  theme="light"
+                  />
     </form>
   );
 }

@@ -11,7 +11,7 @@ import { Link} from "react-router-dom";
 import FolderGifs from './gifsinfolder';
 import { IconButton } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import { ToastContainer, toast } from 'react-toastify';
+import { Zoom, ToastContainer, toast } from 'react-toastify';
 const FolderComponent = () => {
   
   const [folders, setFolders] = useState([]);
@@ -265,7 +265,7 @@ const FolderComponent = () => {
           justifyContent: 'center',
         }}
       >
-        <div style={{ backgroundColor: 'white', padding: '20px' }}>
+        <div style={{ backgroundColor: '#F8F8FF', padding: '20px' }}>
           <h2>Edytuj folder</h2>
           <TextField
             label="Nowa nazwa"
@@ -303,16 +303,17 @@ const FolderComponent = () => {
   </div>
 </Modal>
 <ToastContainer
-limit={1}
+                   transition={Zoom}
                   position="top-right"
+                  limit={1}
                   autoClose={1}
-                  hideProgressBar={false}
+                  hideProgressBar
                   newestOnTop={false}
-                  closeOnClick
+                  closeOnClick={false}
                   rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
+                  pauseOnFocusLoss={false}
+                  draggable={false}
+                  pauseOnHover={false}
                   theme="light"
                   />
     </div>

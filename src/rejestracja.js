@@ -7,6 +7,27 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 
 function RegistrationForm() {
+  const FormStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  };
+  
+  const InputStyle = {
+    margin: '10px',
+    padding: '5px',
+    borderRadius: '4px',
+    border: '1px solid #663399',
+  };
+  
+  const SubmitButtonStyle = {
+    color: 'white',
+    backgroundColor: '#663399',
+    borderRadius: '4px',
+    height: '30px',
+    width: '100px',
+    marginTop: '10px',
+  };
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [isMailConfirmed, setIsMailConfirmed] = useState(false);
   const [formData, setFormData] = useState({
@@ -82,11 +103,12 @@ function RegistrationForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}
+      style={FormStyle}
     >
       <label className="usernameLabel">
         Email:
-        <input type="email" name="mail" value={formData.mail} onChange={handleChange} required />
+        <input type="email" name="mail" value={formData.mail} onChange={handleChange} required style={InputStyle} />
+        
       </label>
       <label className="usernameLabel">
         Hasło:
@@ -96,6 +118,7 @@ function RegistrationForm() {
           value={formData.password}
           onChange={handleChange}
           required
+          style={InputStyle}
         />
       </label>
       <label className="usernameLabel">
@@ -106,6 +129,7 @@ function RegistrationForm() {
           value={formData.confirmPassword}
           onChange={handleChange}
           required
+          style={InputStyle}
         />
       </label>
       <label className="usernameLabel">
@@ -116,17 +140,13 @@ function RegistrationForm() {
           value={formData.nickname}
           onChange={handleChange}
           required
+          style={InputStyle}
         />
       </label>
       <div style={{ color: 'red' }}>{passwordRequirements}</div>
       <button
         type="submit"
-        style={{
-          color: 'white',
-          backgroundColor: '#663399',
-          borderRadius: '4px',
-          height: '35px'
-        }}
+        style={SubmitButtonStyle}
       >
         Zarejestruj
       </button>
@@ -142,20 +162,20 @@ function RegistrationForm() {
         </div>
       )}
 
-      <ToastContainer
-      transition={Zoom}
-        limit={1}
-        position="top-right"
-        autoClose={500}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+<ToastContainer
+                   transition={Zoom}
+                  position="top-right"
+                  limit={1}
+                  autoClose={1}
+                  hideProgressBar
+                  newestOnTop={false}
+                  closeOnClick={false}
+                  rtl={false}
+                  pauseOnFocusLoss={false}
+                  draggable={false}
+                  pauseOnHover={false}
+                  theme="light"
+                  />
     </form>
   );
 }

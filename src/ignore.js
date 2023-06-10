@@ -33,14 +33,14 @@ function Ignore({id}) {
       if (response.ok) {
         window.location.reload();
         toast.success('Gif dodany pomyślnie', {
-            position: "top-right",
-              autoClose: 500,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: false,
-              progress: undefined,
-              theme: "light",
+          position: "top-right",
+          autoClose: 500,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
             })
         const data = await response.json();
         console.log('Data from the server:', data);

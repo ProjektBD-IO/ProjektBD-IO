@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 import { toast, ToastContainer, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BlockIcon from '@mui/icons-material/Block';
+Modal.setAppElement('#root');
 function Ban({ id }) {
   const [showModal, setShowModal] = useState(false);
   const [banNote, setBanNote] = useState('');
@@ -13,22 +14,26 @@ function Ban({ id }) {
     today.setHours(0, 0, 0, 0);
     return today;
   });
-
+  const [gifDeleted, setGifDeleted] = useState(false); 
   const fetchData = async () => {
     const confirmed = window.confirm('Czy na pewno chcesz zbanować tego gifa?');
-
-  if (!confirmed) {
-    // Jeśli użytkownik nie potwierdzi usunięcia, zakończ funkcję
-    return;
-  }
+  
+    if (!confirmed) {
+      return; // Nie wyświetlaj wiadomości o usunięciu gif, jeśli anulowano
+    }
+  
     if (!selectedDate) {
       console.error('Please select an expiration date.');
       return;
     }
-
+  
     try {
       const token = localStorage.getItem('jwtToken');
-      const expirationDate = selectedDate.toISOString().slice(0, -5);
+  
+      // Dodaj 2 godziny do selectedDate
+      const expirationDateWithHours = new Date(selectedDate.getTime() + 2 * 60 * 60 * 1000);
+      const expirationDate = expirationDateWithHours.toISOString().slice(0, -5);
+  
       const response = await fetch(
         `${window.API_URL}/api/ban?gifId=${id}&expirationDate=${expirationDate}&banNote=${banNote}`,
         {
@@ -39,19 +44,31 @@ function Ban({ id }) {
           }
         }
       );
-
+  
       if (response.ok) {
+        setGifDeleted(true);
         const data = await response.json();
         console.log('Data from the server:', data);
+        toast.success('Użytkownik został zbanowany', {
+          position: 'top-right',
+          autoClose: 500,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: 'light'
+        });
+       
       } else {
         console.error('Error while fetching data from the server:', response.status);
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error while fetching data from the server:', error);
-      toast.error('Ten użytkownik został już zbanowany, ten gif zostanie usunięty');
+      window.location.reload();
     }
   };
-
   const openModal = () => {
     setShowModal(true);
   };
@@ -61,21 +78,24 @@ function Ban({ id }) {
   };
 
   const handleMenuSubmit = () => {
-    
-    fetchData()
+    const expirationDateWithHours = new Date(selectedDate.getTime() + 2 * 60 * 60 * 1000);
+    fetchData(expirationDateWithHours)
       .then(() => {
         closeModal();
+        
         // Refresh the page
+        if (gifDeleted) {
         toast.success('Gif usunięty pomyślnie', {
           position: "top-right",
-            autoClose: 500,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: "light",
+        autoClose: 500,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
           })
+          window.location.reload();}
       })
       .catch((error) => {
         console.error('Error while submitting ban:', error);
@@ -123,24 +143,26 @@ function Ban({ id }) {
           timeCaption="Time"
           placeholderText="Select expiration date"
         />
-        <button onClick={handleMenuSubmit}>Submit</button>
-        <button onClick={closeModal}>Cancel</button>
+        <div>
+  <button onClick={handleMenuSubmit}>Submit</button>
+  <button onClick={closeModal}>Cancel</button>
+</div>
         
       </Modal>
       <ToastContainer
-      limit={1}
-      transition={Zoom}
-        position="top-right"
-        autoClose={1}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+                   transition={Zoom}
+                  position="top-right"
+                  limit={1}
+                  autoClose={1}
+                  hideProgressBar
+                  newestOnTop={false}
+                  closeOnClick={false}
+                  rtl={false}
+                  pauseOnFocusLoss={false}
+                  draggable={false}
+                  pauseOnHover={false}
+                  theme="light"
+                  />
     </div>
   );
 }

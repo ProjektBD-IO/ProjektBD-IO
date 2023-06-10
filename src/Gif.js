@@ -114,9 +114,9 @@ const handleLike = async (id) => {
         position: "top-right",
         autoClose: 500,
         hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
         progress: undefined,
         theme: "light",
         });
@@ -159,13 +159,12 @@ const handleDislike = async (id) => {
     if (!jwtToken) {
       // Handle the case when the JWT token is not available
       toast.error('Musisz być zalogowany aby dać dislike', {
-
         position: "top-right",
         autoClose: 500,
         hideProgressBar: true,
-        closeOnClick: true,
+        closeOnClick: false,
         pauseOnHover: false,
-        draggable: true,
+        draggable: false,
         progress: undefined,
         theme: "light",
         });
@@ -216,9 +215,9 @@ const handleDelete = async (id) => {
         position: "top-right",
         autoClose: 500,
         hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
         progress: undefined,
         theme: "light",
       });
@@ -236,14 +235,14 @@ const handleDelete = async (id) => {
 
     if (response.ok) {
       toast.success('Usunięto', {
-        position: 'top-right',
+        position: "top-right",
         autoClose: 500,
         hideProgressBar: true,
-        closeOnClick: true,
+        closeOnClick: false,
         pauseOnHover: false,
         draggable: false,
         progress: undefined,
-        theme: 'light',
+        theme: "light",
       });
 
       console.log('Gif został usunięty');
@@ -251,14 +250,14 @@ const handleDelete = async (id) => {
       // Tutaj możesz wykonać dodatkowe działania, takie jak odświeżenie listy gifów itp.
     } else {
       toast.warn('Wystąpił problem podczas usuwania gifa', {
-        position: 'top-right',
+        position: "top-right",
         autoClose: 500,
         hideProgressBar: true,
-        closeOnClick: true,
+        closeOnClick: false,
         pauseOnHover: false,
         draggable: false,
         progress: undefined,
-        theme: 'light',
+        theme: "light",
       });
       console.log('Wystąpił problem podczas usuwania gifa');
     }
@@ -290,14 +289,14 @@ const handleReport = async (id) => {
 
     if (response.ok) {
       toast.success('Zgłoszono', {
-        position: 'top-right',
+        position: "top-right",
         autoClose: 500,
         hideProgressBar: true,
-        closeOnClick: true,
+        closeOnClick: false,
         pauseOnHover: false,
         draggable: false,
         progress: undefined,
-        theme: 'light',
+        theme: "light",
       });
 
       console.log('Reported');
@@ -305,14 +304,14 @@ const handleReport = async (id) => {
       // Tutaj możesz wykonać dodatkowe działania, takie jak odświeżenie listy gifów itp.
     } else {
       toast.warn('Zgłosiłeś już ten gif', {
-        position: 'top-right',
+        position: "top-right",
         autoClose: 500,
         hideProgressBar: true,
-        closeOnClick: true,
+        closeOnClick: false,
         pauseOnHover: false,
         draggable: false,
         progress: undefined,
-        theme: 'light',
+        theme: "light",
       });
       console.log('Wystąpił problem podczas zgłoszania gifa');
     }
@@ -327,6 +326,7 @@ const handleTagChange = () => {
 
 const handleCategoryChange = (event) => {
   const category = event.target.value;
+  localStorage.setItem('selectedCategory', category);
   setSelectedCategory(category);
   Navigate(`/category/${category}`);
 };
@@ -434,18 +434,18 @@ const user_role = localStorage.getItem('user_role');
                   {gif.likedByCurrentUser==false?
                   <IconButton onClick={() => handleLike(gif.id_gif)}>
                   <ToastContainer
-                  transition={Zoom}
-                  position="top-right"
-                  autoClose={1}
-                  hideProgressBar
-                  newestOnTop={false}
-                  closeOnClick
-                  rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
-                  theme="light"
-                  limit={1}
+                   transition={Zoom}
+                   position="top-right"
+                   limit={1}
+                   autoClose={1}
+                   hideProgressBar
+                   newestOnTop={false}
+                   closeOnClick={false}
+                   rtl={false}
+                   pauseOnFocusLoss={false}
+                   draggable={false}
+                   pauseOnHover={false}
+                   theme="light"
                   />
                   <ThumbUpAltOutlinedIcon />
                   
@@ -460,11 +460,11 @@ const user_role = localStorage.getItem('user_role');
                   autoClose={1}
                   hideProgressBar
                   newestOnTop={false}
-                  closeOnClick
+                  closeOnClick={false}
                   rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
+                  pauseOnFocusLoss={false}
+                  draggable={false}
+                  pauseOnHover={false}
                   theme="light"
                   />
                   <ThumbUpIcon  />

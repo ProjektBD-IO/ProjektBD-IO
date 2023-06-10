@@ -123,9 +123,9 @@ const handleSort = (event) => {
           position: "top-right",
           autoClose: 500,
           hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
           progress: undefined,
           theme: "light",
           });
@@ -169,13 +169,13 @@ const handleSort = (event) => {
         toast.error('Musisz być zalogowany aby dać dislike', {
   
           position: "top-right",
-          autoClose: 500,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
+        autoClose: 500,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
           });
         console.log('JWT token not found');
         return;
@@ -221,13 +221,13 @@ const handleSort = (event) => {
       if (!jwtToken) {
         toast.error('Musisz być zalogowany aby usunąć gifa', {
           position: "top-right",
-          autoClose: 500,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
+        autoClose: 500,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
         });
         console.log('JWT token not found');
         return;
@@ -243,14 +243,14 @@ const handleSort = (event) => {
   
       if (response.ok) {
         toast.success('Usunięto', {
-          position: 'top-right',
-          autoClose: 500,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: 'light',
+          position: "top-right",
+        autoClose: 500,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
         });
   
         console.log('Gif został usunięty');
@@ -258,14 +258,14 @@ const handleSort = (event) => {
         // Tutaj możesz wykonać dodatkowe działania, takie jak odświeżenie listy gifów itp.
       } else {
         toast.warn('Wystąpił problem podczas usuwania gifa', {
-          position: 'top-right',
+          position: "top-right",
           autoClose: 500,
           hideProgressBar: true,
-          closeOnClick: true,
+          closeOnClick: false,
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-          theme: 'light',
+          theme: "light",
         });
         console.log('Wystąpił problem podczas usuwania gifa');
       }
@@ -297,14 +297,14 @@ const handleSort = (event) => {
   
       if (response.ok) {
         toast.success('Zgłoszono', {
-          position: 'top-right',
+          position: "top-right",
           autoClose: 500,
           hideProgressBar: true,
-          closeOnClick: true,
+          closeOnClick: false,
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-          theme: 'light',
+          theme: "light",
         });
   
         console.log('Reported');
@@ -312,14 +312,14 @@ const handleSort = (event) => {
         // Tutaj możesz wykonać dodatkowe działania, takie jak odświeżenie listy gifów itp.
       } else {
         toast.warn('Zgłosiłeś już ten gif', {
-          position: 'top-right',
+          position: "top-right",
           autoClose: 500,
           hideProgressBar: true,
-          closeOnClick: true,
+          closeOnClick: false,
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-          theme: 'light',
+          theme: "light",
         });
         console.log('Wystąpił problem podczas zgłoszania gifa');
       }
@@ -405,38 +405,38 @@ const handleSort = (event) => {
         {gif.likedByCurrentUser === false ? (
           <IconButton onClick={() => handleLike(gif.id_gif)}>
             <ToastContainer
-            transition={Zoom}
-              position='top-right'
-              autoClose={1}
-              hideProgressBar
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme='light'
-              limit={1}
-            />
+                   transition={Zoom}
+                  position="top-right"
+                  limit={1}
+                  autoClose={1}
+                  hideProgressBar
+                  newestOnTop={false}
+                  closeOnClick={false}
+                  rtl={false}
+                  pauseOnFocusLoss={false}
+                  draggable={false}
+                  pauseOnHover={false}
+                  theme="light"
+                  />
             <ThumbUpAltOutlinedIcon />
             <span style={{ color: '663399' }}>{gif.likeCount} </span>
           </IconButton>
         ) : (
           <IconButton onClick={() => handleDislike(gif.id_gif)}>
-            <ToastContainer
-            transition={Zoom}
-              position='top-right'
-              autoClose={1}
-              hideProgressBar
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme='light'
-              limit={1}
-            />
+           <ToastContainer
+                   transition={Zoom}
+                  position="top-right"
+                  limit={1}
+                  autoClose={1}
+                  hideProgressBar
+                  newestOnTop={false}
+                  closeOnClick={false}
+                  rtl={false}
+                  pauseOnFocusLoss={false}
+                  draggable={false}
+                  pauseOnHover={false}
+                  theme="light"
+                  />
             <ThumbUpIcon />
             <span style={{ color: '663399' }}>{gif.likeCount} </span>
           </IconButton>

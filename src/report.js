@@ -26,11 +26,11 @@ function ReportList() {
     }
   }, []);
 
-
+  
   return (
     <div className="report-list">
-    {reports.map(gif => (
-      <div key={gif.id}>
+    {reports.map((gif,index) => (
+      <div key={index}>
         <IconButton>
           
         <Link

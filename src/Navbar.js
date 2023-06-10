@@ -6,6 +6,14 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 
 const Nav = () => {
+  const ButtonStyle = {
+    color: 'white',
+    backgroundColor: '#663399',
+    borderRadius: '8px',
+    padding: '10px 20px',
+    textDecoration: 'none',
+    margin: '10px',
+  };
   const isLoggedIn = localStorage.getItem('jwtToken') !== null;
   const [isLoggedOut, setIsLoggedOut] = useState(false);
   const jwtToken = localStorage.getItem('jwtToken');
@@ -48,13 +56,7 @@ const Nav = () => {
             <p>Witaj, {localStorage.getItem('username')}</p>
             <Link to="/"
               onClick={handleLogout}
-              style={{
-                color: 'white',
-                backgroundColor: '#663399',
-                borderRadius: '8px',
-                height: '25px',
-                width: '250px'
-              }}
+              style={ButtonStyle}
             >
               Wyloguj się
             </Link>
@@ -63,30 +65,33 @@ const Nav = () => {
             
             {user_role === 'Admin' && jwtToken ? (
               <div className="links">
-                <Link to="/reporty" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px' }}>
+                <Link to="/reporty"style={ButtonStyle}>
                   Zgłoszenia
                 </Link>
               </div>
             ) : null}
-             <Link to="/MojeGify" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px', width:'30%' }}> Moje Gify</Link>
+             <Link to="/MojeGify" style={ButtonStyle}> Moje Gify</Link>
+             <div style={{display: 'flex', flexDirection:'column', justifyContent: 'flex-end'}}>
              {isMailConfirmed ? null : (
   <div style={{ position: 'absolute', top: '10px', right: '10px', width: '200px'}}>
     <Alert severity="warning">Potwierdź swój email</Alert>
-    {ifBanned ? null : (
-      <p style={{ color: 'red' }}>
+    </div> )}
+    
+{ifBanned ? null : (
+      <div style={{ color:'red', position: 'absolute', top: '85px', right: '10px', width: '200px'}}>
         Jesteś zbanowany do: {banExpiration}. Możesz teraz tylko przeglądać gify
-      </p>
+      </div>
     )}
-  </div>
-)}
+    </div>
+   
             
           </>
         ) : (
           <>
-            <Link to="/login1" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px' }}>
+            <Link to="/login1" style={ButtonStyle}>
               Zaloguj się
             </Link>
-            <Link to="/register" style={{ color: 'white', backgroundColor: '#663399', borderRadius: '8px' }}>
+            <Link to="/register" style={ButtonStyle}>
               Rejestracja
             </Link>
           </>

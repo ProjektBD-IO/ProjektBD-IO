@@ -77,9 +77,9 @@ function Edit({ gif, id }) {
           Kategoria:
           <select name="category" onChange={handleChange} value={formData.category}>
           
-          <option value="Cat1">Cat1</option>
-          <option value="Cat2">Cat2</option>
-          <option value="Cat3">Cat3</option>
+          <option value="Cat1">Humor</option>
+          <option value="Cat2">Sport</option>
+          <option value="Cat3">Zwierzęta</option>
         </select>
           </label>
           <label>
