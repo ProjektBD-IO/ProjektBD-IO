@@ -16,8 +16,7 @@ function Ban({ id }) {
   });
   const [gifDeleted, setGifDeleted] = useState(false); 
   const fetchData = async () => {
-    const confirmed = window.confirm('Czy na pewno chcesz zbanować tego gifa?');
-  
+    const confirmed = window.confirm('Czy na pewno chcesz zbanować tego użytkownika?');
     if (!confirmed) {
       return; // Nie wyświetlaj wiadomości o usunięciu gif, jeśli anulowano
     }

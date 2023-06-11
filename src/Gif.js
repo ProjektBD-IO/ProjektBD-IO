@@ -234,17 +234,6 @@ const handleDelete = async (id) => {
     });
 
     if (response.ok) {
-      toast.success('Usunięto', {
-        position: "top-right",
-        autoClose: 500,
-        hideProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: "light",
-      });
-
       console.log('Gif został usunięty');
       window.location.reload(); // Odśwież stronę
       // Tutaj możesz wykonać dodatkowe działania, takie jak odświeżenie listy gifów itp.
@@ -461,7 +450,7 @@ const user_role = localStorage.getItem('user_role');
                    transition={Zoom}
                    position="top-right"
                    limit={1}
-                   autoClose={1}
+                   autoClose={500}
                    hideProgressBar
                    newestOnTop={false}
                    closeOnClick={false}

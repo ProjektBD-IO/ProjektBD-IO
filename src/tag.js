@@ -387,42 +387,51 @@ const handleSort = (event) => {
           />
         </Link>
       )}
-      <div className='button-container'>
-        {(user_role === 'Admin' || user_id === gif.creator.id_user) && jwtToken && (
-          <IconButton onClick={() => handleDelete(gif.id_gif)}>
-            <DeleteIcon />
-          </IconButton>
-        )}
+       <div className="button-container">
+              {(user_role == 'Admin' || user_id == gif.creator.id_user) && jwtToken ? (
+                
+          <IconButton onClick={() => handleDelete(gif.id_gif)}> <DeleteIcon  /></IconButton>
+          
+        
+        ) : null}
+        {user_id == gif.creator.id_user && jwtToken? (
+        <Edit gif={gif} id={gif.id_gif}/>
+        ) : null}
+        
+        {  user_role != 'Admin' && user_id != gif.creator.id_user && jwtToken  ?(
+                
+                <IconButton onClick={() => handleReport(gif.id_gif)}> <ReportIcon  /> </IconButton>
+                
+              
+              ) : null}
+               {user_role == 'Admin'  && jwtToken ? (
+                    <IconButton>
+    <Ban id={gif.id_gif}/>
+    </IconButton>
+  ) : null}
+     
 
-        {user_id === gif.creator.id_user && jwtToken && <Edit gif={gif} id={gif.id_gif} />}
-
-        {user_role !== 'Admin' && user_id !== gif.creator.id_user && jwtToken && (
-          <IconButton onClick={() => handleReport(gif.id_gif)}>
-            <ReportIcon />
-          </IconButton>
-        )}
-
-        {gif.likedByCurrentUser === false ? (
-          <IconButton onClick={() => handleLike(gif.id_gif)}>
-           
-            <ThumbUpAltOutlinedIcon />
-            <span style={{ color: '663399' }}>{gif.likeCount} </span>
-          </IconButton>
-        ) : (
-          <IconButton onClick={() => handleDislike(gif.id_gif)}>
-           
-            <ThumbUpIcon />
-            <span style={{ color: '663399' }}>{gif.likeCount} </span>
-          </IconButton>
-        )}
-
-        {user_role === 'Admin' && jwtToken && (
-          <IconButton>
-            <Ban id={gif.id_gif} />
-          </IconButton>
-        )}
-      </div>
-      </LazyLoad>
+        
+                  {gif.likedByCurrentUser==false?
+                  <IconButton onClick={() => handleLike(gif.id_gif)}>
+                  
+                  <ThumbUpAltOutlinedIcon />
+                  
+                   <span style={{ color: '#663399' }}>{gif.likeCount} </span>
+                 </IconButton>
+                    :
+                  <IconButton onClick={() => handleDislike(gif.id_gif)}>
+                   
+                  <ThumbUpIcon  />
+                  <span style={{ color: '663399' }}>{gif.likeCount} </span>
+                  </IconButton>
+                  
+                  }
+                 
+                  </div>
+                  
+  
+            </LazyLoad>
     </li>
   ))}
 </div>
