@@ -13,12 +13,12 @@ const InputStyle = {
   margin: '10px',
   padding: '5px',
   borderRadius: '4px',
-  border: '1px solid #663399',
+  border: '1px solid #8A2BE2',
 };
 
 const SubmitButtonStyle = {
   color: 'white',
-  backgroundColor: '#663399',
+  backgroundColor: '#8A2BE2',
   borderRadius: '4px',
   height: '30px',
   width: '100px',
@@ -142,7 +142,7 @@ useEffect(() => {
       <br />
       {isLoggedin ? (
         <div>
-         <p style={{ color: '#663399' }}>Witaj {localStorage.getItem('username')}</p>
+         <p style={{ color: '#8A2BE2' }}>Witaj {localStorage.getItem('username')}</p>
          </div>
       ) : (
         <button type="submit" style={SubmitButtonStyle}>

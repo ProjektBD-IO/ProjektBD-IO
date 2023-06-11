@@ -208,7 +208,7 @@ const FolderComponent = () => {
   };
   const ButtonStyle = {
     color: 'white',
-    backgroundColor: '#663399',
+    backgroundColor: '#8A2BE2',
     borderRadius: '8px',
     padding: '10px 20px',
     textDecoration: 'none',
@@ -332,7 +332,7 @@ const FolderComponent = () => {
     </select>
     <IconButton onClick={() => addGifToFolder(selectedFolder, gifId)}>
       <button style={{color: 'white',
-    backgroundColor: '#663399',
+    backgroundColor: '#8A2BE2',
     borderRadius: '8px',
     padding: '10px 20px',
     textDecoration: 'none',

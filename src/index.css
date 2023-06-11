@@ -3,10 +3,10 @@
 * {
   margin: 0;
   font-family: "Poppins";
-  color: #663399;
+  color: #8A2BE2;
 }
 .custom-dots {
-  color: #663399;
+  color: #8A2BE2;
 }
 .sort-select {
   appearance: none;
@@ -118,7 +118,7 @@
 .nav h1 {
   width: "100px"; 
   height: "40px"; 
-  color: #663399;
+  color: #8A2BE2;
 }
 .nav .links {
   margin-left: auto;
@@ -142,7 +142,7 @@
   
   width: 100%;
   margin-left: auto;
-  color: #663399;
+  color: #8A2BE2;
   text-decoration: none;
   padding: 6px;
 }
@@ -283,15 +283,15 @@ form {
   color: blue;
 }
 .usernameLabel {
-  color: #663399;
-  text-decoration:#663399;
+  color: #8A2BE2;
+  text-decoration:#8A2BE2;
   display: flex;
   align-items: center;
   position: relative;
 }
 .usernameLabe {
-  color: #663399;
-  text-decoration:#663399;
+  color: #8A2BE2;
+  text-decoration:#8A2BE2;
   
   
 }
@@ -304,19 +304,19 @@ form {
 }
 .successMessage {
   color: white;
-  background-color: #663399;
+  background-color: #8A2BE2;
   border-radius: 4px;
   padding: 8px;
 }
 .report-link {
   font-size: 40px;
-  color: #663399;
+  color: #8A2BE2;
   /* Dodaj inne style dla linku */
 }
 
 .report-info {
   font-size: 25px;
-  color: #663399;
+  color: #8A2BE2;
   /* Dodaj inne style dla elementu <p> */
 }
 .report-list {

@@ -16,8 +16,19 @@ import { useState, useEffect } from 'react';
 function App() {
   const [darkMode, setDarkMode] = useState(false);
 
+  useEffect(() => {
+    // Sprawdź, czy w localStorage jest zapisana informacja o trybie
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode) {
+      setDarkMode(JSON.parse(savedMode));
+    }
+  }, []);
+
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
+    const updatedMode = !darkMode;
+    setDarkMode(updatedMode);
+    // Zapisz tryb w localStorage
+    localStorage.setItem('darkMode', JSON.stringify(updatedMode));
   };
   const isEmailConfirmed = window.location.search.includes('redirect=1');
   useEffect(() => {

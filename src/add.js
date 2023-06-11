@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function AddFileModal() {
   const ButtonStyle = {
     color: 'white',
-    backgroundColor: '#663399',
+    backgroundColor: '#8A2BE2',
     borderRadius: '8px',
     padding: '10px 20px',
     textDecoration: 'none',
@@ -140,6 +140,8 @@ function AddFileModal() {
   <button type="submit" style={ButtonStyle}>Dodaj</button>
 </form>
       </Modal>
+
+
       
     </div>
   );

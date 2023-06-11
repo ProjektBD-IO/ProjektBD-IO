@@ -79,6 +79,9 @@ const handleSearch = () => {
     
 };
 const handleTagChange = () => {
+  if (searchTerm.trim() === '') {
+    return; // Jeśli searchTerm jest pusty, przerwij funkcję
+  }
   if (searchTerm !== prevtag) {
     SetSort(prevsort);
     setprevsort(null);
@@ -417,13 +420,13 @@ const handleSort = (event) => {
                   
                   <ThumbUpAltOutlinedIcon />
                   
-                   <span style={{ color: '#663399' }}>{gif.likeCount} </span>
+                   <span style={{ color: '#8A2BE2' }}>{gif.likeCount} </span>
                  </IconButton>
                     :
                   <IconButton onClick={() => handleDislike(gif.id_gif)}>
                    
                   <ThumbUpIcon  />
-                  <span style={{ color: '663399' }}>{gif.likeCount} </span>
+                  <span style={{ color: '#8A2BE2' }}>{gif.likeCount} </span>
                   </IconButton>
                   
                   }

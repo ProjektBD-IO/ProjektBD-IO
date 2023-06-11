@@ -310,6 +310,9 @@ const handleReport = async (id) => {
   }
 };
 const handleTagChange = () => {
+  if (searchTerm.trim() === '') {
+    return; // Jeśli searchTerm jest pusty, przerwij funkcję
+  }
   Navigate(`/search/${searchTerm}`);
 };
 
@@ -425,13 +428,13 @@ const user_role = localStorage.getItem('user_role');
                   
                   <ThumbUpAltOutlinedIcon />
                   
-                   <span style={{ color: '#663399' }}>{gif.likeCount} </span>
+                   <span style={{ color: '#8A2BE2' }}>{gif.likeCount} </span>
                  </IconButton>
                     :
                   <IconButton onClick={() => handleDislike(gif.id_gif)}>
                    
                   <ThumbUpIcon  />
-                  <span style={{ color: '663399' }}>{gif.likeCount} </span>
+                  <span style={{ color: '#8A2BE2' }}>{gif.likeCount} </span>
                   </IconButton>
                   
                   }

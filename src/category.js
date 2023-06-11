@@ -405,13 +405,13 @@ return(
                   
                   <ThumbUpAltOutlinedIcon />
                   
-                   <span style={{ color: '#663399' }}>{gif.likeCount} </span>
+                   <span style={{ color: '#8A2BE2' }}>{gif.likeCount} </span>
                  </IconButton>
                     :
                   <IconButton onClick={() => handleDislike(gif.id_gif)}>
                    
                   <ThumbUpIcon  />
-                  <span style={{ color: '663399' }}>{gif.likeCount} </span>
+                  <span style={{ color: '#8A2BE2' }}>{gif.likeCount} </span>
                   </IconButton>
                   
                   }

@@ -17,12 +17,12 @@ function RegistrationForm() {
     margin: '10px',
     padding: '5px',
     borderRadius: '4px',
-    border: '1px solid #663399',
+    border: '1px solid #8A2BE2',
   };
   
   const SubmitButtonStyle = {
     color: 'white',
-    backgroundColor: '#663399',
+    backgroundColor: '#8A2BE2',
     borderRadius: '4px',
     height: '30px',
     width: '100px',
@@ -159,7 +159,7 @@ function RegistrationForm() {
             </Alert>
           </Stack>
           
-            <ThreeDots stroke="#663399" fill="#B0E0E6"/>
+            <ThreeDots stroke="#8A2BE2" fill="#B0E0E6"/>
           
         </div>
       )}
