@@ -158,7 +158,9 @@ function RegistrationForm() {
               klikając w ten link. Za kilka sekund zostaniesz automatycznie przeniesiony na stronę główną
             </Alert>
           </Stack>
-          <ThreeDots></ThreeDots>
+          
+            <ThreeDots stroke="#663399" fill="#B0E0E6"/>
+          
         </div>
       )}
 

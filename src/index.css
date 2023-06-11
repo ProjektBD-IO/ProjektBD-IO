@@ -5,7 +5,9 @@
   font-family: "Poppins";
   color: #663399;
 }
-
+.custom-dots {
+  color: #663399;
+}
 .sort-select {
   appearance: none;
   background-color: #ffffff;

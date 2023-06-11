@@ -13,7 +13,7 @@ function AddFileModal() {
   };
   const [formData, setFormData] = useState({
     file: null,
-    category: 'Cat1',
+    category: 'Humor',
     tags: '',
     title:'',
     gifType:'true'
@@ -52,30 +52,11 @@ function AddFileModal() {
         mode: "cors",
     });
     if (response.ok) {
-      toast.success('Gif dodany pomyślnie', {
-        position: "top-right",
-        position: "top-right",
-        autoClose: 500,
-        hideProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: "light",
-        });
+     
       setModalIsOpen(false);
       window.location.reload();
     } else {
-      toast.warn('Błąd w dodawaniu gifa', {
-        position: "top-right",
-        autoClose: 500,
-        hideProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: "light",
-    });
+     
     const data = await response;
     console.log(data);
 
@@ -159,20 +140,7 @@ function AddFileModal() {
   <button type="submit" style={ButtonStyle}>Dodaj</button>
 </form>
       </Modal>
-      <ToastContainer
-                   transition={Zoom}
-                  position="top-right"
-                  limit={1}
-                  autoClose={1}
-                  hideProgressBar
-                  newestOnTop={false}
-                  closeOnClick={false}
-                  rtl={false}
-                  pauseOnFocusLoss={false}
-                  draggable={false}
-                  pauseOnHover={false}
-                  theme="light"
-                  />
+      
     </div>
   );
 }
