@@ -76,7 +76,7 @@ function RegistrationForm() {
       position: 'top-right',
       autoClose: 500,
       hideProgressBar: true,
-      closeOnClick: true,
+      closeOnClick: false,
       pauseOnHover: false,
       draggable: false,
       progress: undefined,

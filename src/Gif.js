@@ -103,23 +103,28 @@ function GifPage() {
     setPage((prevPage) => prevPage + 1);
   };
   
-  
+
+const [toastDisplayed, setToastDisplayed] = useState(false);
 const handleLike = async (id) => {
   try {
     const jwtToken = localStorage.getItem('jwtToken');
     if (!jwtToken) {
       // Handle the case when the JWT token is not available
       console.log('JWT token not found');
-      toast.error('Musisz być zalogowany aby dać like', {
-        position: "top-right",
-        autoClose: 500,
-        hideProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: "light",
+      if (!toastDisplayed) {
+        setToastDisplayed(true);
+        toast.error('Musisz być zalogowany aby dać like', {
+          id: 'like',
+          position: "top-right",
+          autoClose: 500,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
         });
+      }
       return;
     }
 
@@ -146,11 +151,11 @@ const handleLike = async (id) => {
         return gif;
       });
     });
-   
   } catch (error) {
     console.log('An error occurred while adding a like:', error);
   }
 };
+
 
 
 const handleDislike = async (id) => {

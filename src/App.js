@@ -1,7 +1,8 @@
 import Nav from './Navbar';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './index.css';
-import { ToastContainer, toast, ToastMessage, Zoom } from 'react-toastify';
+import { ToastContainer, toast, Zoom } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import GifPage from './Gif';
 import RegistrationForm from './rejestracja';
 import LoginForm from './login';
@@ -15,6 +16,7 @@ import { useState, useEffect } from 'react';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+  const [isEmailConfirmed, setIsEmailConfirmed] = useState(false);
 
   useEffect(() => {
     // Sprawdź, czy w localStorage jest zapisana informacja o trybie
@@ -22,15 +24,11 @@ function App() {
     if (savedMode) {
       setDarkMode(JSON.parse(savedMode));
     }
+
+    // Sprawdź, czy adres email został potwierdzony
+    setIsEmailConfirmed(window.location.search.includes('redirect=1'));
   }, []);
 
-  const toggleDarkMode = () => {
-    const updatedMode = !darkMode;
-    setDarkMode(updatedMode);
-    // Zapisz tryb w localStorage
-    localStorage.setItem('darkMode', JSON.stringify(updatedMode));
-  };
-  const isEmailConfirmed = window.location.search.includes('redirect=1');
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add('dark-mode');
@@ -40,26 +38,36 @@ function App() {
       document.body.classList.remove('dark-mode');
     }
   }, [darkMode]);
+
+  useEffect(() => {
+    if (isEmailConfirmed) {
+      toast.success('Potwierdzono adres email', {
+        position: 'top-right',
+        autoClose: 1100,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
+  }, [isEmailConfirmed]);
+
+  const toggleDarkMode = () => {
+    const updatedMode = !darkMode;
+    setDarkMode(updatedMode);
+    // Zapisz tryb w localStorage
+    localStorage.setItem('darkMode', JSON.stringify(updatedMode));
+  };
+
   return (
     <div className="App">
       <Router>
         <Nav />
         <button className={`toggle-button ${darkMode ? 'dark' : 'light'}`} onClick={toggleDarkMode}>
-  {darkMode ? 'Tryb Jasny' : 'Tryb Ciemny'}
-</button>
-{isEmailConfirmed && (
-          toast.success('Potwierdzono adres email' , {
-      
-            position: 'top-right',
-            autoClose: 1100,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: 'light'
-          })
-        )}
+          {darkMode ? 'Tryb Jasny' : 'Tryb Ciemny'}
+        </button>
         <Routes>
           <Route path="/login1" element={<LoginForm />} />
           <Route path="/register" element={<RegistrationForm />} />
@@ -76,20 +84,7 @@ function App() {
           </Routes>
         </div>
       </Router>
-      <ToastContainer
-                   transition={Zoom}
-                  position="top-right"
-                  limit={1}
-                  autoClose={1}
-                  hideProgressBar
-                  newestOnTop={false}
-                  closeOnClick={false}
-                  rtl={false}
-                  pauseOnFocusLoss={false}
-                  draggable={false}
-                  pauseOnHover={false}
-                  theme="light"
-                  />
+      <ToastContainer transition={Zoom} position="top-right" limit={1} autoClose={1} hideProgressBar newestOnTop={false} closeOnClick={false} rtl={false} pauseOnFocusLoss={false} draggable={false} pauseOnHover={false} theme="light" />
     </div>
   );
 }

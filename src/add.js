@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 function AddFileModal() {
   const ButtonStyle = {
     color: 'white',
@@ -34,6 +35,14 @@ function AddFileModal() {
     const allowedExtensions = /(\.gif)$/i;
     if (!allowedExtensions.exec(filed.name)) {
       alert('Dozwolone są tylko pliki z rozszerzeniem .gif');
+      return;
+    }
+    if (!filed.name.endsWith('.gif')) {
+      alert('Nazwa pliku musi kończyć się rozszerzeniem .gif');
+      return;
+    }
+    if (filed.type !== 'gif') {
+      alert('Przesłany plik nie jest plikiem GIF');
       return;
     }
     const formDataToSend = new FormData();
