@@ -94,6 +94,21 @@ function RegistrationForm() {
       setRedirectToHome(false);
       return;
     }
+    if(response.status === 500 && data.message==='User with this nickname already exists'){
+      toast.warn('Ten login jest już zajęty', {
+        position: 'top-right',
+        autoClose: 500,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: 'light'
+      });
+      setIsRegistering(false);
+      setRedirectToHome(false);
+      return;
+    }
     console.log(data);
     setIsMailConfirmed(true);
     setRedirectToHome(true);
