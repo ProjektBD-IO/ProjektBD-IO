@@ -41,10 +41,7 @@ function AddFileModal() {
       alert('Nazwa pliku musi kończyć się rozszerzeniem .gif');
       return;
     }
-    if (filed.type !== 'gif') {
-      alert('Przesłany plik nie jest plikiem GIF');
-      return;
-    }
+    
     const formDataToSend = new FormData();
     formDataToSend.append('file', formData.file);
     formDataToSend.append('category', formData.category);

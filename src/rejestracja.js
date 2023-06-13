@@ -7,10 +7,20 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 
 function RegistrationForm() {
+  const LabelStyle = {
+    marginRight: '270px',
+    
+  };
+  const LabelStyles = {
+    marginRight: '200px',
+    
+  };
+ 
   const FormStyle = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    gap: '2px',
   };
   
   const InputStyle = {
@@ -18,6 +28,8 @@ function RegistrationForm() {
     padding: '5px',
     borderRadius: '4px',
     border: '1px solid #8A2BE2',
+    width: '300px'
+    
   };
   
   const SubmitButtonStyle = {
@@ -66,6 +78,22 @@ function RegistrationForm() {
       body: JSON.stringify(formData)
     });
     const data = await response.json();
+    if (response.status === 500 && data.message === 'User with this email already exists') {
+      toast.warn('Użytkownik o takim mailu już istnieje', {
+        position: 'top-right',
+        autoClose: 500,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: 'light'
+      });
+     
+      setIsRegistering(false);
+      setRedirectToHome(false);
+      return;
+    }
     console.log(data);
     setIsMailConfirmed(true);
     setRedirectToHome(true);
@@ -105,13 +133,13 @@ function RegistrationForm() {
       onSubmit={handleSubmit}
       style={FormStyle}
     >
-      <label className="usernameLabel">
-        Email:
+      <label className="usernameLabel" style={LabelStyle}>
+        Email</label>
         <input type="email" name="mail" value={formData.mail} onChange={handleChange} required style={InputStyle} />
         
-      </label>
-      <label className="usernameLabel">
-        Hasło:
+      
+      <label className="usernameLabel" style={LabelStyle}>
+        Hasło</label>
         <input
           type="password"
           name="password"
@@ -120,9 +148,9 @@ function RegistrationForm() {
           required
           style={InputStyle}
         />
-      </label>
-      <label className="usernameLabel">
-        Powtórz hasło:
+      
+      <label className="usernameLabel" style={LabelStyles}>
+        Powtórz hasło      </label>
         <input
           type="password"
           name="confirmPassword"
@@ -131,9 +159,9 @@ function RegistrationForm() {
           required
           style={InputStyle}
         />
-      </label>
-      <label className="usernameLabel">
-        Login:
+      
+      <label className="usernameLabel " style={LabelStyle}>
+        Login</label>
         <input
           type="text"
           name="nickname"
@@ -142,7 +170,8 @@ function RegistrationForm() {
           required
           style={InputStyle}
         />
-      </label>
+      
+      
       <div style={{ color: 'red' }}>{passwordRequirements}</div>
       <button
         type="submit"
@@ -183,3 +212,5 @@ function RegistrationForm() {
 }
 
 export default RegistrationForm;
+
+
