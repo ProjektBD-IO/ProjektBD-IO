@@ -42,8 +42,11 @@ public class GifController {
     }
 
     @GetMapping("/{gifId}/**")
-    public Gif getGif(@PathVariable Integer gifId) throws AccessDeniedException {
-        return gifService.getGif(gifId);
+    public Gif getGif(@PathVariable Integer gifId, Principal principal) throws AccessDeniedException {
+        Gif gif=gifService.getGif(gifId);
+        if(principal!=null)
+                gif.setLikedByCurrentUser(Integer.parseInt(principal.getName()));
+        return gif;
     }
 
     @GetMapping("/usergifs")
