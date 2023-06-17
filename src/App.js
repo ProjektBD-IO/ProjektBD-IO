@@ -7,7 +7,7 @@ import GifPage from './Gif';
 import RegistrationForm from './rejestracja';
 import LoginForm from './login';
 import ReportList from './report';
-import Gifen from './awd';
+import Gifen from './Podstrona';
 import FolderGifs from './gifsinfolder';
 import FolderComponent from './folder';
 import Category from './category';

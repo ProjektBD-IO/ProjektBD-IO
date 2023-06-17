@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Gifen from './awd';
+import Gifen from './Podstrona';
 import FolderIcon from '@mui/icons-material/Folder';
 import { Link} from "react-router-dom";
 import FolderGifs from './gifsinfolder';

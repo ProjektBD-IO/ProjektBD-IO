@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Edit from './edit';
 import ReportIcon from '@mui/icons-material/Report';
 import { Link, BrowserRouter  } from "react-router-dom";
-import Gifen from './awd';
+import Gifen from './Podstrona';
 import Ban from './ban';
 import { useNavigate } from 'react-router';
 import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"

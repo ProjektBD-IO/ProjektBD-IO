@@ -30,7 +30,7 @@ function Ban({ id }) {
       const token = localStorage.getItem('jwtToken');
   
       // Dodaj 2 godziny do selectedDate
-      const expirationDateWithHours = new Date(selectedDate.getTime() + 2 * 60 * 60 * 1000);
+      const expirationDateWithHours = new Date(selectedDate.getTime());
       const expirationDate = expirationDateWithHours.toISOString().slice(0, -5);
   
       const response = await fetch(
