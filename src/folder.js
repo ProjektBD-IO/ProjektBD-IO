@@ -12,6 +12,7 @@ import FolderGifs from './gifsinfolder';
 import { IconButton } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { Zoom, ToastContainer, toast } from 'react-toastify';
+
 const FolderComponent = () => {
   
   const [folders, setFolders] = useState([]);

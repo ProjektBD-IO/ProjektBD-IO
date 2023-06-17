@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function LoginForm(props) {
@@ -149,6 +150,7 @@ useEffect(() => {
           Zaloguj się
         </button>
       )}
+      <p>Nie masz konta?</p><Link to="/register">Zarejestruj się</Link>
       <ToastContainer
                    transition={Zoom}
                   position="top-right"

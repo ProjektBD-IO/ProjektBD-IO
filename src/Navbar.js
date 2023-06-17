@@ -53,7 +53,7 @@ const Nav = () => {
         {isLoggedIn ? (
           <>
           <AddFileModal />
-            <p>Witaj, {localStorage.getItem('username')}</p>
+            <p style={{color:'#8A2BE2'}}>Witaj, {localStorage.getItem('username')}</p>
             <Link to="/"
               onClick={handleLogout}
               style={ButtonStyle}

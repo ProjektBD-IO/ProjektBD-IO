@@ -14,7 +14,7 @@ import { Link, BrowserRouter  } from "react-router-dom";
 import Gifen from './awd';
 import Ban from './ban';
 import { useNavigate } from 'react-router-dom';
-
+import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
 function Category(){
 const Navigate = useNavigate();
 const [page, setPage] = useState(0)
@@ -364,14 +364,15 @@ return(
       hasMore={hasMore}
       scrollThreshold={0.9}
     >
-      <div className='galleryy'>
+      <Masonry columnsCount={4} gutter="15px">
+      
   {categoryResults.map((gif, index) => (
-            <li key={`gif-${index}`}>
+            <div className="gif-container" key={`gif-${index}`}>
         <Link to={`/podstrona/${gif.id_gif}`}>
           <img
             src={`${window.API_URL}${gif.reflink}`}
             alt={gif.title}
-            style={{ width: '200px', height: '200px' }}
+            style={{ width: "100%", margin:"0px" }}
           />
         </Link>
       
@@ -383,7 +384,9 @@ return(
         
         ) : null}
         {user_id == gif.creator.id_user && jwtToken? (
+        <IconButton>
         <Edit gif={gif} id={gif.id_gif}/>
+        </IconButton>
         ) : null}
         
         {  user_role != 'Admin' && user_id != gif.creator.id_user && jwtToken  ?(
@@ -421,13 +424,14 @@ return(
   </div>
   
            
-    </li>
     
-  
+    
+    </div>
   ))
   }
  
-</div>
+
+</Masonry>
 <ToastContainer
                    transition={Zoom}
                   position="top-right"

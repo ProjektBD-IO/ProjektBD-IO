@@ -11,6 +11,7 @@ function AddFileModal() {
     padding: '10px 20px',
     textDecoration: 'none',
     margin: '10px',
+    border: 'none'
   };
   const [formData, setFormData] = useState({
     file: null,

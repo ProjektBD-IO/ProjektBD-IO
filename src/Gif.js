@@ -13,8 +13,10 @@ import { Link, BrowserRouter  } from "react-router-dom";
 import Gifen from './awd';
 import Ban from './ban';
 import { useNavigate } from 'react-router-dom';
+import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
 function GifPage() {
   const Navigate=useNavigate();
+
   const [hasMore, setHasMore] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(0);
@@ -72,7 +74,9 @@ function GifPage() {
           console.log('Dane z serwera:', data);
           if (Array.isArray(data.content) && data.content.length > 0) {
             const newResults = data.content.filter(gif => !searchResultsIds.includes(gif.id_gif)); // filter out duplicates
-            setGifs(prevResults => [...prevResults, ...newResults]);
+            const currentGifs = [...gifs];
+            const newGifs = [...newResults];
+            setGifs([...currentGifs, ...newGifs]);
             setgifsid(prevIds => [...prevIds, ...newResults.map(gif => gif.id_gif)]);
             sendRequestRef.current = true;
             setHasMore(newResults.length>0);
@@ -366,6 +370,7 @@ const user_role = localStorage.getItem('user_role');
         </select>
         
       </div>
+    
 
       <InfiniteScroll
       dataLength={gifs.length}
@@ -374,35 +379,25 @@ const user_role = localStorage.getItem('user_role');
       scrollThreshold={0.9}
       sort={Sort}
     >
-      <div className='galleryy'>
+      <Masonry columnsCount={4} gutter="15px">
+               
         
+     
         {gifs.map((gif, index) => (
-            <li key={`gif-${index}`}>
-            <LazyLoad> 
-              <div> 
-                
-              {user_id === gif.creator.id_user && jwtToken ? (
-  <div style={{ border: '2px purple', display: 'inline-block' }}>
-    <Link to={`/podstrona/${gif.id_gif}`}>
-      <img
-        src={`${window.API_URL}${gif.reflink}`}
-        alt={gif.title}
-        style={{ width: '200px', height: '200px' }}
-        onClick={<Gifen id={gif.id_gif}/>}
-        
-      />
-    </Link>
-  </div>
-) : (
+          <div className="gif-container" key={`gif-${index}`}>
+         <>
+              
   <Link to={`/podstrona/${gif.id_gif}`}>
     <img
       src={`${window.API_URL}${gif.reflink}`}
       alt={gif.title}
-      style={{ width: '200px', height: '200px' }}
+      style={{ width: "100%", margin:"0px" }}
       
     />
+    
   </Link>
-)}
+  
+        
         <div className="button-container">
               {(user_role == 'Admin' || user_id == gif.creator.id_user) && jwtToken ? (
                 
@@ -411,9 +406,11 @@ const user_role = localStorage.getItem('user_role');
         
         ) : null}
         {user_id == gif.creator.id_user && jwtToken? (
+          <IconButton>
         <Edit gif={gif} id={gif.id_gif}/>
+        </IconButton>
         ) : null}
-        
+         
         {  user_role != 'Admin' && user_id != gif.creator.id_user && jwtToken  ?(
                 
                 <IconButton onClick={() => handleReport(gif.id_gif)}> <ReportIcon  /> </IconButton>
@@ -422,7 +419,7 @@ const user_role = localStorage.getItem('user_role');
               ) : null}
                {user_role == 'Admin'  && jwtToken ? (
                     <IconButton>
-    <Ban id={gif.id_gif}/>
+             <Ban id={gif.id_gif}/>
     </IconButton>
   ) : null}
      
@@ -433,26 +430,28 @@ const user_role = localStorage.getItem('user_role');
                   
                   <ThumbUpAltOutlinedIcon />
                   
-                   <span style={{ color: '#8A2BE2' }}>{gif.likeCount} </span>
+                   <span >{gif.likeCount} </span>
                  </IconButton>
                     :
                   <IconButton onClick={() => handleDislike(gif.id_gif)}>
                    
                   <ThumbUpIcon  />
-                  <span style={{ color: '#8A2BE2' }}>{gif.likeCount} </span>
+                  <span >{gif.likeCount} </span>
                   </IconButton>
                   
                   }
                  
                   </div>
                   
-  </div>
-  
-            </LazyLoad>
-          </li>
+</>
+           
+        
+</div>
         ))}
         
-      </div>
+        
+        
+        </Masonry>
       </InfiniteScroll>
       <ToastContainer
                    transition={Zoom}
@@ -468,7 +467,9 @@ const user_role = localStorage.getItem('user_role');
                    pauseOnHover={false}
                    theme="light"
                   />
+                  
     </div>
+    
     
     
   );

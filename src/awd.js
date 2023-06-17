@@ -32,13 +32,9 @@ function Gifen() {
         if (response.ok) {
           const data = await response.json();
           console.log('Dane z serwera:', data);
-
-          if (Array.isArray(data)) {
-            setGifs(data);
-          } else if (typeof data === 'object') {
             setGifs([data]);
           }
-        }
+        
          else {
           console.error('Błąd podczas pobierania danych z serwera:', response.status);
         }
@@ -101,7 +97,6 @@ function Gifen() {
     try {
       const jwtToken = localStorage.getItem('jwtToken');
       if (!jwtToken) {
-        // Handle the case when the JWT token is not available
         toast.error('Musisz być zalogowany aby dać dislike', {
           position: "top-right",
         autoClose: 500,
@@ -263,7 +258,7 @@ function Gifen() {
       console.log('An error occurred while removing a like:', error);
     }
   };
-
+  
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', border:'5px' }}>
       <ul>
@@ -287,17 +282,21 @@ function Gifen() {
                     <ReportIcon />
                   </IconButton>
                 )}
-                {gif.likedByCurrentUser == false ? (
+                {gif.likedByCurrentUser==false?
                   <IconButton onClick={() => handleLike(gif.id_gif)}>
-                    <ThumbUpAltOutlinedIcon />
-                    <span style={{ color: '#8A2BE2' }}>{gif.likeCount}</span>
-                  </IconButton>
-                ) : (
+                  
+                  <ThumbUpAltOutlinedIcon />
+                  
+                   <span >{gif.likeCount} </span>
+                 </IconButton>
+                    :
                   <IconButton onClick={() => handleDislike(gif.id_gif)}>
-                    <ThumbUpIcon />
-                    <span style={{ color: '#8A2BE2' }}>{gif.likeCount}</span>
+                   
+                  <ThumbUpIcon  />
+                  <span >{gif.likeCount} </span>
                   </IconButton>
-                )}
+                  
+                  }
               </>
             )}
           </li>

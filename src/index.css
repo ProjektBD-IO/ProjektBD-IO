@@ -118,6 +118,7 @@
 .nav h1 {
   width: "100px"; 
   height: "40px"; 
+  font-size: 40px;
   color: #8A2BE2;
 }
 .nav .links {
@@ -160,7 +161,7 @@
   color: #f1356d;
 }
 .content {
-  max-width: 1000px;
+  max-width: 1250px;
   margin: 40px auto;
   padding: 20px;
     
@@ -184,19 +185,40 @@ form {
 }
 
 
-.galleryy {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); 
-  grid-gap: 12px; 
-  padding: 15px;;
-  margin: 0;
+.galleryy{
+  -webkit-column-count: 4;
+  -moz-column-count: 4;
+  column-count: 4;
+  -webkit-column-width: 25%;
+  -moz-column-width:25%;
+  column-width:25%;
+  padding:0 12px;
+  margin-right: 0px;
+  margin-left: 0px;
+  padding:0px;
 }
-.galleryy li {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  break-inside: avoid-column;
+
+
+@media (max-width: 991px){
+  .galleryy{
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    column-count: 2;
+  }
 }
+@media (max-width: 480px){
+  .galleryy{
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    column-count: 2;
+    -webkit-column-width: 100%;
+    -moz-column-width:100%;
+    column-width:100%;
+    padding:0 12px;
+  }
+}
+
+
 .search-results {
   display: grid;
   grid-template-columns: repeat(4, 1fr); 
@@ -242,13 +264,7 @@ form {
   align-items: center;
   
 }
-.dislike-button {
-  color: black;
-}
 
-.dislike-button-liked {
-  color: blue;
-}
 .usernameLabel {
   color: #8A2BE2;
   text-decoration:#8A2BE2;
@@ -292,9 +308,11 @@ form {
   flex-direction: column;
 }
 .button-container {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* Odstęp między przyciskami */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: none;
+  
 }
 .gal {
   display: grid;
@@ -302,4 +320,19 @@ form {
   grid-gap: 12px; 
   padding: 0px;;
   margin: 0;
+}
+.gif-container {
+  position: relative;
+  display: inline-block;
+}
+
+.gif-container:hover .button-container {
+  display: flex;
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  right: 0;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 5px;
 }

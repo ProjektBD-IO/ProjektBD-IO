@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ThreeDots } from 'react-loading-icons';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
-
+import { Link } from 'react-router-dom';
 function RegistrationForm() {
   const LabelStyle = {
     marginRight: '270px',
@@ -207,6 +207,7 @@ function RegistrationForm() {
           
         </div>
       )}
+      <p>Masz już konto?</p><Link to='/login1'> Zaloguj się</Link>
 
 <ToastContainer
                    transition={Zoom}

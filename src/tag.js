@@ -14,7 +14,7 @@ import { Link, BrowserRouter  } from "react-router-dom";
 import Gifen from './awd';
 import Ban from './ban';
 import { useNavigate } from 'react-router';
-
+import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
 function Tag(){
   
 const [hasMore, setHasMore] = useState(true);
@@ -365,31 +365,20 @@ const handleSort = (event) => {
       hasMore={hasMore}
       scrollThreshold={0.9}
     >
-      <div className='galleryy'>
+     <Masonry columnsCount={4} gutter="15px">
         
     {searchResults.map((gif, index) => (
-            <li key={`gif-${index}`}>
+            <div className="gif-container" key={`gif-${index}`}>
       <LazyLoad> 
-      {user_id === gif.creator.id_user && jwtToken ? (
-        <div style={{ border: '2px purple', display: 'inline-block' }}>
-          <Link to={`/podstrona/${gif.id_gif}`}>
-            <img
-              src={`${window.API_URL}${gif.reflink}`}
-              alt={gif.title}
-              style={{ width: '200px', height: '200px' }}
-              onClick={<Gifen id={gif.id_gif} />}
-            />
-          </Link>
-        </div>
-      ) : (
+    
         <Link to={`/podstrona/${gif.id_gif}`}>
           <img
             src={`${window.API_URL}${gif.reflink}`}
             alt={gif.title}
-            style={{ width: '200px', height: '200px' }}
+            style={{ width: "100%", margin:"0px" }}
           />
         </Link>
-      )}
+     
        <div className="button-container">
               {(user_role == 'Admin' || user_id == gif.creator.id_user) && jwtToken ? (
                 
@@ -398,7 +387,9 @@ const handleSort = (event) => {
         
         ) : null}
         {user_id == gif.creator.id_user && jwtToken? (
+          <IconButton>
         <Edit gif={gif} id={gif.id_gif}/>
+        </IconButton>
         ) : null}
         
         {  user_role != 'Admin' && user_id != gif.creator.id_user && jwtToken  ?(
@@ -435,9 +426,9 @@ const handleSort = (event) => {
                   
   
             </LazyLoad>
-    </li>
+            </div>
   ))}
-</div>
+</Masonry>
 <ToastContainer
                    transition={Zoom}
                   position="top-right"
